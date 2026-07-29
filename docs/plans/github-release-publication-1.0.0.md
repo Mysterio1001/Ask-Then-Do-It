@@ -10,7 +10,7 @@ Target release: `v1.0.0`
 
 Repository: `https://github.com/Mysterio1001/Ask-Then-Do-It`
 
-Status: Approved
+Status: Completed
 
 Approval: Explicitly approved by the user on 2026-07-29 with the response `繼續往下執行`.
 
@@ -78,7 +78,7 @@ Depends on Ticket 1 establishing that `dist/` is generated and untracked. The li
 
 ## Ticket 3 — Publish the two validated ZIP assets
 
-Status: Planned
+Status: Completed — evidence: [Ticket 3 evidence](../evidence/github-release-1.0.0-ticket-3.md).
 
 ### User-visible outcome
 
