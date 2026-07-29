@@ -1,4 +1,0 @@
-interface:
-  display_name: "Grill Requirements"
-  short_description: "Interrogate risky requirements one decision at a time"
-  default_prompt: "Use $grill-requirements to question this requirement until the important decisions are explicit."

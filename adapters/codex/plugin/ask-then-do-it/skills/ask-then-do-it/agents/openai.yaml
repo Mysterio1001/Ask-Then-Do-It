@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ask Then Do It"
+  short_description: "Guide substantial software changes through gated stages"
+  default_prompt: "Use $ask-then-do-it to guide this software change from discovery through verified review."

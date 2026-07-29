@@ -9,30 +9,30 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 ADAPTER = ROOT / "adapters" / "codex"
-SKILLS = ADAPTER / "plugin" / "grill-me" / "skills"
+SKILLS = ADAPTER / "plugin" / "ask-then-do-it" / "skills"
 CATALOG = ROOT / "core" / "rules" / "rules.yaml"
 MANIFEST = ADAPTER / "conformance.yaml"
 
 LEGACY_SKILLS = {
-    "ai-dev-workflow",
-    "grill-requirements",
+    "ask-then-do-it",
+    "ask-requirements",
     "implement-tdd",
     "plan-tickets",
     "review-code",
     "write-spec",
 }
-EXPECTED_SKILLS = LEGACY_SKILLS | {"grill-with-docs", "improve-architecture"}
+EXPECTED_SKILLS = LEGACY_SKILLS | {"ask-with-docs", "improve-architecture"}
 
 # This snapshot was captured from the approved v1 source before migration. It
 # protects skill behavior and Codex provider metadata from accidental rewrites.
 EXPECTED_FILE_HASHES = {
-    "ai-dev-workflow/SKILL.md":
+    "ask-then-do-it/SKILL.md":
         "87c0efd63fd96910c8b24479e94dc5f7412cc7e5e58977c30ede067699dea546",
-    "ai-dev-workflow/agents/openai.yaml":
+    "ask-then-do-it/agents/openai.yaml":
         "25b6062bef499ea486c1193b55e2cb2eadb40727238135ba113c3fe9e202c6b6",
-    "grill-requirements/SKILL.md":
+    "ask-requirements/SKILL.md":
         "4100d4cd1e0300d16d86641789613556f436b5e7f4f8d88081e0402ffc27bcd6",
-    "grill-requirements/agents/openai.yaml":
+    "ask-requirements/agents/openai.yaml":
         "c9051df766cd762decded3d267bde5ec7fce335a7c772e1fcff30419d03c065a",
     "implement-tdd/SKILL.md":
         "3ccaeac0700c32ec92cf8cc208ebdf569e22265b2adc9c8ae9b2f74a1a2a81b3",
@@ -106,7 +106,7 @@ class CodexAdapterTests(unittest.TestCase):
         self.assertEqual(inventory.get("intermediate_root"), "adapters/codex/skills")
         self.assertEqual(
             inventory.get("destination_root"),
-            "adapters/codex/plugin/grill-me/skills",
+            "adapters/codex/plugin/ask-then-do-it/skills",
         )
         entries = inventory.get("skills")
         self.assertIsInstance(entries, list)
@@ -120,7 +120,7 @@ class CodexAdapterTests(unittest.TestCase):
             )
             self.assertEqual(
                 entry.get("destination"),
-                f"adapters/codex/plugin/grill-me/skills/{skill_id}",
+                f"adapters/codex/plugin/ask-then-do-it/skills/{skill_id}",
             )
             rollback = entry.get("rollback")
             self.assertEqual(rollback.get("from"), entry["destination"])
@@ -223,10 +223,10 @@ class CodexAdapterTests(unittest.TestCase):
                 self.assertIn("Match user-facing", text)
 
     def test_grill_with_docs_enforces_the_knowledge_approval_contract(self) -> None:
-        skill = SKILLS / "grill-with-docs"
+        skill = SKILLS / "ask-with-docs"
         text = (skill / "SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("name: grill-with-docs", text)
-        self.assertIn("core_version` `3.0.0`", text)
+        self.assertIn("name: ask-with-docs", text)
+        self.assertIn("core_version` `1.0.0`", text)
         self.assertIn("exactly one question", text)
         self.assertIn("Draft Working Notes", text)
         for state in ("`proposed`", "`confirmed`", "`unresolved`"):
@@ -251,10 +251,10 @@ class CodexAdapterTests(unittest.TestCase):
         interface = metadata.get("interface", {})
         self.assertEqual(interface.get("display_name"), "Grill with Docs")
         self.assertIn("knowledge", interface.get("short_description", "").lower())
-        self.assertIn("$grill-with-docs", interface.get("default_prompt", ""))
+        self.assertIn("$ask-with-docs", interface.get("default_prompt", ""))
 
     def test_orchestrator_declares_runtime_capabilities_before_routing(self) -> None:
-        text = (SKILLS / "ai-dev-workflow" / "SKILL.md").read_text(
+        text = (SKILLS / "ask-then-do-it" / "SKILL.md").read_text(
             encoding="utf-8"
         )
         self.assertIn("## Declare capabilities", text)
@@ -263,14 +263,14 @@ class CodexAdapterTests(unittest.TestCase):
             self.assertIn(capability, text)
         self.assertIn("downgrade", text.lower())
 
-    def test_orchestrator_routes_v3_modes_and_honors_direct_selection(self) -> None:
-        text = (SKILLS / "ai-dev-workflow" / "SKILL.md").read_text(
+    def test_orchestrator_routes_modes_and_honors_direct_selection(self) -> None:
+        text = (SKILLS / "ask-then-do-it" / "SKILL.md").read_text(
             encoding="utf-8"
         )
         self.assertIn("## Honor explicit user control", text)
         self.assertIn("## Choose the requirement mode", text)
-        self.assertIn("$grill-requirements", text)
-        self.assertIn("$grill-with-docs", text)
+        self.assertIn("$ask-requirements", text)
+        self.assertIn("$ask-with-docs", text)
         self.assertIn("$improve-architecture", text)
         for condition in (
             "Project Knowledge Base already exists",
@@ -291,21 +291,10 @@ class CodexAdapterTests(unittest.TestCase):
         self.assertIn("$write-spec", text)
         self.assertIn("Knowledge Base Change Summary", text)
 
-    def test_orchestrator_migrates_v2_knowledge_non_destructively(self) -> None:
-        text = (SKILLS / "ai-dev-workflow" / "SKILL.md").read_text(
-            encoding="utf-8"
-        )
-        self.assertIn("## Migrate v2 on first use", text)
-        self.assertIn("approved v2 artifacts", text)
-        self.assertIn("propose an initial Project Knowledge Base", text)
-        self.assertIn("explicit approval", text)
-        self.assertIn("unresolved", text)
-        self.assertIn("must not rewrite, relabel, or overwrite", text.lower())
-
     def test_artifact_producers_require_the_portable_envelope(self) -> None:
         producers = {
-            "grill-requirements": "Requirement Decision Record",
-            "grill-with-docs": "Requirement Decision Record",
+            "ask-requirements": "Requirement Decision Record",
+            "ask-with-docs": "Requirement Decision Record",
             "write-spec": "Specification",
             "plan-tickets": "Ticket Plan",
             "implement-tdd": "Implementation Evidence",
@@ -331,8 +320,8 @@ class CodexAdapterTests(unittest.TestCase):
                     self.assertIn(field, text)
 
         for skill_id in (
-            "grill-requirements",
-            "grill-with-docs",
+            "ask-requirements",
+            "ask-with-docs",
             "write-spec",
             "plan-tickets",
         ):

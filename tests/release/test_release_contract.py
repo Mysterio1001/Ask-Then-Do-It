@@ -21,7 +21,7 @@ REQUIRED_VALIDATION_CHECKS = [
     "reproducible-build",
     "zip-equivalence",
     "sha256-verification",
-    "v2-preservation",
+    "removed-artifact-scan",
     "release-architecture-diagnosis",
 ]
 
@@ -57,36 +57,30 @@ def top_level_scalar(path: Path, key: str) -> str:
 
 
 class ReleaseContractTests(unittest.TestCase):
-    def test_v3_release_identity_and_validation_gate_are_declared(self) -> None:
+    def test_first_release_identity_and_validation_gate_are_declared(self) -> None:
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
         self.assertEqual(config["schema_version"], 2)
-        self.assertEqual(config["release_version"], "3.0.0")
-        self.assertEqual(config["core_version"], "3.0.0")
+        self.assertEqual(config["release_version"], "1.0.0")
+        self.assertEqual(config["core_version"], "1.0.0")
         self.assertEqual(
             config["required_validation_checks"], REQUIRED_VALIDATION_CHECKS
         )
 
-    def test_validated_2_1_release_artifacts_remain_byte_identical(self) -> None:
+    def test_current_distribution_has_exactly_two_verified_archives(self) -> None:
+        checksums = (ROOT / "dist" / "checksums.sha256").read_text(
+            encoding="ascii"
+        ).splitlines()
         expected = {
-            "dist/grill-me-2.1.0.zip":
-                "10c9b95e9e75c9dac20e570d0f7ed75ef71e4ad0d59e755f53d27ec5a729236d",
-            "dist/generic-prompts-2.1.0.zip":
-                "5f5d6e86dbde9e2de99f68528c18df1ea1265b59f65d969a4aa9c70bee954254",
-            "docs/evidence/grill-me-release-2.1.0.md":
-                "cb740d91041363f15e262c090f20f33e7b5716ac554b61bfaa4b0a50f4589879",
+            "codex/ask-then-do-it-1.0.0.zip",
+            "generic/ask-then-do-it-generic-1.0.0.zip",
         }
-        for relative, digest in expected.items():
-            path = ROOT / relative
-            with self.subTest(path=relative):
-                self.assertTrue(path.is_file())
-                self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), digest)
-        self.assertEqual(
-            (ROOT / "dist" / "checksums-2.1.0.sha256").read_text(
-                encoding="ascii"
-            ),
-            "10c9b95e9e75c9dac20e570d0f7ed75ef71e4ad0d59e755f53d27ec5a729236d  grill-me-2.1.0.zip\n"
-            "5f5d6e86dbde9e2de99f68528c18df1ea1265b59f65d969a4aa9c70bee954254  generic-prompts-2.1.0.zip\n",
-        )
+        self.assertEqual({line.split("  ", 1)[1] for line in checksums}, expected)
+        for line in checksums:
+            digest, relative = line.split("  ", 1)
+            archive = ROOT / "dist" / relative
+            with self.subTest(archive=relative):
+                self.assertTrue(archive.is_file())
+                self.assertEqual(hashlib.sha256(archive.read_bytes()).hexdigest(), digest)
 
     def test_non_default_output_requires_explicit_test_opt_in(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
@@ -94,7 +88,7 @@ class ReleaseContractTests(unittest.TestCase):
             result = run_builder(CONFIG, output)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("--allow-test-output-root", result.stderr)
-            self.assertFalse((output / "grill-me").exists())
+            self.assertFalse((output / "codex").exists())
 
     def test_core_version_is_consistent_across_all_canonical_declarations(self) -> None:
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
@@ -123,8 +117,8 @@ class ReleaseContractTests(unittest.TestCase):
             result = run_builder(conflicting, output)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("core_version", result.stderr)
-            self.assertFalse((output / "grill-me").exists())
-            self.assertFalse((output / "generic-prompts-3.0.0").exists())
+            self.assertFalse((output / "codex").exists())
+            self.assertFalse((output / "generic").exists())
 
     def test_builder_rejects_unknown_configuration_fields(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
@@ -146,7 +140,7 @@ class ReleaseContractTests(unittest.TestCase):
                 "stale-prompt.md"
             ),
             "unlisted Skill": lambda config, _root: config["codex"]["skills"].remove(
-                "grill-with-docs"
+                "ask-with-docs"
             ),
         }
         for label, mutate in mutations.items():
@@ -161,13 +155,13 @@ class ReleaseContractTests(unittest.TestCase):
                         invalid, root / "dist", allow_test_output=True
                     )
                     self.assertNotEqual(result.returncode, 0)
-                    self.assertFalse((root / "dist" / "grill-me").exists())
+                    self.assertFalse((root / "dist" / "codex").exists())
 
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
             root = Path(temporary)
-            plugin = root / "source" / "grill-me"
+            plugin = root / "source" / "ask-then-do-it"
             shutil.copytree(
-                ROOT / "adapters" / "codex" / "plugin" / "grill-me", plugin
+                ROOT / "adapters" / "codex" / "plugin" / "ask-then-do-it", plugin
             )
             (plugin / "unexpected-runtime.txt").write_text(
                 "not approved runtime content", encoding="utf-8"

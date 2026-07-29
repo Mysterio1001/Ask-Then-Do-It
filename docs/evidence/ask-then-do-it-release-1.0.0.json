@@ -1,0 +1,17 @@
+{
+  "release_version": "1.0.0",
+  "checks": [
+    {"id": "automated-tests", "status": "passed", "command": "python -m unittest discover -s tests -p test_*.py", "outcome": "Ran 58 tests; OK"},
+    {"id": "codex-skill-validation", "status": "passed", "command": "quick_validate.py for eight canonical and eight packaged Skills", "outcome": "All 16 Skill validations passed"},
+    {"id": "codex-plugin-validation", "status": "passed", "command": "validate_plugin.py for canonical and packaged Plugin", "outcome": "Both Plugin validations passed"},
+    {"id": "codex-conformance", "status": "passed", "command": "validate_conformance.py for adapters/codex/conformance.yaml", "outcome": "Codex conforms to Core 1.0.0"},
+    {"id": "generic-conformance", "status": "passed", "command": "validate_conformance.py for adapters/generic-prompts/manifest.yaml", "outcome": "Generic prompts conform to Core 1.0.0"},
+    {"id": "codex-package-inventory", "status": "passed", "command": "Codex exact inventory and legal-copy tests", "outcome": "20 files with exactly eight Skills and both legal files"},
+    {"id": "generic-package-inventory", "status": "passed", "command": "Generic exact inventory and legal-copy tests", "outcome": "14 files with nine prompts, one combined workflow, manifest, guide and both legal files"},
+    {"id": "reproducible-build", "status": "passed", "command": "Build two complete releases and compare archive SHA-256", "outcome": "Both corresponding archives were byte-identical"},
+    {"id": "zip-equivalence", "status": "passed", "command": "Release safety ZIP-to-directory equivalence tests", "outcome": "Both ZIPs equal their generated directories"},
+    {"id": "sha256-verification", "status": "passed", "command": "Verify dist/checksums.sha256", "outcome": "Exactly two current entries match the archives"},
+    {"id": "removed-artifact-scan", "status": "passed", "command": "Identity, documentation, migration and output inventory scans", "outcome": "No active old package or command alias remains in consumer outputs"},
+    {"id": "release-architecture-diagnosis", "status": "passed", "command": "Read-only twelve-lens release diagnosis", "outcome": "No release-blocking architecture finding"}
+  ]
+}

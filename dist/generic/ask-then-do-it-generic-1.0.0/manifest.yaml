@@ -1,0 +1,21 @@
+# GENERATED FILE — DO NOT EDIT
+schema_version: 1
+package_id: "ask-then-do-it"
+display_name: "Ask Then Do It"
+release_version: "1.0.0"
+core_version: "1.0.0"
+adapter_id: "generic-prompts"
+entrypoint: "generic-workflow.md"
+artifact_persistence: "user-managed-markdown"
+capabilities:
+  - "conversation"
+source_modules:
+  - "bootstrap.md"
+  - "orchestration.md"
+  - "requirements.md"
+  - "documented-requirements.md"
+  - "specification.md"
+  - "ticket-planning.md"
+  - "tdd-implementation.md"
+  - "review.md"
+  - "architecture-improvement.md"

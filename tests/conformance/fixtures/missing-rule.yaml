@@ -1,7 +1,7 @@
 adapter_id: fixture-missing-rule
 adapter_version: 1.0.0
 target: test-harness
-core_version: 3.0.0
+core_version: 1.0.0
 capabilities:
   - conversation
 artifact_persistence: user-managed-markdown
@@ -27,7 +27,6 @@ implemented_rules:
   - ARCH-REFLOW-001
   - ROUTE-USER-001
   - ROUTE-DOCS-001
-  - MIGRATE-V2-001
 capability_evidence:
   conversation:
     - tests/conformance/test_validator.py

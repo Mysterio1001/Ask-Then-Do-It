@@ -1,4 +1,4 @@
-core_version: 3.0.0
+core_version: 1.0.0
 capability_profiles:
   conversation:
     includes: []
@@ -101,7 +101,3 @@ rules:
     mandatory: true
     module: orchestration
     statement: Announce the evidence-based reason whenever documented requirement interrogation is selected automatically.
-  - id: MIGRATE-V2-001
-    mandatory: true
-    module: project-knowledge
-    statement: Initialize v3 project knowledge from approved v2 evidence without rewriting approved v2 artifacts.

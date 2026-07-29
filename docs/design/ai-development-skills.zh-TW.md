@@ -1,16 +1,16 @@
-# 可攜式 AI 開發工作流：Core v3 設計說明
+# 可攜式 AI 開發工作流：Core 1.0.0 設計說明
 
-本文件是給人類閱讀的繁體中文設計說明。正式規則以已核准的 [Portable AI Development Workflow - v3 Specification](../specs/ai-development-skills-v3.md) 為準，實作順序以已核准的 [v3 Ticket Plan](../plans/ai-development-skills-v3.md) 為準。本文件只解釋概念，不取代英文規格。
+本文件是給人類閱讀的繁體中文設計說明。正式規則以已核准的 [Ask Then Do It 1.0.0 Specification](../specs/ask-then-do-it-1.0.0.md) 為準，實作順序以已核准的 [Ask Then Do It 1.0.0 Ticket Plan](../plans/ask-then-do-it-1.0.0.md) 為準。本文件只解釋概念，不取代英文規格。
 
 ## 要解決的問題
 
-Grill Me 的核心方法是「先問清楚，再寫規格、拆 Ticket、用 TDD 實作，最後 Review」。Core v2 已經把這套方法從 Codex 格式中抽離，但長期使用還有三個問題：
+Ask Then Do It 的核心方法是「先問清楚，再寫規格、拆 Ticket、用 TDD 實作，最後 Review」。模型中立的 Core 已經把這套方法從 Codex 格式中抽離，但長期使用仍要處理三個問題：
 
 - 新對話常要重新教 AI 專案術語、架構與決策。
 - 不同模型做 Review 時，使用的重構詞彙與深度不一致。
 - AI 發現架構問題後，容易直接提議動手重構，跳過產品規格與批准程序。
 
-Core v3 因此新增「專案知識」、「固定 12 項檢查視角」和「只診斷、不直接動工的架構改善」三個能力。
+Core 因此包含「專案知識」、「固定 12 項檢查視角」和「只診斷、不直接動工的架構改善」三個能力。
 
 ## 三層架構仍然不變
 
@@ -20,7 +20,7 @@ Core v3 因此新增「專案知識」、「固定 12 項檢查視角」和「�
 | `adapters/` | 把 Core 翻譯成 Generic prompts 或 Codex Skills | 可以配合主機特性改寫說法，但不能弱化規則 |
 | `docs/` | Specification、Plan、設計說明、使用指南、驗證證據 | `specs/` 與 `plans/` 的英文檔是模型規範；`design/`、`guides/` 是給人看的說明 |
 
-所以 `$grill-with-docs` 是 Codex 的入口名稱，`documented-requirements.md` 是 Generic 的入口名稱；兩者背後遵守相同的 Core 契約。
+所以 `$ask-with-docs` 是 Codex 的入口名稱，`documented-requirements.md` 是 Generic 的入口名稱；兩者背後遵守相同的 Core 契約。
 
 ## 能力 Profiles
 
@@ -32,7 +32,7 @@ Core v3 因此新增「專案知識」、「固定 12 項檢查視角」和「�
 
 能力未知時一律從 `conversation` 開始。這個限制適用各種模型，不是 Codex 專用規則。
 
-## v3 完整流程
+## 完整流程
 
 ```mermaid
 flowchart TD
@@ -118,18 +118,6 @@ AI 只能從已核准或已接受的證據更新正式 Knowledge Base。每次�
 
 少一項就只能做模擬。報告即使變成 `accepted`，仍要回到 Specification、Ticket Plan 與 TDD，不能直接重構。
 
-## v2 第一次升級
-
-`MIGRATE-V2-001` 規定 v3 第一次使用時採非破壞性遷移：
-
-1. 只讀取已有批准證據的 v2 Artifacts。
-2. 提出初始 Knowledge Base 與完整變更摘要。
-3. 缺少或矛盾資訊標成 unresolved。
-4. 等使用者明確批准後才建立正式 Knowledge Base。
-5. 絕不改寫 v2 的 Requirement、Specification、Plan、Evidence 或 Review。
-
-若使用者拒絕或遷移失敗，舊文件保持原樣，v3 可以在沒有正式 Knowledge Base 的情況下繼續。
-
 ## 八種 Artifact
 
 | Artifact | 用途 |
@@ -168,7 +156,7 @@ docs/
 
 ## 官方支援與未來 Adapter
 
-Core v3 仍只提供兩種正式實作方向：Generic prompts 與 Codex Plugin。其他模型可以先使用 Generic prompts；只有專用 Adapter 實作並通過共享規則、主機原生驗證與情境測試後，才會標示為專用支援。
+Core 1.0.0 提供兩種正式實作方向：Generic prompts 與 Codex Plugin。其他模型可以先使用 Generic prompts；只有專用 Adapter 實作並通過共享規則、主機原生驗證與情境測試後，才會標示為專用支援。
 
 新增 Adapter 時，先證明能力，再映射每個 mandatory Rule ID，最後驗證不能虛構檔案、測試、持久化、獨立 Review 或刪除實驗。
 

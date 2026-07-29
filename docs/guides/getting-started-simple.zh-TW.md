@@ -1,8 +1,8 @@
-# Grill Me 超簡單使用說明
+# Ask Then Do It 超簡單使用說明
 
-這份說明寫給第一次使用 Grill Me 的人。就算你只有小學三年級，也可以跟著做。
+這份說明寫給第一次使用 Ask Then Do It 的人。就算你只有小學三年級，也可以跟著做。
 
-Grill Me 是一套教 AI「不要急著寫程式」的方法。它會先問清楚你想做什麼，再寫設計、分工作、做測試，最後檢查成果。
+Ask Then Do It 是一套教 AI「不要急著寫程式」的方法。它會先問清楚你想做什麼，再寫設計、分工作、做測試，最後檢查成果。
 
 ## 先記住一句話
 
@@ -114,7 +114,7 @@ AI 會像一位很有耐心的小記者：
 
 如果只是全新的小問題，可以用一般 Requirements。
 
-如果正在修改舊系統、已經有專案筆記，或這次會談到很多專有名詞與架構，AI 會使用 `$grill-with-docs`。
+如果正在修改舊系統、已經有專案筆記，或這次會談到很多專有名詞與架構，AI 會使用 `$ask-with-docs`。
 
 它像一位一邊訪問、一邊整理筆記的小記者：
 
@@ -308,39 +308,39 @@ Independence: non-independent
 
 | Skill | 像誰 | 工作 |
 | --- | --- | --- |
-| `$ai-dev-workflow` | 隊長 | 看現在走到哪裡，安排下一位隊員 |
-| `$grill-requirements` | 小記者 | 一次問一題，把需求問清楚 |
-| `$grill-with-docs` | 筆記記者 | 一次問一題，還會整理專案知識 |
+| `$ask-then-do-it` | 隊長 | 看現在走到哪裡，安排下一位隊員 |
+| `$ask-requirements` | 小記者 | 一次問一題，把需求問清楚 |
+| `$ask-with-docs` | 筆記記者 | 一次問一題，還會整理專案知識 |
 | `$write-spec` | 設計師 | 寫 Specification 設計書 |
 | `$plan-tickets` | 任務管理員 | 把大工作拆成小 Tickets |
 | `$implement-tdd` | 工程師 | 先測試，再寫程式，最後整理 |
 | `$review-code` | 檢查員 | 找錯誤、風險和漏掉的事情 |
 | `$improve-architecture` | 房屋健檢員 | 找大架構問題，但不直接拆改 |
 
-通常從 `$ai-dev-workflow` 開始就好。隊長會判斷該請誰工作。
+通常從 `$ask-then-do-it` 開始就好。隊長會判斷該請誰工作。
 
 ## 在 Codex 裡怎麼用
 
-先安裝並啟用 Grill Me Plugin，再開一個新的 Codex task。
+先安裝並啟用 Ask Then Do It Plugin，再開一個新的 Codex task。
 
 輸入：
 
 ```text
-使用 $ai-dev-workflow 幫我開發一個班級借書系統。
+使用 $ask-then-do-it 幫我開發一個班級借書系統。
 目前只有想法，請先不要寫程式。
 ```
 
 Codex 應該先說明能力，再開始一次問一題。
 
-也可以不寫 Skill 名稱，直接說明一個重大又不清楚的開發需求。Codex 可能會自動選擇 `$ai-dev-workflow`。
+也可以不寫 Skill 名稱，直接說明一個重大又不清楚的開發需求。Codex 可能會自動選擇 `$ask-then-do-it`。
 
-如果你一定要它使用完整流程，明確寫出 `$ai-dev-workflow` 最可靠。
+如果你一定要它使用完整流程，明確寫出 `$ask-then-do-it` 最可靠。
 
 Codex 的安裝、更新與移除方式請閱讀 [Codex Plugin 使用說明](codex.zh-TW.md)。
 
 ## 在 Gemini 或其他 AI 裡怎麼用
 
-開啟建置後的 `dist/generic-prompts-2.1.0/generic-workflow.md`，複製全部內容，貼到一個新的 AI 對話。
+開啟建置後的 `dist/generic/ask-then-do-it-generic-1.0.0/generic-workflow.md`，複製全部內容，貼到一個新的 AI 對話。
 
 接著輸入：
 
@@ -406,7 +406,7 @@ Codex 的安裝、更新與移除方式請閱讀 [Codex Plugin 使用說明](cod
 可以直接提醒它：
 
 ```text
-你一次問了很多題。請遵守 Grill Me，每次只問一題，並提供建議和主要取捨。
+你一次問了很多題。請遵守 Ask Then Do It，每次只問一題，並提供建議和主要取捨。
 ```
 
 ```text
@@ -423,7 +423,7 @@ Codex 的安裝、更新與移除方式請閱讀 [Codex Plugin 使用說明](cod
 
 ## 最後再記一次
 
-Grill Me 不是叫 AI 做得更快，而是幫助 AI 少做錯事。
+Ask Then Do It 不是叫 AI 做得更快，而是幫助 AI 少做錯事。
 
 ```text
 問清楚 → 寫清楚 → 分小步 → 先測試 → 再施工 → 最後檢查

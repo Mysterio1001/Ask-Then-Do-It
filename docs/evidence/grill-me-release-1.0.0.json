@@ -1,0 +1,77 @@
+{
+  "release_version": "1.0.0",
+  "checks": [
+    {
+      "id": "automated-tests",
+      "status": "passed",
+      "command": "python -m unittest discover -s tests -p \"test_*.py\"",
+      "outcome": "Ran 52 tests in 4.190s; OK"
+    },
+    {
+      "id": "codex-skill-validation",
+      "status": "passed",
+      "command": "quick_validate.py for all eight source Skills and all eight packaged Skills",
+      "outcome": "16 validations returned Skill is valid!"
+    },
+    {
+      "id": "codex-plugin-validation",
+      "status": "passed",
+      "command": "validate_plugin.py against source and dist/codex/grill-me",
+      "outcome": "Both source and packaged Plugin validation passed"
+    },
+    {
+      "id": "codex-conformance",
+      "status": "passed",
+      "command": "python scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/codex/conformance.yaml",
+      "outcome": "Conformance passed: codex against core 1.0.0"
+    },
+    {
+      "id": "generic-conformance",
+      "status": "passed",
+      "command": "python scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/generic-prompts/manifest.yaml",
+      "outcome": "Conformance passed: generic-prompts against core 1.0.0"
+    },
+    {
+      "id": "codex-package-inventory",
+      "status": "passed",
+      "command": "Codex source-equivalence and exact package inventory tests",
+      "outcome": "18 runtime files: manifest, start guide, eight SKILL.md files, and eight UI metadata files"
+    },
+    {
+      "id": "generic-package-inventory",
+      "status": "passed",
+      "command": "Generic source-equivalence and exact package inventory tests",
+      "outcome": "12 runtime files: start guide, combined workflow, generated manifest, and nine prompt sources"
+    },
+    {
+      "id": "reproducible-build",
+      "status": "passed",
+      "command": "Build two isolated complete releases and compare every relative file SHA-256",
+      "outcome": "All files in two clean builds were byte-identical"
+    },
+    {
+      "id": "zip-equivalence",
+      "status": "passed",
+      "command": "Expand both archives and compare every relative file hash with its generated directory",
+      "outcome": "Codex and Generic ZIP contents were byte-equivalent to their unpacked directories"
+    },
+    {
+      "id": "sha256-verification",
+      "status": "passed",
+      "command": "Verify both dist/checksums.sha256 entries against the current archives",
+      "outcome": "Exactly two entries matched the Codex and Generic archive bytes"
+    },
+    {
+      "id": "removed-artifact-scan",
+      "status": "passed",
+      "command": "Scan active runtime, docs, release, and dist areas for migration, stale identities, placeholders, caches, and forbidden package content",
+      "outcome": "Migration, stale active identity, placeholder, and distribution inventory scans passed"
+    },
+    {
+      "id": "release-architecture-diagnosis",
+      "status": "passed",
+      "command": "Read-only twelve-lens diagnosis with simulated deletion analysis",
+      "outcome": "Complete draft Architecture Improvement Report created; no release-blocking finding"
+    }
+  ]
+}

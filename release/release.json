@@ -1,17 +1,17 @@
 {
   "schema_version": 2,
-  "package_id": "grill-me",
-  "display_name": "Grill Me — AI Development Workflow",
-  "release_version": "3.0.0",
-  "core_version": "3.0.0",
+  "package_id": "ask-then-do-it",
+  "display_name": "Ask Then Do It",
+  "release_version": "1.0.0",
+  "core_version": "1.0.0",
   "codex": {
-    "source": "adapters/codex/plugin/grill-me",
-    "directory": "grill-me",
-    "archive": "grill-me-3.0.0.zip",
+    "source": "adapters/codex/plugin/ask-then-do-it",
+    "directory": "codex/ask-then-do-it",
+    "archive": "codex/ask-then-do-it-1.0.0.zip",
     "skills": [
-      "ai-dev-workflow",
-      "grill-requirements",
-      "grill-with-docs",
+      "ask-then-do-it",
+      "ask-requirements",
+      "ask-with-docs",
       "implement-tdd",
       "improve-architecture",
       "plan-tickets",
@@ -21,9 +21,10 @@
   },
   "generic": {
     "source": "adapters/generic-prompts",
-    "directory": "generic-prompts-3.0.0",
-    "archive": "generic-prompts-3.0.0.zip",
+    "directory": "generic/ask-then-do-it-generic-1.0.0",
+    "archive": "generic/ask-then-do-it-generic-1.0.0.zip",
     "entrypoint": "generic-workflow.md",
+    "start_guide": "release/generic/START-HERE.zh-TW.md",
     "modules": [
       "bootstrap.md",
       "orchestration.md",
@@ -47,14 +48,12 @@
     "reproducible-build",
     "zip-equivalence",
     "sha256-verification",
-    "v2-preservation",
+    "removed-artifact-scan",
     "release-architecture-diagnosis"
   ],
   "managed_outputs": [
-    "grill-me",
-    "grill-me-3.0.0.zip",
-    "generic-prompts-3.0.0",
-    "generic-prompts-3.0.0.zip",
+    "codex",
+    "generic",
     "checksums.sha256"
   ]
 }

@@ -54,9 +54,13 @@ class GenericReleaseTests(unittest.TestCase):
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
         generic = config["generic"]
         self.assertEqual(generic["source"], "adapters/generic-prompts")
-        self.assertEqual(generic["directory"], "generic-prompts-3.0.0")
-        self.assertEqual(generic["archive"], "generic-prompts-3.0.0.zip")
+        self.assertEqual(generic["directory"], "generic/ask-then-do-it-generic-1.0.0")
+        self.assertEqual(generic["archive"], "generic/ask-then-do-it-generic-1.0.0.zip")
         self.assertEqual(generic["entrypoint"], "generic-workflow.md")
+        self.assertEqual(
+            generic["start_guide"],
+            "release/generic/START-HERE.zh-TW.md",
+        )
         self.assertEqual(generic["modules"], MODULES)
         self.assertFalse((SOURCE / "generic-workflow.md").exists())
 
@@ -80,8 +84,8 @@ class GenericReleaseTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
 
-            package = output_root / "generic-prompts-3.0.0"
-            archive = output_root / "generic-prompts-3.0.0.zip"
+            package = output_root / "generic" / "ask-then-do-it-generic-1.0.0"
+            archive = output_root / "generic" / "ask-then-do-it-generic-1.0.0.zip"
             checksums = output_root / "checksums.sha256"
             actual_files = {
                 path.relative_to(package).as_posix()
@@ -89,11 +93,26 @@ class GenericReleaseTests(unittest.TestCase):
                 if path.is_file()
             }
             expected_files = {
+                "START-HERE.zh-TW.md",
+                "LICENSE",
+                "THIRD_PARTY_NOTICES.md",
                 "generic-workflow.md",
                 "manifest.yaml",
                 *{f"prompts/{name}" for name in MODULES},
             }
             self.assertEqual(actual_files, expected_files)
+
+            start_guide = (package / "START-HERE.zh-TW.md").read_text(
+                encoding="utf-8"
+            )
+            for required in (
+                "貼上一次",
+                "generic-workflow.md",
+                "第一個需求問題",
+                "自行保存",
+                "Conversation-only",
+            ):
+                self.assertIn(required, start_guide)
 
             for name in MODULES:
                 self.assertEqual(
@@ -106,15 +125,17 @@ class GenericReleaseTests(unittest.TestCase):
             self.assertIn("Use the included sections internally", combined)
             self.assertIn("do not ask the user to paste another module", combined.lower())
             self.assertIn("Conversation-only capability boundary", combined)
+            self.assertIn("same effective response", combined)
+            self.assertIn("exactly one high-impact requirement question", combined)
             self.assertIn("explicit approval", combined)
             self.assertIn("UNEXECUTED IMPLEMENTATION GUIDANCE", combined)
             positions = [combined.index(f"BEGIN SOURCE: {name}") for name in MODULES]
             self.assertEqual(positions, sorted(positions))
 
             manifest = read_generated_manifest(package / "manifest.yaml")
-            self.assertEqual(manifest["package_id"], "grill-me")
-            self.assertEqual(manifest["release_version"], "3.0.0")
-            self.assertEqual(manifest["core_version"], "3.0.0")
+            self.assertEqual(manifest["package_id"], "ask-then-do-it")
+            self.assertEqual(manifest["release_version"], "1.0.0")
+            self.assertEqual(manifest["core_version"], "1.0.0")
             self.assertEqual(manifest["adapter_id"], "generic-prompts")
             self.assertEqual(manifest["capabilities"], ["conversation"])
             self.assertEqual(manifest["source_modules"], MODULES)
@@ -122,12 +143,12 @@ class GenericReleaseTests(unittest.TestCase):
             with zipfile.ZipFile(archive) as bundle:
                 for relative in expected_files:
                     self.assertEqual(
-                        bundle.read(f"generic-prompts-3.0.0/{relative}"),
+                        bundle.read(f"ask-then-do-it-generic-1.0.0/{relative}"),
                         (package / relative).read_bytes(),
                     )
             self.assertEqual(
                 checksums.read_text(encoding="ascii"),
-                f"{sha256(archive)}  generic-prompts-3.0.0.zip\n",
+                f"{sha256(archive)}  generic/ask-then-do-it-generic-1.0.0.zip\n",
             )
 
 

@@ -75,7 +75,6 @@ class ConformanceValidatorTests(unittest.TestCase):
             "ARCH-REFLOW-001",
             "ROUTE-USER-001",
             "ROUTE-DOCS-001",
-            "MIGRATE-V2-001",
         }
         with CATALOG.open(encoding="utf-8") as handle:
             catalog = yaml.safe_load(handle)
@@ -86,10 +85,10 @@ class ConformanceValidatorTests(unittest.TestCase):
         }
         self.assertEqual(actual, expected)
 
-    def test_core_v3_defines_documented_requirements_artifacts(self) -> None:
+    def test_core_defines_documented_requirements_artifacts(self) -> None:
         with CATALOG.open(encoding="utf-8") as handle:
             catalog = yaml.safe_load(handle)
-        self.assertEqual(catalog["core_version"], "3.0.0")
+        self.assertEqual(catalog["core_version"], "1.0.0")
 
         knowledge = (
             ROOT / "core" / "artifacts" / "project-knowledge-base.md"
@@ -123,7 +122,7 @@ class ConformanceValidatorTests(unittest.TestCase):
         self.assertIn("exactly one question", module)
         self.assertIn("single explicit approval", module)
 
-    def test_core_v3_defines_the_twelve_review_lenses(self) -> None:
+    def test_core_defines_the_twelve_review_lenses(self) -> None:
         lenses = (
             ROOT / "core" / "references" / "architecture-refactoring-lenses.md"
         ).read_text(encoding="utf-8")
@@ -155,7 +154,7 @@ class ConformanceValidatorTests(unittest.TestCase):
         self.assertIn("all twelve", review)
         self.assertIn("changed code", review)
 
-    def test_core_v3_defines_safe_architecture_diagnosis(self) -> None:
+    def test_core_defines_safe_architecture_diagnosis(self) -> None:
         module = (
             ROOT / "core" / "modules" / "architecture-improvement.md"
         ).read_text(encoding="utf-8")
@@ -198,7 +197,7 @@ class ConformanceValidatorTests(unittest.TestCase):
             self.assertIn(state, report)
         self.assertIn("MUST NOT authorize", report)
 
-    def test_core_v3_routes_documented_requirements_and_architecture(self) -> None:
+    def test_core_routes_documented_requirements_and_architecture(self) -> None:
         orchestration = (
             ROOT / "core" / "modules" / "orchestration.md"
         ).read_text(encoding="utf-8")

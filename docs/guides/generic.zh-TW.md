@@ -1,10 +1,10 @@
-# Grill Me Generic prompts 使用說明
+# Ask Then Do It Generic prompts 使用說明
 
-本指南說明如何在 Gemini 或其他一般語言模型使用 Grill Me。它不要求 Codex，也不把 Codex 的 Plugin、工具或 multi-agent 能力套到別的模型。正式規則以 [Portable AI Development Workflow v3 Specification](../specs/ai-development-skills-v3.md) 為準；設計理由請見 [繁體中文設計說明](../design/ai-development-skills.zh-TW.md)。
+本指南說明如何在 Gemini 或其他一般語言模型使用 Ask Then Do It。它不要求 Codex，也不把 Codex 的 Plugin、工具或 multi-agent 能力套到別的模型。正式規則以 [Ask Then Do It Clean-slate 1.0.0 Specification](../specs/ask-then-do-it-1.0.0.md) 為準；設計理由請見 [繁體中文設計說明](../design/ai-development-skills.zh-TW.md)。
 
 ## 目前版本
 
-Repository 內的 v3 canonical prompts 與 `dist/generic-prompts-3.0.0/` release 都已包含 Knowledge Base 與架構診斷。舊的 `2.1.0` versioned directory、archives 與 checksum snapshot 仍保留，不會被 v3 builder 覆寫。
+Repository 內的 canonical prompts 與 `dist/generic/ask-then-do-it-generic-1.0.0/` release 都已包含 Knowledge Base 與架構診斷。`1.0.0` 是第一個公開版本。
 
 ## 建置與檔案
 
@@ -16,10 +16,11 @@ python scripts/build_release.py
 
 目前已驗證的 Generic 套件包含：
 
-主要入口是 `dist/generic-prompts-3.0.0/generic-workflow.md`；模組化檔案位於 `dist/generic-prompts-3.0.0/prompts/`。
+主要入口是 `dist/generic/ask-then-do-it-generic-1.0.0/generic-workflow.md`；模組化檔案位於 `dist/generic/ask-then-do-it-generic-1.0.0/prompts/`。
 
 ```text
-dist/generic-prompts-3.0.0/
+dist/generic/ask-then-do-it-generic-1.0.0/
+├─ START-HERE.zh-TW.md
 ├─ generic-workflow.md
 ├─ manifest.yaml
 └─ prompts/
@@ -34,21 +35,22 @@ dist/generic-prompts-3.0.0/
    └─ architecture-improvement.md
 ```
 
-v3 source 位於 `adapters/generic-prompts/`，相較 v2 另增加：
+Canonical source 位於 `adapters/generic-prompts/`，其中包含：
 
 - `documented-requirements.md`
 - `architecture-improvement.md`
 
-這兩個模組已進入 `3.0.0` 的 all-in-one 與 `prompts/` 套件。
+這兩個模組已進入 `1.0.0` 的 all-in-one 與 `prompts/` 套件。
 
-## 一份檔案快速開始
+## 一份檔案快速開始：貼上一次
 
 建議使用 all-in-one `generic-workflow.md`：
 
 1. 複製全文到新對話的 system、developer 或第一則 user prompt；位置取決於模型介面。
 2. 提供需求、偏好語言、能力證據及目前擁有的完整 Artifacts。
-3. 新工作流會從需求開始；恢復工作流會先驗證 Artifact 與核准證據，再前往第一個未完成階段。
-4. 每次只處理一個階段或一個需求問題，並在 stop condition 停下。
+3. 新工作流會在第一個有效回應中簡短說明能力與階段，然後立刻提出第一個需求問題，並附上建議答案與主要取捨；不需要再說「開始」。
+4. 恢復工作流會先驗證 Artifact 與核准證據，再前往第一個未完成階段，不會無故重新開始需求審問。
+5. 每次只處理一個階段或一個需求問題，並在 stop condition 停下。
 
 範例：
 
@@ -92,7 +94,7 @@ Generic adapter 唯一經驗證的 profile 是 `conversation`。模型不得聲�
 
 | Prompt | 用途 |
 | --- | --- |
-| `bootstrap.md` | 宣告能力、盤點 Artifacts、處理 v2 第一次升級 |
+| `bootstrap.md` | 宣告能力、盤點 Artifacts，fresh workflow 立刻進入第一個需求問題 |
 | `orchestration.md` | 判斷第一個未完成階段與自動路由 |
 | `requirements.md` | 一次問一個高影響問題 |
 | `documented-requirements.md` | 一次問一題，同時維護 Draft Working Notes 與 Project Knowledge Base 提案 |
@@ -134,12 +136,6 @@ AI 必須一起展示 Requirement Decision Record 及 Knowledge Base 的 `additi
 
 模擬刪除只分析「拿掉它會壞什麼」，不真的刪除、移動或改寫檔案。Architecture Improvement Report 即使變成 `accepted`，也只能回到 Specification；仍要核准 Specification、Ticket Plan，再由有工具的主機執行 TDD。
 
-## 從 v2 第一次使用 v3
-
-提供完整且有核准證據的 v2 Artifacts。AI 會提出初始 Knowledge Base、列出變更並等待明確批准。
-
-AI 不能改寫、重新標記或覆蓋舊的 Requirement、Specification、Plan、Evidence 或 Review。資料不足或矛盾時要標記 `unresolved`。如果你拒絕提案，舊 Artifacts 保持原樣。
-
 ## 保存 Artifact 與恢復工作流
 
 Conversation-only 模型沒有可靠的跨 session 記憶。請保存：
@@ -156,12 +152,12 @@ Conversation-only 模型沒有可靠的跨 session 記憶。請保存：
 
 ## 驗證與完整性
 
-目前的 v3 套件驗證命令是：
+目前的 `1.0.0` 套件驗證命令是：
 
 ```powershell
 python -m unittest discover -s tests/generic -p "test_*.py" -v
 python -m unittest discover -s tests/release -p "test_*.py" -v
-Get-FileHash dist/generic-prompts-3.0.0.zip -Algorithm SHA256
+Get-FileHash dist/generic/ask-then-do-it-generic-1.0.0.zip -Algorithm SHA256
 ```
 
 雜湊必須等於 `dist/checksums.sha256`。`dist/` 是 generated output；修改 Prompt 要編輯 canonical source，再重新建置。

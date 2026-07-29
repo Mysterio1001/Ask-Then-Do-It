@@ -1,4 +1,0 @@
-interface:
-  display_name: "AI Dev Workflow"
-  short_description: "Guide substantial software changes through gated stages"
-  default_prompt: "Use $ai-dev-workflow to guide this software change from discovery through verified review."

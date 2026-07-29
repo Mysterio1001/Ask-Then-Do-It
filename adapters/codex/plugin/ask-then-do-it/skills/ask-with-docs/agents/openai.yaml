@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ask with Docs"
+  short_description: "Interrogate requirements and preserve project knowledge"
+  default_prompt: "Use $ask-with-docs to clarify this change while maintaining evidence-backed project knowledge."

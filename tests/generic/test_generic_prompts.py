@@ -39,7 +39,7 @@ class GenericPromptContractTests(unittest.TestCase):
                 self.assertRegex(text, r"(?m)^Prompt ID: `[^`]+`$")
                 self.assertRegex(text, r"(?m)^Prompt version: `1\.0\.0`$")
                 self.assertRegex(text, r"(?m)^Required capability: `[^`]+`$")
-                self.assertRegex(text, r"(?m)^Core version: `3\.0\.0`$")
+                self.assertRegex(text, r"(?m)^Core version: `1\.0\.0`$")
                 for heading in (
                     "## Required inputs",
                     "## Expected outputs",
@@ -97,6 +97,12 @@ class GenericPromptScenarioTests(unittest.TestCase):
         self.assertIn("Default to `conversation`", text)
         self.assertIn("first unmet stage", text)
         self.assertIn("requirement consensus", text)
+        self.assertIn("same effective response", text)
+        self.assertIn("exactly one high-impact requirement question", text)
+        self.assertIn("recommended answer", text)
+        self.assertIn("principal tradeoff", text)
+        self.assertIn("Do not stop after", text)
+        self.assertIn('say "start"', text)
 
     def test_resumed_bootstrap_imports_artifacts_without_restarting(self) -> None:
         text = prompt("bootstrap.md")
@@ -129,15 +135,6 @@ class GenericPromptScenarioTests(unittest.TestCase):
         self.assertIn("accepted Architecture Improvement Report", texts)
         self.assertIn("specification.md", texts)
         self.assertIn("Knowledge Base Change Summary", texts)
-
-    def test_bootstrap_migrates_v2_artifacts_without_rewriting_them(self) -> None:
-        text = prompt("bootstrap.md")
-        self.assertIn("v2 first use", text)
-        self.assertIn("approved v2 artifacts", text)
-        self.assertIn("propose an initial Project Knowledge Base", text)
-        self.assertIn("explicit approval", text)
-        self.assertIn("unresolved", text)
-        self.assertIn("do not rewrite, relabel, or overwrite", text.lower())
 
     def test_requirements_asks_one_recommended_question_and_matches_language(self) -> None:
         text = prompt("requirements.md")

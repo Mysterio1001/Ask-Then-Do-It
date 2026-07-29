@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build deterministic, runtime-only Grill Me release packages.
+"""Build deterministic, runtime-only Ask Then Do It release packages.
 
 The repository sources and ``release/release.json`` are authoritative. Generated
 files under the selected output root are disposable and must not be edited.
@@ -24,6 +24,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = ROOT / "release" / "release.json"
 DEFAULT_OUTPUT = ROOT / "dist"
+LEGAL_FILES = ("LICENSE", "THIRD_PARTY_NOTICES.md")
 ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 TOP_LEVEL_KEYS = {
@@ -38,7 +39,14 @@ TOP_LEVEL_KEYS = {
     "managed_outputs",
 }
 CODEX_KEYS = {"source", "directory", "archive", "skills"}
-GENERIC_KEYS = {"source", "directory", "archive", "entrypoint", "modules"}
+GENERIC_KEYS = {
+    "source",
+    "directory",
+    "archive",
+    "entrypoint",
+    "start_guide",
+    "modules",
+}
 
 
 class BuildError(RuntimeError):
@@ -98,6 +106,19 @@ def validate_relative_name(raw: str, label: str) -> str:
     return path.as_posix()
 
 
+def validate_relative_output_path(raw: str, label: str) -> str:
+    path = PurePosixPath(raw.replace("\\", "/"))
+    if (
+        path.is_absolute()
+        or len(path.parts) < 2
+        or any(part in {"", ".", ".."} for part in path.parts)
+    ):
+        raise BuildError(
+            f"{label} must be a nested relative output path: {raw!r}"
+        )
+    return path.as_posix()
+
+
 def read_top_level_yaml_scalar(path: Path, key: str) -> str:
     """Read one unindented scalar without adding a YAML build dependency."""
 
@@ -142,8 +163,12 @@ def load_config(path: Path) -> dict[str, Any]:
     require_exact_keys(codex, CODEX_KEYS, "release configuration.codex")
     for key in ("source", "directory", "archive"):
         require_string(codex, key, "release configuration.codex")
-    validate_relative_name(codex["directory"], "codex.directory")
-    validate_relative_name(codex["archive"], "codex.archive")
+    validate_relative_output_path(codex["directory"], "codex.directory")
+    validate_relative_output_path(codex["archive"], "codex.archive")
+    if PurePosixPath(codex["directory"]).parts[0] != "codex" or PurePosixPath(
+        codex["archive"]
+    ).parts[0] != "codex":
+        raise BuildError("Codex outputs must stay under the codex provider directory")
     skills = codex.get("skills")
     if not isinstance(skills, list) or not skills or not all(
         isinstance(item, str) and item.strip() for item in skills
@@ -156,10 +181,18 @@ def load_config(path: Path) -> dict[str, Any]:
     if not isinstance(generic, dict):
         raise BuildError("release configuration.generic must be an object")
     require_exact_keys(generic, GENERIC_KEYS, "release configuration.generic")
-    for key in ("source", "directory", "archive", "entrypoint"):
+    for key in ("source", "directory", "archive", "entrypoint", "start_guide"):
         require_string(generic, key, "release configuration.generic")
-    for key in ("directory", "archive", "entrypoint"):
-        validate_relative_name(generic[key], f"generic.{key}")
+    for key in ("directory", "archive"):
+        validate_relative_output_path(generic[key], f"generic.{key}")
+    validate_relative_name(generic["entrypoint"], "generic.entrypoint")
+    start_guide = (ROOT / generic["start_guide"]).resolve()
+    if not start_guide.is_relative_to(ROOT) or not start_guide.is_file():
+        raise BuildError(f"Missing Generic start guide source: {start_guide}")
+    if PurePosixPath(generic["directory"]).parts[0] != "generic" or PurePosixPath(
+        generic["archive"]
+    ).parts[0] != "generic":
+        raise BuildError("Generic outputs must stay under the generic provider directory")
     modules = generic.get("modules")
     if not isinstance(modules, list) or not modules or not all(
         isinstance(item, str) and item.strip() for item in modules
@@ -191,13 +224,7 @@ def load_config(path: Path) -> dict[str, Any]:
     normalized = [validate_relative_name(item, "managed_outputs entry") for item in managed]
     if len(normalized) != len(set(normalized)):
         raise BuildError("release configuration.managed_outputs contains duplicates")
-    expected = {
-        codex["directory"],
-        codex["archive"],
-        generic["directory"],
-        generic["archive"],
-        "checksums.sha256",
-    }
+    expected = {"codex", "generic", "checksums.sha256"}
     if set(normalized) != expected:
         raise BuildError(f"managed_outputs must equal configured outputs: {sorted(expected)}")
     return config
@@ -227,8 +254,8 @@ def validate_codex_source(config: dict[str, Any]) -> Path:
         raise BuildError(
             "Codex Plugin folder, release package_id, and plugin.json name must match"
         )
-    if codex["directory"] != plugin.name:
-        raise BuildError("codex.directory must match the Codex Plugin root name")
+    if PurePosixPath(codex["directory"]).name != plugin.name:
+        raise BuildError("codex.directory basename must match the Codex Plugin root name")
     if manifest.get("version") != config["release_version"]:
         raise BuildError("Plugin version must match release_version")
     if manifest.get("skills") != "./skills/":
@@ -247,8 +274,11 @@ def validate_codex_source(config: dict[str, Any]) -> Path:
     for skill in actual_skills:
         if not (skills_root / skill / "SKILL.md").is_file():
             raise BuildError(f"Codex Skill is missing SKILL.md: {skill}")
+    start_guide = plugin / "START-HERE.zh-TW.md"
+    if not start_guide.is_file():
+        raise BuildError("Codex Plugin source is missing START-HERE.zh-TW.md")
     top_level = {path.name for path in plugin.iterdir()}
-    if top_level != {".codex-plugin", "skills"}:
+    if top_level != {".codex-plugin", "skills", "START-HERE.zh-TW.md"}:
         raise BuildError(f"Unexpected Codex Plugin source entries: {sorted(top_level)}")
     return plugin
 
@@ -313,78 +343,9 @@ def read_checksums(path: Path) -> dict[str, str]:
 
 
 def selected_output_names(config: dict[str, Any], selected: list[str]) -> list[str]:
-    names: list[str] = []
-    for package_id in selected:
-        package = config[package_id]
-        names.extend((package["directory"], package["archive"]))
+    names = [PurePosixPath(config[package_id]["directory"]).parts[0] for package_id in selected]
     names.append("checksums.sha256")
     return names
-
-
-def validated_legacy_overlap(
-    root: Path,
-    config: dict[str, Any],
-    selected: list[str],
-    present: list[str],
-) -> list[str] | None:
-    """Recognize the replaceable unversioned files of a preserved older release.
-
-    Versioned archives and directories remain untouched. Only the unversioned Codex
-    directory and current checksum pointer may be replaced, and only after their old
-    release is proven complete by a versioned checksum snapshot.
-    """
-
-    if selected != ["codex", "generic"]:
-        return None
-    expected_overlap = [config["codex"]["directory"], "checksums.sha256"]
-    if set(present) != set(expected_overlap):
-        return None
-
-    manifest_path = (
-        root
-        / config["codex"]["directory"]
-        / ".codex-plugin"
-        / "plugin.json"
-    )
-    try:
-        manifest = read_json_object(manifest_path, "legacy Plugin manifest")
-        legacy_version = manifest.get("version")
-        if (
-            not isinstance(legacy_version, str)
-            or SEMVER.fullmatch(legacy_version) is None
-            or legacy_version == config["release_version"]
-        ):
-            return None
-        versioned_checksum = root / f"checksums-{legacy_version}.sha256"
-        current_checksum = root / "checksums.sha256"
-        if versioned_checksum.read_bytes() != current_checksum.read_bytes():
-            return None
-        checksums = read_checksums(versioned_checksum)
-        codex_archive_name = f"grill-me-{legacy_version}.zip"
-        generic_directory_name = f"generic-prompts-{legacy_version}"
-        generic_archive_name = f"{generic_directory_name}.zip"
-        if set(checksums) != {codex_archive_name, generic_archive_name}:
-            return None
-        for archive_name, digest in checksums.items():
-            archive = root / archive_name
-            if not archive.is_file() or sha256(archive) != digest:
-                return None
-        generic_directory = root / generic_directory_name
-        if not generic_directory.is_dir():
-            return None
-        verify_zip_equivalence(
-            root / config["codex"]["directory"],
-            root / codex_archive_name,
-            config["codex"]["directory"],
-        )
-        verify_zip_equivalence(
-            generic_directory,
-            root / generic_archive_name,
-            generic_directory_name,
-        )
-    except (BuildError, OSError):
-        return None
-    return expected_overlap
 
 
 def expected_package_files(
@@ -392,9 +353,11 @@ def expected_package_files(
 ) -> set[str]:
     if package_id == "codex":
         source = validate_codex_source(config)
-        return relative_file_names(source)
+        return relative_file_names(source) | set(LEGAL_FILES)
     generic = config["generic"]
     return {
+        "START-HERE.zh-TW.md",
+        *LEGAL_FILES,
         generic["entrypoint"],
         "manifest.yaml",
         *{f"prompts/{name}" for name in generic["modules"]},
@@ -407,18 +370,15 @@ def validate_output_set(
     selected: list[str],
     *,
     allow_absent: bool,
+    require_source_equivalence: bool,
 ) -> list[str]:
     """Validate a complete output set, or report that no selected output exists."""
 
     names = selected_output_names(config, selected)
-    present = [name for name in names if (root / name).exists()]
+    present = sorted(path.name for path in root.iterdir()) if root.exists() else []
     if not present and allow_absent:
         return []
-    if len(present) != len(names):
-        if allow_absent:
-            legacy = validated_legacy_overlap(root, config, selected, present)
-            if legacy is not None:
-                return legacy
+    if set(present) != set(names):
         collision = (root / (present[0] if present else names[0])).resolve()
         raise BuildError(f"Unmanaged or incomplete output collision: {collision}")
 
@@ -437,9 +397,13 @@ def validate_output_set(
         package = config[package_id]
         directory = root / package["directory"]
         archive = root / package["archive"]
-        if relative_file_names(directory) != expected_package_files(config, package_id):
+        if require_source_equivalence and relative_file_names(
+            directory
+        ) != expected_package_files(config, package_id):
             raise BuildError(f"Runtime package inventory mismatch: {directory}")
-        verify_zip_equivalence(directory, archive, package["directory"])
+        verify_zip_equivalence(
+            directory, archive, PurePosixPath(package["directory"]).name
+        )
 
     codex_manifest = root / config["codex"]["directory"] / ".codex-plugin" / "plugin.json"
     if "codex" in selected:
@@ -460,9 +424,12 @@ def build_codex(config: dict[str, Any], staging: Path) -> list[str]:
     source = validate_codex_source(config)
     codex = config["codex"]
     package = staging / codex["directory"]
+    package.parent.mkdir(parents=True)
     shutil.copytree(source, package, copy_function=shutil.copyfile)
+    for legal_file in LEGAL_FILES:
+        shutil.copyfile(ROOT / legal_file, package / legal_file)
     archive = staging / codex["archive"]
-    write_reproducible_zip(package, archive, codex["directory"])
+    write_reproducible_zip(package, archive, PurePosixPath(codex["directory"]).name)
     return [codex["directory"], codex["archive"]]
 
 
@@ -495,6 +462,12 @@ Match the user's language in user-facing output. Begin with the bootstrap sectio
 fresh or resumed request, use the orchestration section to identify the first unmet gate,
 then apply exactly one matching stage section at a time. Preserve every explicit approval
 gate, stop condition, Artifact contract, and user-managed persistence reminder.
+
+For a fresh workflow whose first unmet stage is requirement consensus, apply the selected
+requirement section in the same effective response. After a concise capability and stage
+declaration, ask exactly one high-impact requirement question in the user's language and
+include a recommended answer and the principal tradeoff. Do not stop at routing status,
+promise to ask later, or require the user to say "start".
 
 ## Conversation-only capability boundary
 
@@ -549,6 +522,9 @@ def build_generic(config: dict[str, Any], staging: Path) -> list[str]:
     prompts.mkdir(parents=True)
     for name in generic["modules"]:
         shutil.copyfile(source / name, prompts / name)
+    shutil.copyfile(ROOT / generic["start_guide"], package / "START-HERE.zh-TW.md")
+    for legal_file in LEGAL_FILES:
+        shutil.copyfile(ROOT / legal_file, package / legal_file)
     (package / generic["entrypoint"]).write_bytes(
         compose_generic_workflow(config, source)
     )
@@ -556,7 +532,9 @@ def build_generic(config: dict[str, Any], staging: Path) -> list[str]:
         generic_manifest(config), encoding="utf-8", newline="\n"
     )
     archive = staging / generic["archive"]
-    write_reproducible_zip(package, archive, generic["directory"])
+    write_reproducible_zip(
+        package, archive, PurePosixPath(generic["directory"]).name
+    )
     return [generic["directory"], generic["archive"]]
 
 
@@ -613,19 +591,18 @@ def main() -> int:
                 "explicitly for an isolated repository-owned test target"
             )
         output_root.mkdir(parents=True, exist_ok=True)
-        staging = output_root / f".release-staging-{uuid.uuid4().hex}"
+        staging = output_root.parent / f".{output_root.name}-release-staging-{uuid.uuid4().hex}"
         staging.mkdir()
 
         selected = (
             ["codex", "generic"] if args.package == "all" else [args.package]
         )
-        outputs: list[str] = []
         archives: list[str] = []
         if "codex" in selected:
-            outputs.extend(build_codex(config, staging))
+            build_codex(config, staging)
             archives.append(config["codex"]["archive"])
         if "generic" in selected:
-            outputs.extend(build_generic(config, staging))
+            build_generic(config, staging)
             archives.append(config["generic"]["archive"])
 
         checksum_name = "checksums.sha256"
@@ -637,12 +614,20 @@ def main() -> int:
             encoding="ascii",
             newline="\n",
         )
-        outputs.append(checksum_name)
+        outputs = selected_output_names(config, selected)
         validate_output_set(
-            staging, config, selected, allow_absent=False
+            staging,
+            config,
+            selected,
+            allow_absent=False,
+            require_source_equivalence=True,
         )
         existing_names = validate_output_set(
-            output_root, config, selected, allow_absent=True
+            output_root,
+            config,
+            selected,
+            allow_absent=True,
+            require_source_equivalence=False,
         )
         commit(
             staging,

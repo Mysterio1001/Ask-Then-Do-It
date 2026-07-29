@@ -1,73 +1,51 @@
-# Grill Me — AI Development Workflow
+# Ask Then Do It — AI Development Workflow
 
-Release `3.0.0` packages the model-neutral core `3.0.0` for two supported usage paths: one Codex Plugin and one Generic prompt bundle. The validated `2.1.0` archives and checksum snapshot remain available for rollback and comparison.
+Release `1.0.0` is the first public release of **Ask Then Do It**: a model-neutral workflow that helps an AI ask first, reach agreement, and then do the work.
+
+This project is an independent extension inspired by Matt Pocock’s skills repository, particularly grill-me, grilling, and its engineering workflow skills. Matt Pocock’s original work is licensed under the MIT License. This project is not affiliated with or endorsed by Matt Pocock.
+
+Upstream: [Matt Pocock skills repository](https://github.com/mattpocock/skills) · [upstream MIT License](https://github.com/mattpocock/skills/blob/main/LICENSE). See [LICENSE](LICENSE) for this project's additions and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the upstream notice and complete license.
 
 ## 繁體中文快速開始
 
-Grill Me 是一套有明確人類核准點的 AI 軟體開發工作流，依序處理需求釐清、Specification、Ticket Planning、TDD 實作與證據式 Review。它不是只為 Codex 設計：共用規則在 `core/`，Codex Plugin 與 Generic prompts 都只是 adapter。
+請先開啟 [START-HERE.zh-TW.md](START-HERE.zh-TW.md)。它會先讓你選擇適合的使用方式：
 
-第一次使用，建議先閱讀 [Grill Me 超簡單使用說明](docs/guides/getting-started-simple.zh-TW.md)。它用蓋小屋的方式解釋完整流程與每個階段。
+- Codex Plugin：下載 `dist/codex/ask-then-do-it-1.0.0.zip`，從 `$ask-then-do-it` 開始。
+- Gemini 或其他 AI：下載 `dist/generic/ask-then-do-it-generic-1.0.0.zip`，貼上解壓後的 `generic-workflow.md`。
 
-先在 repository 根目錄建置：
+一般使用者不需要理解 `core/`、`adapters/`、`tests/` 或建置程式，也不需要先執行 Python。完整人類說明：
+
+- [超簡單完整流程](docs/guides/getting-started-simple.zh-TW.md)
+- [Codex Plugin 使用說明](docs/guides/codex.zh-TW.md)
+- [Generic prompts 使用說明](docs/guides/generic.zh-TW.md)
+- [模型中立設計說明](docs/design/ai-development-skills.zh-TW.md)
+
+## 維護者工作區
+
+這個 repository 是 canonical source 與驗證工作區：
+
+- `core/`：所有模型共用的規則、階段與 Artifact 契約。
+- `adapters/codex/`：Codex Plugin 與八個 Skills。
+- `adapters/generic-prompts/`：Conversation-only 的九個 prompt 模組。
+- `release/release.json`：目前版本與兩個套件的發佈契約。
+- `scripts/`、`tests/`：建置與驗證工具。
+- `dist/`：自動產生的成品，不是 canonical source。
+
+在 repository 根目錄建置：
 
 ```powershell
 python scripts/build_release.py
 ```
 
-這個命令只會產生 repository 內的 `dist/` 成品，不會自動安裝 Plugin、不會修改 personal installation、不會建立 marketplace，也不會發布到網路。
+建置器只管理 `dist/codex/`、`dist/generic/` 與 `dist/checksums.sha256`。它不會修改 personal installation、不會建立或修改 marketplace，也不會安裝或發布任何內容。
 
-### 路徑 A：Codex Plugin
-
-- 未壓縮套件：`dist/grill-me/`
-- 可發布壓縮檔：`dist/grill-me-3.0.0.zip`
-- 主要入口：`$ai-dev-workflow`
-- 進階入口：八個 Skill 都可獨立呼叫
-
-Codex 會從已設定的 marketplace 安裝 Plugin；本專案只建置與驗證 Plugin bundle，不會替你設定 marketplace。安裝、更新與移除方式請見 [Codex Plugin 繁體中文使用說明](docs/guides/codex.zh-TW.md)。
-
-### 路徑 B：Generic prompts
-
-- 建議入口：`dist/generic-prompts-3.0.0/generic-workflow.md`
-- 模組化替代方案：`dist/generic-prompts-3.0.0/prompts/`
-- 適用環境：任何能接受文字 prompt 的一般語言模型或聊天介面
-
-把 `generic-workflow.md` 全文貼入同一段對話，接著附上需求與既有 Artifacts。這個 adapter 僅宣告 Conversation-only 能力，不會假裝改過檔案、跑過測試或完成獨立 Review。詳見 [Generic prompts 繁體中文使用說明](docs/guides/generic.zh-TW.md)。
-
-### 三種位置不要混用
-
-| 類型 | 位置 | 是否可編輯 |
-| --- | --- | --- |
-| canonical source | `core/`、`adapters/`、`release/release.json` | 是；維護者只在這裡改規則、adapter 與 release 設定 |
-| generated release | `dist/` | 否；刪除後可由 builder 重建 |
-| personal installation | Codex 或其他主機管理的使用者環境 | 不屬於本 repository；任何修改都需要另外授權 |
-
-`dist/checksums.sha256` 驗證目前的 `3.0.0` archives；`dist/checksums-2.1.0.sha256` 保留舊版驗證值。架構理由請閱讀 [繁體中文設計說明](docs/design/ai-development-skills.zh-TW.md)；正式行為契約以 [Portable AI Development Workflow v3 Specification](docs/specs/ai-development-skills-v3.md) 為準，原始包裝邊界則記錄於 [Release Packaging Specification](docs/specs/grill-me-release-packaging.md)。
+目前正式的命名與授權行為契約請見 [Ask Then Do It 1.0.0 Specification](docs/specs/ask-then-do-it-1.0.0.md)，實作順序請見 [Ask Then Do It 1.0.0 Ticket Plan](docs/plans/ask-then-do-it-1.0.0.md)。舊版 Grill Me 文件僅保留為開發歷程。
 
 ## English Quick Start
 
-Grill Me is a model-neutral, gated AI development workflow. Build both supported runtime packages from the repository root:
+Start with [START-HERE.zh-TW.md](START-HERE.zh-TW.md), then choose one consumer package:
 
-```powershell
-python scripts/build_release.py
-```
+- Codex Plugin: `dist/codex/ask-then-do-it-1.0.0.zip`; begin with `$ask-then-do-it`.
+- Generic prompts: `dist/generic/ask-then-do-it-generic-1.0.0.zip`; paste the extracted `generic-workflow.md` once with your request.
 
-The command writes generated files only under `dist/`. It does not install a plugin, modify a personal installation, create a marketplace, publish anything, or use the network.
-
-### Path A: Codex Plugin
-
-- Unpacked plugin: `dist/grill-me/`
-- Reproducible archive: `dist/grill-me-3.0.0.zip`
-- Primary entry: `$ai-dev-workflow`
-- Advanced use: invoke any of the eight Skills directly
-
-Codex installs plugins from a configured marketplace. This repository builds the plugin bundle but does not configure or mutate a marketplace. See the [Traditional Chinese Codex guide](docs/guides/codex.zh-TW.md) for the manual lifecycle boundary.
-
-### Path B: Generic prompts
-
-- Recommended one-file entry: `dist/generic-prompts-3.0.0/generic-workflow.md`
-- Modular alternative: `dist/generic-prompts-3.0.0/prompts/`
-- Host requirement: a language model or chat interface that accepts text prompts
-
-Paste the complete generated workflow into one conversation and then supply the request and existing Artifacts. This adapter is Conversation-only and never claims repository writes, command execution, completed TDD, durable persistence, or independent review. See the [Traditional Chinese Generic guide](docs/guides/generic.zh-TW.md).
-
-Edit only canonical source under `core/`, `adapters/`, and `release/release.json`; treat `dist/` as generated; treat every personal installation as external user state requiring separate authorization. The versioned `2.1.0` archives and `checksums-2.1.0.sha256` remain preserved beside the current `3.0.0` release.
+The repository is a maintainer workspace. Edit canonical source under `core/`, `adapters/`, and `release/release.json`; treat `dist/` as generated output. Building does not modify a personal installation, marketplace, or external service.
