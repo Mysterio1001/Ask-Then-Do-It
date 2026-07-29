@@ -41,13 +41,15 @@ class ReleaseDocumentationTests(unittest.TestCase):
         for required in (
             "Codex Plugin",
             "Generic prompts",
-            "dist/codex/ask-then-do-it-1.0.0.zip",
-            "dist/generic/ask-then-do-it-generic-1.0.0.zip",
+            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.0/ask-then-do-it-1.0.0.zip",
+            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.0/ask-then-do-it-generic-1.0.0.zip",
             "python scripts/build_release.py",
             "canonical source",
             "personal installation",
         ):
             self.assertIn(required, body)
+        self.assertNotIn("dist/codex/ask-then-do-it-1.0.0.zip", body)
+        self.assertNotIn("dist/generic/ask-then-do-it-generic-1.0.0.zip", body)
         for obsolete in ("2.1.0", "3.0.0", "checksums-2.1.0"):
             self.assertNotIn(obsolete, body)
 

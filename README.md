@@ -10,8 +10,8 @@ Upstream: [Matt Pocock skills repository](https://github.com/mattpocock/skills) 
 
 請先開啟 [START-HERE.zh-TW.md](START-HERE.zh-TW.md)。它會先讓你選擇適合的使用方式：
 
-- Codex Plugin：下載 `dist/codex/ask-then-do-it-1.0.0.zip`，從 `$ask-then-do-it` 開始。
-- Gemini 或其他 AI：下載 `dist/generic/ask-then-do-it-generic-1.0.0.zip`，貼上解壓後的 `generic-workflow.md`。
+- Codex Plugin：[下載 ask-then-do-it-1.0.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.0/ask-then-do-it-1.0.0.zip)，從 `$ask-then-do-it` 開始。
+- Gemini 或其他 AI：[下載 ask-then-do-it-generic-1.0.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.0/ask-then-do-it-generic-1.0.0.zip)，貼上解壓後的 `generic-workflow.md`。
 
 一般使用者不需要理解 `core/`、`adapters/`、`tests/` 或建置程式，也不需要先執行 Python。完整人類說明：
 
@@ -45,7 +45,7 @@ python scripts/build_release.py
 
 Start with [START-HERE.zh-TW.md](START-HERE.zh-TW.md), then choose one consumer package:
 
-- Codex Plugin: `dist/codex/ask-then-do-it-1.0.0.zip`; begin with `$ask-then-do-it`.
-- Generic prompts: `dist/generic/ask-then-do-it-generic-1.0.0.zip`; paste the extracted `generic-workflow.md` once with your request.
+- Codex Plugin: [download ask-then-do-it-1.0.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.0/ask-then-do-it-1.0.0.zip); begin with `$ask-then-do-it`.
+- Generic prompts: [download ask-then-do-it-generic-1.0.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.0/ask-then-do-it-generic-1.0.0.zip); paste the extracted `generic-workflow.md` once with your request.
 
 The repository is a maintainer workspace. Edit canonical source under `core/`, `adapters/`, and `release/release.json`; treat `dist/` as generated output. Building does not modify a personal installation, marketplace, or external service.

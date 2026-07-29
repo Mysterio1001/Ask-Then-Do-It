@@ -1,4 +1,0 @@
-interface:
-  display_name: "Plan Tickets"
-  short_description: "Split approved specs into testable vertical tickets"
-  default_prompt: "Use $plan-tickets to split this approved specification into testable vertical tickets."

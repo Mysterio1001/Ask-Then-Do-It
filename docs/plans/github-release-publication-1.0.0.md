@@ -10,9 +10,9 @@ Target release: `v1.0.0`
 
 Repository: `https://github.com/Mysterio1001/Ask-Then-Do-It`
 
-Status: Draft
+Status: Approved
 
-Approval: Pending explicit human approval.
+Approval: Explicitly approved by the user on 2026-07-29 with the response `繼續往下執行`.
 
 ## Planned outcome
 
@@ -20,7 +20,7 @@ Keep generated release output out of normal Git history, direct users from the r
 
 ## Ticket 1 — Keep generated and local-only files out of Git
 
-Status: Planned
+Status: Completed — evidence: [Ticket 1 evidence](../evidence/github-release-1.0.0-ticket-1.md).
 
 ### User-visible outcome
 
@@ -48,7 +48,7 @@ This is the first Ticket. Index cleanup must use a cache-only Git operation so l
 
 ## Ticket 2 — Route README downloads to GitHub Releases
 
-Status: Planned
+Status: Completed — evidence: [Ticket 2 evidence](../evidence/github-release-1.0.0-ticket-2.md).
 
 ### User-visible outcome
 
@@ -121,4 +121,4 @@ Depends on Tickets 1 and 2, a committed and pushed source state, valid GitHub au
 
 ## Plan approval gate
 
-This Draft plan authorizes no implementation or publication. Explicit approval is required before Tickets 1 and 2 begin. Ticket 3 additionally requires a final explicit publication confirmation immediately before any GitHub Release mutation.
+This Approved plan authorizes implementation of Tickets 1 and 2. Ticket 3 additionally requires a final explicit publication confirmation immediately before any GitHub Release mutation.
