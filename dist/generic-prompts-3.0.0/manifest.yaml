@@ -1,0 +1,21 @@
+# GENERATED FILE — DO NOT EDIT
+schema_version: 1
+package_id: "grill-me"
+display_name: "Grill Me — AI Development Workflow"
+release_version: "3.0.0"
+core_version: "3.0.0"
+adapter_id: "generic-prompts"
+entrypoint: "generic-workflow.md"
+artifact_persistence: "user-managed-markdown"
+capabilities:
+  - "conversation"
+source_modules:
+  - "bootstrap.md"
+  - "orchestration.md"
+  - "requirements.md"
+  - "documented-requirements.md"
+  - "specification.md"
+  - "ticket-planning.md"
+  - "tdd-implementation.md"
+  - "review.md"
+  - "architecture-improvement.md"

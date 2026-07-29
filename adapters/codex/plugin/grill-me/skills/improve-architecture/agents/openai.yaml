@@ -1,0 +1,4 @@
+interface:
+  display_name: "Improve Architecture"
+  short_description: "Diagnose architecture without changing code"
+  default_prompt: "Use $improve-architecture to diagnose this system and produce a safe architecture improvement report."

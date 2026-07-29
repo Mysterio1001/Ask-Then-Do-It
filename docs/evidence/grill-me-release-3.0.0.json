@@ -1,0 +1,77 @@
+{
+  "release_version": "3.0.0",
+  "checks": [
+    {
+      "id": "automated-tests",
+      "status": "passed",
+      "command": "python -m unittest tests.conformance.test_validator tests.codex.test_adapter tests.generic.test_generic_prompts tests.migration.test_v2_migration tests.release.test_documentation tests.release.test_release_contract tests.release.test_codex_release tests.release.test_generic_release tests.release.test_release_safety tests.release.test_release_evidence -v",
+      "outcome": "73 tests ran in 4.595s; OK"
+    },
+    {
+      "id": "codex-skill-validation",
+      "status": "passed",
+      "command": "Run skill-creator/scripts/quick_validate.py for every directory under dist/grill-me/skills",
+      "outcome": "All eight packaged Skills reported: Skill is valid!"
+    },
+    {
+      "id": "codex-plugin-validation",
+      "status": "passed",
+      "command": "python plugin-creator/scripts/validate_plugin.py dist/grill-me",
+      "outcome": "Plugin validation passed: dist/grill-me"
+    },
+    {
+      "id": "codex-conformance",
+      "status": "passed",
+      "command": "python scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/codex/conformance.yaml",
+      "outcome": "Conformance passed: codex against core 3.0.0"
+    },
+    {
+      "id": "generic-conformance",
+      "status": "passed",
+      "command": "python scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/generic-prompts/manifest.yaml",
+      "outcome": "Conformance passed: generic-prompts against core 3.0.0"
+    },
+    {
+      "id": "codex-package-inventory",
+      "status": "passed",
+      "command": "Compare dist/grill-me recursively with the configured Plugin source and ZIP inventory",
+      "outcome": "17 runtime files; exact source, directory, and grill-me ZIP inventories matched"
+    },
+    {
+      "id": "generic-package-inventory",
+      "status": "passed",
+      "command": "Compare dist/generic-prompts-3.0.0 with nine configured source prompts, generated manifest, combined workflow, and ZIP inventory",
+      "outcome": "11 runtime files; nine source prompts plus generated manifest and combined workflow matched"
+    },
+    {
+      "id": "reproducible-build",
+      "status": "passed",
+      "command": "Build unchanged source into .tmp/repro-a and .tmp/repro-b, then compare archive and checksum bytes",
+      "outcome": "Both archives and checksums.sha256 were byte-identical across clean builds"
+    },
+    {
+      "id": "zip-equivalence",
+      "status": "passed",
+      "command": "Compare every ZIP entry byte-for-byte with its unpacked release directory",
+      "outcome": "grill-me-3.0.0.zip: 17 equivalent files; generic-prompts-3.0.0.zip: 11 equivalent files"
+    },
+    {
+      "id": "sha256-verification",
+      "status": "passed",
+      "command": "Get-FileHash for both v3 archives and compare with dist/checksums.sha256",
+      "outcome": "grill-me ce6c9331e37f13bb1968340a4a122250c5c0044319288d3d5c10e6c3d8c766af; generic 54895142a2af1bebe84d413761c1003f38092f62c7382deb61a6982236075c96"
+    },
+    {
+      "id": "v2-preservation",
+      "status": "passed",
+      "command": "Hash protected 2.1.0 archives and evidence; run the validated legacy-overlap migration scenario",
+      "outcome": "Both 2.1.0 archives retained their approved hashes; checksums-2.1.0.sha256 and legacy Generic directory remained preserved"
+    },
+    {
+      "id": "release-architecture-diagnosis",
+      "status": "passed",
+      "command": "Perform read-only twelve-lens release milestone diagnosis and simulated deletion analysis",
+      "outcome": "Draft Architecture Improvement Report completed with all required sections; no release-blocking finding and no mutation performed"
+    }
+  ]
+}

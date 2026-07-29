@@ -1,0 +1,39 @@
+adapter_id: fixture-incompatible-version
+adapter_version: 1.0.0
+target: test-harness
+core_version: 9.0.0
+capabilities:
+  - conversation
+artifact_persistence: user-managed-markdown
+implemented_rules:
+  - CAP-DECLARE-001
+  - CAP-CLAIM-001
+  - GATE-REQ-001
+  - GATE-SPEC-001
+  - GATE-PLAN-001
+  - GRILL-ONE-001
+  - SPEC-NOCODE-001
+  - PLAN-VERTICAL-001
+  - TDD-RED-001
+  - REVIEW-EVIDENCE-001
+  - ART-STATE-001
+  - ADAPTER-COVERAGE-001
+  - KB-EVIDENCE-001
+  - KB-DRAFT-001
+  - KB-SYNC-001
+  - REVIEW-LENSES-001
+  - ARCH-DIAG-001
+  - ARCH-DELETE-001
+  - ARCH-REPORT-001
+  - ARCH-REFLOW-001
+  - ROUTE-USER-001
+  - ROUTE-DOCS-001
+  - MIGRATE-V2-001
+capability_evidence:
+  conversation:
+    - tests/conformance/test_validator.py
+validation:
+  status: test-fixture
+  environment: local-python
+  commands:
+    - python -m unittest tests.conformance.test_validator

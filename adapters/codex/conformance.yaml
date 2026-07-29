@@ -1,0 +1,54 @@
+adapter_id: codex
+adapter_version: 3.0.0
+target: Codex skill runtime
+core_version: 3.0.0
+capabilities:
+  - conversation
+  - tools
+  - multi_agent
+artifact_persistence: Repository-backed Markdown artifacts and Codex task context.
+implemented_rules:
+  - CAP-DECLARE-001
+  - CAP-CLAIM-001
+  - GATE-REQ-001
+  - GATE-SPEC-001
+  - GATE-PLAN-001
+  - GRILL-ONE-001
+  - SPEC-NOCODE-001
+  - PLAN-VERTICAL-001
+  - TDD-RED-001
+  - REVIEW-EVIDENCE-001
+  - ART-STATE-001
+  - ADAPTER-COVERAGE-001
+  - KB-EVIDENCE-001
+  - KB-DRAFT-001
+  - KB-SYNC-001
+  - REVIEW-LENSES-001
+  - ARCH-DIAG-001
+  - ARCH-DELETE-001
+  - ARCH-REPORT-001
+  - ARCH-REFLOW-001
+  - ROUTE-USER-001
+  - ROUTE-DOCS-001
+  - MIGRATE-V2-001
+capability_evidence:
+  conversation:
+    - adapters/codex/plugin/grill-me/skills/grill-requirements/SKILL.md
+    - adapters/codex/plugin/grill-me/skills/write-spec/SKILL.md
+    - adapters/codex/plugin/grill-me/skills/plan-tickets/SKILL.md
+    - adapters/codex/plugin/grill-me/skills/grill-with-docs/SKILL.md
+    - adapters/codex/plugin/grill-me/skills/improve-architecture/SKILL.md
+  tools:
+    - adapters/codex/plugin/grill-me/skills/implement-tdd/SKILL.md
+    - adapters/codex/plugin/grill-me/skills/improve-architecture/SKILL.md
+    - tests/codex/test_adapter.py
+  multi_agent:
+    - adapters/codex/plugin/grill-me/skills/ai-dev-workflow/SKILL.md
+    - adapters/codex/plugin/grill-me/skills/review-code/SKILL.md
+validation:
+  status: validated
+  environment: Codex Desktop on Windows 11; CPython 3.12.13; PyYAML 6.0.3
+  commands:
+    - python -m unittest discover -s tests/codex -p "test_*.py"
+    - python scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/codex/conformance.yaml
+    - python %CODEX_HOME%/skills/.system/skill-creator/scripts/quick_validate.py adapters/codex/plugin/grill-me/skills/<skill-name>

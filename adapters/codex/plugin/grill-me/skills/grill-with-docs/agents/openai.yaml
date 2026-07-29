@@ -1,0 +1,4 @@
+interface:
+  display_name: "Grill with Docs"
+  short_description: "Interrogate requirements and preserve project knowledge"
+  default_prompt: "Use $grill-with-docs to clarify this change while maintaining evidence-backed project knowledge."

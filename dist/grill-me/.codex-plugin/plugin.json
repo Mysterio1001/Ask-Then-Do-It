@@ -1,0 +1,38 @@
+{
+  "name": "grill-me",
+  "version": "3.0.0",
+  "description": "A gated AI development workflow from requirement discovery through evidence-based review and architecture diagnosis.",
+  "author": {
+    "name": "Grill Me contributors"
+  },
+  "skills": "./skills/",
+  "keywords": [
+    "ai-development",
+    "requirements",
+    "project-knowledge",
+    "specification",
+    "tdd",
+    "code-review",
+    "architecture"
+  ],
+  "interface": {
+    "displayName": "Grill Me — AI Development Workflow",
+    "shortDescription": "Develop software through explicit gates and evidence.",
+    "longDescription": "A modular workflow for requirement grilling, evidence-backed project knowledge, specification, ticket planning, TDD implementation, twelve-lens review, and safe architecture diagnosis.",
+    "developerName": "Grill Me contributors",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Conversation",
+      "Write",
+      "Tools",
+      "Multi-agent"
+    ],
+    "defaultPrompt": [
+      "Use $ai-dev-workflow to guide this software change.",
+      "Use $grill-requirements to clarify this idea.",
+      "Use $grill-with-docs to clarify this change and preserve project knowledge.",
+      "Use $improve-architecture to diagnose system structure without changing code.",
+      "Use $review-code to review these changes."
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Spec"
+  short_description: "Turn approved decisions into durable behavior specs"
+  default_prompt: "Use $write-spec to turn the approved decisions into a durable behavioral specification."

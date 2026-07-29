@@ -1,0 +1,115 @@
+core_version: 3.0.0
+rules:
+  CAP-DECLARE-001:
+    - file: conformance.yaml
+      section: capabilities
+      implementation: Declares the cumulative conversation, tools, and multi-agent profiles supported by the Codex adapter.
+    - file: plugin/grill-me/skills/ai-dev-workflow/SKILL.md
+      section: Declare capabilities
+      implementation: Requires the orchestrator to state the strongest runtime-proven profile before routing and to downgrade when tools or isolation are unavailable.
+  CAP-CLAIM-001:
+    - file: plugin/grill-me/skills/ai-dev-workflow/SKILL.md
+      section: Declare capabilities
+      implementation: Forbids claims of repository actions, evidence, persistence, or independence beyond the declared runtime profile.
+    - file: plugin/grill-me/skills/ai-dev-workflow/SKILL.md
+      section: Finish
+      implementation: Forbids completion claims while verification or blocking review work remains.
+    - file: plugin/grill-me/skills/review-code/SKILL.md
+      section: Validate each finding
+      implementation: Requires uncertainty and unavailable evidence to be disclosed instead of invented.
+  GATE-REQ-001:
+    - file: plugin/grill-me/skills/grill-requirements/SKILL.md
+      section: Reach consensus
+      implementation: Stops until the user explicitly confirms the consolidated requirement.
+  GATE-SPEC-001:
+    - file: plugin/grill-me/skills/write-spec/SKILL.md
+      section: Run the specification gate
+      implementation: Requires explicit approval before changing the Specification from Draft to Approved.
+  GATE-PLAN-001:
+    - file: plugin/grill-me/skills/plan-tickets/SKILL.md
+      section: Run the plan gate
+      implementation: Requires explicit approval before implementation can begin.
+  GRILL-ONE-001:
+    - file: plugin/grill-me/skills/grill-requirements/SKILL.md
+      section: Ask exactly one question
+      implementation: Requires one question, a concrete recommendation, its tradeoff, and then a stop.
+  SPEC-NOCODE-001:
+    - file: plugin/grill-me/skills/write-spec/SKILL.md
+      section: Write the behavioral contract
+      implementation: Excludes production implementation code and proposed patches from Specifications.
+  PLAN-VERTICAL-001:
+    - file: plugin/grill-me/skills/plan-tickets/SKILL.md
+      section: Slice vertically
+      implementation: Builds each ticket as a verifiable behavior spanning the layers needed by that behavior.
+  TDD-RED-001:
+    - file: plugin/grill-me/skills/implement-tdd/SKILL.md
+      section: Establish red
+      implementation: Requires execution and observation of the expected missing-behavior failure before production implementation.
+  REVIEW-EVIDENCE-001:
+    - file: plugin/grill-me/skills/review-code/SKILL.md
+      section: Create an independent view
+      implementation: Supplies approved artifacts, final diff, surrounding code, test changes, and raw results without implementer conclusions.
+  ART-STATE-001:
+    - file: plugin/grill-me/skills/ai-dev-workflow/SKILL.md
+      section: Enforce the gates
+      implementation: Preserves separate Draft and Approved states and requires artifact state to agree with conversation approval.
+    - file: plugin/grill-me/skills/grill-requirements/SKILL.md
+      section: Emit the decision artifact
+      implementation: Emits the decision record as Draft and promotes it only after explicit consensus evidence.
+    - file: plugin/grill-me/skills/write-spec/SKILL.md
+      section: Run the specification gate
+      implementation: Writes Draft first and promotes it only after explicit approval.
+    - file: plugin/grill-me/skills/plan-tickets/SKILL.md
+      section: Run the plan gate
+      implementation: Writes Draft first and promotes it only after explicit approval.
+  ADAPTER-COVERAGE-001:
+    - file: conformance.yaml
+      section: implemented_rules
+      implementation: Enumerates every mandatory rule in core version 3.0.0 for deterministic shared validation.
+    - file: rule-mapping.yaml
+      section: rules
+      implementation: Resolves each mandatory rule to its concrete Codex adapter implementation.
+  KB-EVIDENCE-001:
+    - file: plugin/grill-me/skills/grill-with-docs/SKILL.md
+      section: Use approved evidence
+      implementation: Derives formal project knowledge only from approved or accepted evidence and leaves unsupported facts unresolved.
+  KB-DRAFT-001:
+    - file: plugin/grill-me/skills/grill-with-docs/SKILL.md
+      section: Keep provisional notes
+      implementation: Keeps proposed, confirmed, and unresolved discoveries in Draft Working Notes until the combined approval gate passes.
+  KB-SYNC-001:
+    - file: plugin/grill-me/skills/grill-with-docs/SKILL.md
+      section: Approve the record and knowledge together
+      implementation: Displays additions, modifications, and removals and binds approval to only the disclosed knowledge changes.
+  REVIEW-LENSES-001:
+    - file: plugin/grill-me/skills/review-code/SKILL.md
+      section: Apply the twelve lenses
+      implementation: Applies every core lens to the change scope and requires evidence or a justified result for each one.
+  ARCH-DIAG-001:
+    - file: plugin/grill-me/skills/improve-architecture/SKILL.md
+      section: Declare scope and capability
+      implementation: Declares a diagnostic-only analysis boundary and prohibits implementation during architecture assessment.
+  ARCH-DELETE-001:
+    - file: plugin/grill-me/skills/improve-architecture/SKILL.md
+      section: Simulate deletion safely
+      implementation: Makes non-mutating simulation the default and requires authorization, tools, and isolation for an actual experiment.
+  ARCH-REPORT-001:
+    - file: plugin/grill-me/skills/improve-architecture/SKILL.md
+      section: Emit the architecture report
+      implementation: Emits all required Architecture Improvement Report fields and sections.
+  ARCH-REFLOW-001:
+    - file: plugin/grill-me/skills/improve-architecture/SKILL.md
+      section: Enforce report state and handoff
+      implementation: Routes accepted proposals through Specification, vertical Ticket Plan, and TDD rather than implementation.
+  ROUTE-USER-001:
+    - file: plugin/grill-me/skills/ai-dev-workflow/SKILL.md
+      section: Honor explicit user control
+      implementation: Gives direct module and requirement-mode selection precedence over automatic routing while preserving gates.
+  ROUTE-DOCS-001:
+    - file: plugin/grill-me/skills/ai-dev-workflow/SKILL.md
+      section: Choose the requirement mode
+      implementation: Selects documented interrogation from the three approved conditions and states a brief reason.
+  MIGRATE-V2-001:
+    - file: plugin/grill-me/skills/ai-dev-workflow/SKILL.md
+      section: Migrate v2 on first use
+      implementation: Proposes initial v3 project knowledge from approved v2 evidence without rewriting historical artifacts.

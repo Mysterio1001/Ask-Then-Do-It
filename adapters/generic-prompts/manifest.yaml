@@ -1,0 +1,45 @@
+adapter_id: generic-prompts
+adapter_version: 3.0.0
+target: copyable-general-language-model-prompts
+core_version: 3.0.0
+capabilities:
+  - conversation
+artifact_persistence: user-managed-markdown
+implemented_rules:
+  - CAP-DECLARE-001
+  - CAP-CLAIM-001
+  - GATE-REQ-001
+  - GATE-SPEC-001
+  - GATE-PLAN-001
+  - GRILL-ONE-001
+  - SPEC-NOCODE-001
+  - PLAN-VERTICAL-001
+  - TDD-RED-001
+  - REVIEW-EVIDENCE-001
+  - ART-STATE-001
+  - ADAPTER-COVERAGE-001
+  - KB-EVIDENCE-001
+  - KB-DRAFT-001
+  - KB-SYNC-001
+  - REVIEW-LENSES-001
+  - ARCH-DIAG-001
+  - ARCH-DELETE-001
+  - ARCH-REPORT-001
+  - ARCH-REFLOW-001
+  - ROUTE-USER-001
+  - ROUTE-DOCS-001
+  - MIGRATE-V2-001
+capability_evidence:
+  conversation:
+    - tests/generic/test_generic_prompts.py
+    - adapters/generic-prompts/bootstrap.md
+    - adapters/generic-prompts/tdd-implementation.md
+    - adapters/generic-prompts/review.md
+    - adapters/generic-prompts/documented-requirements.md
+    - adapters/generic-prompts/architecture-improvement.md
+validation:
+  status: validated
+  environment: CPython 3.12 with PyYAML 6.x on Windows
+  commands:
+    - python -m unittest tests.generic.test_generic_prompts
+    - python scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/generic-prompts/manifest.yaml

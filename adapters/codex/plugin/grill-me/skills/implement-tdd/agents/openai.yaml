@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implement TDD"
+  short_description: "Implement approved tickets with red-green-refactor"
+  default_prompt: "Use $implement-tdd to implement the approved ticket with red-green-refactor evidence."

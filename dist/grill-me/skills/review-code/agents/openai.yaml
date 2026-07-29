@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Code"
+  short_description: "Review changes independently against approved intent"
+  default_prompt: "Use $review-code to independently review these changes against the approved specification."

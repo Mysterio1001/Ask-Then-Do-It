@@ -1,0 +1,107 @@
+core_version: 3.0.0
+capability_profiles:
+  conversation:
+    includes: []
+    description: Exchange text and emit user-managed artifacts.
+  tools:
+    includes:
+      - conversation
+    description: Inspect and modify a repository, persist artifacts, and execute commands.
+  multi_agent:
+    includes:
+      - conversation
+      - tools
+    description: Create isolated worker or reviewer contexts.
+rules:
+  - id: CAP-DECLARE-001
+    mandatory: true
+    module: orchestration
+    statement: Declare proven capability profiles before selecting executable stages.
+  - id: CAP-CLAIM-001
+    mandatory: true
+    module: orchestration
+    statement: Never claim an action or evidence that declared capabilities cannot produce.
+  - id: GATE-REQ-001
+    mandatory: true
+    module: requirements
+    statement: Require explicit human confirmation of requirement consensus.
+  - id: GATE-SPEC-001
+    mandatory: true
+    module: specification
+    statement: Require explicit human approval before marking a Specification Approved.
+  - id: GATE-PLAN-001
+    mandatory: true
+    module: ticket-planning
+    statement: Require explicit human approval before marking a Ticket Plan Approved.
+  - id: GRILL-ONE-001
+    mandatory: true
+    module: requirements
+    statement: Ask exactly one requirement question per turn and include a recommendation.
+  - id: SPEC-NOCODE-001
+    mandatory: true
+    module: specification
+    statement: Keep production implementation code out of behavioral Specifications.
+  - id: PLAN-VERTICAL-001
+    mandatory: true
+    module: ticket-planning
+    statement: Split work into vertically testable behavior rather than horizontal technical layers.
+  - id: TDD-RED-001
+    mandatory: true
+    module: tdd-implementation
+    statement: Observe expected test failure before production implementation when automated testing is reasonable.
+  - id: REVIEW-EVIDENCE-001
+    mandatory: true
+    module: review
+    statement: Review raw evidence rather than relying on an implementer conclusion.
+  - id: ART-STATE-001
+    mandatory: true
+    module: artifacts
+    statement: Preserve explicit Draft and Approved states for gated artifacts.
+  - id: ADAPTER-COVERAGE-001
+    mandatory: true
+    module: adapter-contract
+    statement: Map every mandatory core rule in every conforming adapter.
+  - id: KB-EVIDENCE-001
+    mandatory: true
+    module: project-knowledge
+    statement: Derive formal Project Knowledge Base content only from approved or accepted evidence.
+  - id: KB-DRAFT-001
+    mandatory: true
+    module: project-knowledge
+    statement: Keep unapproved requirement discoveries in Draft Working Notes rather than formal project knowledge.
+  - id: KB-SYNC-001
+    mandatory: true
+    module: project-knowledge
+    statement: Disclose additions, modifications, and removals before approving a Project Knowledge Base update.
+  - id: REVIEW-LENSES-001
+    mandatory: true
+    module: review
+    statement: Evaluate all twelve core Architecture and Refactoring Lenses with evidence or a justified result.
+  - id: ARCH-DIAG-001
+    mandatory: true
+    module: architecture-improvement
+    statement: Keep architecture improvement diagnostic-only unless a later approved workflow authorizes implementation.
+  - id: ARCH-DELETE-001
+    mandatory: true
+    module: architecture-improvement
+    statement: Use non-mutating simulated deletion by default and enforce every gate for an actual deletion experiment.
+  - id: ARCH-REPORT-001
+    mandatory: true
+    module: architecture-improvement
+    statement: Produce a complete Architecture Improvement Report whose acceptance does not authorize code changes.
+  - id: ARCH-REFLOW-001
+    mandatory: true
+    module: architecture-improvement
+    statement: Return accepted architecture improvements through Specification, Ticket Plan, and TDD before implementation.
+  - id: ROUTE-USER-001
+    mandatory: true
+    module: orchestration
+    statement: Honor an explicit user-selected module or requirement mode over automatic routing unless it violates a safety or approval gate.
+  - id: ROUTE-DOCS-001
+    mandatory: true
+    module: orchestration
+    statement: Announce the evidence-based reason whenever documented requirement interrogation is selected automatically.
+  - id: MIGRATE-V2-001
+    mandatory: true
+    module: project-knowledge
+    statement: Initialize v3 project knowledge from approved v2 evidence without rewriting approved v2 artifacts.
