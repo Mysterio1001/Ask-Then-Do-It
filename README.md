@@ -12,7 +12,7 @@ Upstream: [Matt Pocock skills repository](https://github.com/mattpocock/skills) 
 
 ### Quick Start
 
-Please read [Traditional Chinese](START-HERE.zh-TW.md) · [English](START-HERE.en.md) · [Japanese](START-HERE.ja.md) first, then choose how you want to use it:
+Please read  [User Guide](START-HERE.en.md) first, then choose how you want to use it:
 
 - Codex Plugin: [Download ask-then-do-it-1.0.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.1/ask-then-do-it-1.0.1.zip), install it, and start with `$ask-then-do-it`.
 - Gemini or another AI: [Download ask-then-do-it-generic-1.0.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.1/ask-then-do-it-generic-1.0.1.zip), extract it, and paste `generic-workflow.md` into each new conversation.
@@ -24,14 +24,6 @@ More information:
 - [Generic guide](docs/guides/generic.en.md)
 - [Design guide](docs/design/ai-development-skills.en.md)
 
-### Maintainers
-
-Build the packages and run the tests from the repository root:
-
-```powershell
-python scripts/build_release.py
-python -m unittest discover -s tests -p "test_*.py" -v
-```
 
 ---
 
@@ -47,7 +39,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 
 ### 快速開始
 
-請先閱讀 [繁體中文](START-HERE.zh-TW.md) · [英文](START-HERE.en.md) · [日文](START-HERE.ja.md)，再選擇使用方式：
+請先閱讀 [使用說明](START-HERE.zh-TW.md)，再選擇使用方式：
 
 - Codex Plugin：[下載 ask-then-do-it-1.0.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.1/ask-then-do-it-1.0.1.zip)，安裝後從 `$ask-then-do-it` 開始。
 - Gemini 或其他 AI：[下載 ask-then-do-it-generic-1.0.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.1/ask-then-do-it-generic-1.0.1.zip)，解壓縮後，在每個新對話貼上 `generic-workflow.md`。
@@ -58,15 +50,6 @@ python -m unittest discover -s tests -p "test_*.py" -v
 - [Codex Plugin 使用說明](docs/guides/codex.zh-TW.md)
 - [Generic 使用說明](docs/guides/generic.zh-TW.md)
 - [設計說明](docs/design/ai-development-skills.zh-TW.md)
-
-### 維護者
-
-在儲存庫根目錄建置套件並執行測試：
-
-```powershell
-python scripts/build_release.py
-python -m unittest discover -s tests -p "test_*.py" -v
-```
 
 ---
 
@@ -82,7 +65,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 
 ### クイックスタート
 
-まず [繁体字中国語](START-HERE.zh-TW.md) · [英語](START-HERE.en.md) · [日本語](START-HERE.ja.md) を読み、その後で利用方法を選んでください：
+まず [利用ガイド](START-HERE.ja.md) を読み、その後で利用方法を選んでください：
 
 - Codex Plugin：[ask-then-do-it-1.0.1.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.1/ask-then-do-it-1.0.1.zip)し、インストール後に `$ask-then-do-it` から始めます。
 - Gemini またはその他の AI：[ask-then-do-it-generic-1.0.1.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.1/ask-then-do-it-generic-1.0.1.zip)して展開し、新しい会話を始めるたびに `generic-workflow.md` を貼り付けます。
@@ -94,11 +77,3 @@ python -m unittest discover -s tests -p "test_*.py" -v
 - [Generic 利用ガイド](docs/guides/generic.ja.md)
 - [設計ガイド](docs/design/ai-development-skills.ja.md)
 
-### メンテナー
-
-リポジトリのルートディレクトリでパッケージをビルドし、テストを実行します：
-
-```powershell
-python scripts/build_release.py
-python -m unittest discover -s tests -p "test_*.py" -v
-```
