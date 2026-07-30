@@ -38,7 +38,7 @@ class AskThenDoItCodexIdentityTests(unittest.TestCase):
 
         self.assertEqual(PLUGIN.name, "ask-then-do-it")
         self.assertEqual(manifest["name"], "ask-then-do-it")
-        self.assertEqual(manifest["version"], "1.0.0")
+        self.assertEqual(manifest["version"], "1.0.1")
         self.assertEqual(manifest["author"]["name"], "Ian Wu, Handle by me Tech Studio")
         self.assertIn("independent", manifest["description"].lower())
         self.assertIn("not affiliated with or endorsed by Matt Pocock", manifest["description"])
@@ -66,8 +66,8 @@ class AskThenDoItCodexIdentityTests(unittest.TestCase):
 
         self.assertIn("$ask-requirements", orchestrator)
         self.assertIn("$ask-with-docs", orchestrator)
-        self.assertNotIn("$ask-requirements", orchestrator)
-        self.assertNotIn("$ask-with-docs", orchestrator)
+        self.assertNotIn("$grill-requirements", orchestrator)
+        self.assertNotIn("$grill-with-docs", orchestrator)
 
     def test_isolated_codex_package_carries_identical_legal_files(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
@@ -89,7 +89,7 @@ class AskThenDoItCodexIdentityTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             package = output / "codex" / "ask-then-do-it"
-            archive = output / "codex" / "ask-then-do-it-1.0.0.zip"
+            archive = output / "codex" / "ask-then-do-it-1.0.1.zip"
 
             for legal_file in ("LICENSE", "THIRD_PARTY_NOTICES.md"):
                 with self.subTest(legal_file=legal_file):
@@ -104,7 +104,7 @@ class AskThenDoItCodexIdentityTests(unittest.TestCase):
                         )
 
             guide = (package / "START-HERE.zh-TW.md").read_text(encoding="utf-8")
-            self.assertIn("沒有從屬關係", guide)
+            self.assertIn("沒有從屬或背書關係", guide)
             self.assertIn("THIRD_PARTY_NOTICES.md", guide)
 
 

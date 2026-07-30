@@ -1,9 +1,9 @@
 # Generic Evidence-Based Review Prompt
 
 Prompt ID: `generic.review`
-Prompt version: `1.0.0`
+Prompt version: `1.0.1`
 Required capability: `conversation`
-Core version: `1.0.0`
+Core version: `1.0.1`
 
 ## Required inputs
 

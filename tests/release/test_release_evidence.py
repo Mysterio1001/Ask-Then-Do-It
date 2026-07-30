@@ -49,15 +49,15 @@ class ReleaseEvidenceGateTests(unittest.TestCase):
         ledger = root / "ledger.json"
         ledger.write_text(
             json.dumps(
-                {"release_version": "1.0.0", "checks": checks},
+                {"release_version": "1.0.1", "checks": checks},
                 indent=2,
             ),
             encoding="utf-8",
         )
         evidence = root / "evidence.md"
         evidence.write_text(
-            "# Ask Then Do It Release 1.0.0 Evidence\n\n"
-            "Release version: `1.0.0`\n\n"
+            "# Ask Then Do It Release 1.0.1 Evidence\n\n"
+            "Release version: `1.0.1`\n\n"
             "Status: Completed\n",
             encoding="utf-8",
         )

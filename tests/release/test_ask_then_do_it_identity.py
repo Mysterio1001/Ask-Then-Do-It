@@ -35,8 +35,10 @@ class AskThenDoItIdentityTests(unittest.TestCase):
         design = DESIGN.read_text(encoding="utf-8")
 
         self.assertIn("Ask Then Do It", design)
-        self.assertIn("ask-then-do-it-1.0.0.md", design)
-        self.assertIn("$ask-with-docs", design)
+        self.assertIn("Codex Plugin", design)
+        self.assertIn("Generic workflow", design)
+        self.assertNotIn("ask-then-do-it-1.0.0.md", design)
+        self.assertNotIn("$ask-with-docs", design)
 
     def test_readme_places_verbatim_attribution_before_quick_start(self) -> None:
         readme = README.read_text(encoding="utf-8")

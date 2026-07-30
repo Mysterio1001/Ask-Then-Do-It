@@ -1,7 +1,7 @@
 adapter_id: fixture-unknown-rule
-adapter_version: 1.0.0
+adapter_version: 1.0.1
 target: test-harness
-core_version: 1.0.0
+core_version: 1.0.1
 capabilities:
   - conversation
 artifact_persistence: user-managed-markdown

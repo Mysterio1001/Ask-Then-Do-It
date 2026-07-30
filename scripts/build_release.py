@@ -25,6 +25,11 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = ROOT / "release" / "release.json"
 DEFAULT_OUTPUT = ROOT / "dist"
 LEGAL_FILES = ("LICENSE", "THIRD_PARTY_NOTICES.md")
+START_GUIDE_FILES = (
+    "START-HERE.zh-TW.md",
+    "START-HERE.en.md",
+    "START-HERE.ja.md",
+)
 ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 TOP_LEVEL_KEYS = {
@@ -189,6 +194,15 @@ def load_config(path: Path) -> dict[str, Any]:
     start_guide = (ROOT / generic["start_guide"]).resolve()
     if not start_guide.is_relative_to(ROOT) or not start_guide.is_file():
         raise BuildError(f"Missing Generic start guide source: {start_guide}")
+    if start_guide.name != "START-HERE.zh-TW.md":
+        raise BuildError(
+            "generic.start_guide must identify START-HERE.zh-TW.md"
+        )
+    missing_start_guides = [
+        name for name in START_GUIDE_FILES if not (start_guide.parent / name).is_file()
+    ]
+    if missing_start_guides:
+        raise BuildError(f"Missing localized Generic start guides: {missing_start_guides}")
     if PurePosixPath(generic["directory"]).parts[0] != "generic" or PurePosixPath(
         generic["archive"]
     ).parts[0] != "generic":
@@ -274,11 +288,13 @@ def validate_codex_source(config: dict[str, Any]) -> Path:
     for skill in actual_skills:
         if not (skills_root / skill / "SKILL.md").is_file():
             raise BuildError(f"Codex Skill is missing SKILL.md: {skill}")
-    start_guide = plugin / "START-HERE.zh-TW.md"
-    if not start_guide.is_file():
-        raise BuildError("Codex Plugin source is missing START-HERE.zh-TW.md")
+    missing_start_guides = [
+        name for name in START_GUIDE_FILES if not (plugin / name).is_file()
+    ]
+    if missing_start_guides:
+        raise BuildError(f"Codex Plugin source is missing start guides: {missing_start_guides}")
     top_level = {path.name for path in plugin.iterdir()}
-    if top_level != {".codex-plugin", "skills", "START-HERE.zh-TW.md"}:
+    if top_level != {".codex-plugin", "skills", *START_GUIDE_FILES}:
         raise BuildError(f"Unexpected Codex Plugin source entries: {sorted(top_level)}")
     return plugin
 
@@ -356,7 +372,7 @@ def expected_package_files(
         return relative_file_names(source) | set(LEGAL_FILES)
     generic = config["generic"]
     return {
-        "START-HERE.zh-TW.md",
+        *START_GUIDE_FILES,
         *LEGAL_FILES,
         generic["entrypoint"],
         "manifest.yaml",
@@ -522,7 +538,9 @@ def build_generic(config: dict[str, Any], staging: Path) -> list[str]:
     prompts.mkdir(parents=True)
     for name in generic["modules"]:
         shutil.copyfile(source / name, prompts / name)
-    shutil.copyfile(ROOT / generic["start_guide"], package / "START-HERE.zh-TW.md")
+    start_guide_root = (ROOT / generic["start_guide"]).parent
+    for name in START_GUIDE_FILES:
+        shutil.copyfile(start_guide_root / name, package / name)
     for legal_file in LEGAL_FILES:
         shutil.copyfile(ROOT / legal_file, package / legal_file)
     (package / generic["entrypoint"]).write_bytes(

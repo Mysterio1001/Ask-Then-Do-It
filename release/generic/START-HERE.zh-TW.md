@@ -1,40 +1,35 @@
-# Ask Then Do It Generic prompts 1.0.0 使用說明
+# Ask Then Do It Generic 1.0.1 使用說明
 
-這個套件適合 Gemini 或任何能接受長文字提示的 AI。它不需要 Codex Plugin，也不會安裝或修改你的模型帳號。
+這個套件適合 Gemini 或其他能接收長文字的 AI。你只要將工作流貼進對話，就能從需求釐清開始。
 
-這是獨立專案，受到 Matt Pocock 的 skills repository 啟發，但與 Matt Pocock 沒有從屬關係，也沒有獲得其背書。請讀套件根目錄的 `LICENSE` 與 `THIRD_PARTY_NOTICES.md` 了解適用授權與完整來源說明。
+這是受到 Matt Pocock 的 skills repository 啟發的獨立專案，與 Matt Pocock 沒有從屬關係，也沒有獲得其背書。授權與來源請見套件內的 `LICENSE` 及 `THIRD_PARTY_NOTICES.md`。
 
-## 最快開始：貼上一次
+## 每個新對話如何開始
 
-1. 開啟這個資料夾內的 `generic-workflow.md`。
-2. 複製整份內容，貼到一個新的 AI 對話。
-3. 在同一則訊息後面或下一則訊息提供你的實際需求與偏好語言。
-4. 如果你已有 Requirement Decision Record、Specification、Ticket Plan 或其他 Ask Then Do It Artifact，也請貼上完整內容與 approval evidence。
+1. 開啟 `generic-workflow.md`。
+2. 複製全文，貼到一個新的 AI 對話。
+3. 在同一則訊息後面或下一則訊息說明你的需求與偏好語言。
+4. 如果要繼續先前工作，也一起貼上之前保存的重要文件。
 
-Fresh workflow 的第一個有效回應應該簡短宣告能力與目前階段，接著立刻提出第一個需求問題，並附上建議答案與主要取捨。它不應只報告狀態、承諾下一次再問，或要求你再說「開始」。
+AI 的第一個有效回應會簡短說明目前階段，接著提出第一個需求問題，並附上建議答案與主要取捨。
 
 ## 你會看到什麼
 
-- 每一輪只問一個高影響問題。
-- Requirement、Specification 與 Ticket Plan 都有明確的人類核准點。
-- 實作只能提供 `UNEXECUTED IMPLEMENTATION GUIDANCE`，不能假裝已修改檔案或跑過測試。
-- Review 只能依你提供的內容進行，並標示 `limited-evidence`、`non-independent` 或無法驗證的項目。
+- 每輪只問一個重要問題。
+- 需求、規格與 Ticket 規劃都需要你明確核准。
+- 核准 Ticket 規劃後，AI 才會進入實作階段。
+- Review 會根據你提供的內容指出可確認與無法確認的部分。
 
-## Conversation-only 能力
+## 能力限制
 
-這個 Generic adapter 只證明 `Conversation-only` 能力。除非另一個主機真的提供並證明工具能力，AI 不得聲稱：
+Generic 版本只會在對話中引導流程，不能直接修改你的檔案或執行測試。若你使用的 AI 另外具備檔案或工具功能，請依該服務實際提供的能力操作。
 
-- 已讀取或修改 repository。
-- 已執行命令、測試、build 或部署。
-- 已完成真實 TDD、獨立 Review 或實際刪除實驗。
-- 已替你保存跨對話狀態。
+## 保存進度
 
-## 請自行保存 Artifact
+請保存 AI 產生的需求紀錄、規格、Ticket 規劃、Review 與其他重要文件。
 
-一般聊天模型不保證跨對話記憶。當 AI 輸出 Requirement Decision Record、Project Knowledge Base、Specification、Ticket Plan、Review Report 或 Architecture Improvement Report 時，請自行保存完整 Markdown。
-
-之後開新對話時，重新貼上 `generic-workflow.md`、你的新要求，以及保存的完整 Artifact。工作流會驗證已核准內容並前往第一個未完成階段，不應無故重新開始需求審問。
+每個新對話都要重新貼上 `generic-workflow.md`。要延續先前工作時，再一起貼上保存的文件和新的要求；AI 會從第一個尚未完成的階段繼續。
 
 ## 進階用法
 
-`prompts/` 內有九個獨立模組，供知道自己要直接使用哪個階段的人使用。一般使用者只需要 `generic-workflow.md`。
+`prompts/` 內有九個分階段模組。熟悉流程後，可以直接選擇需要的模組；一般情況使用 `generic-workflow.md` 即可。

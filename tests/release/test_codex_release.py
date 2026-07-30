@@ -13,6 +13,10 @@ CONFIG = ROOT / "release" / "release.json"
 PLUGIN = ROOT / "adapters" / "codex" / "plugin" / "ask-then-do-it"
 SKILLS = PLUGIN / "skills"
 START_GUIDE = PLUGIN / "START-HERE.zh-TW.md"
+START_GUIDES = {
+    name: PLUGIN / name
+    for name in ("START-HERE.zh-TW.md", "START-HERE.en.md", "START-HERE.ja.md")
+}
 EXPECTED_SKILLS = {
     "ask-then-do-it",
     "ask-requirements",
@@ -42,8 +46,9 @@ class CodexReleaseSourceTests(unittest.TestCase):
         self.assertTrue(START_GUIDE.is_file())
         body = START_GUIDE.read_text(encoding="utf-8")
         for required in (
-            "1.0.0",
-            "手動",
+            "1.0.1",
+            "解壓縮",
+            "marketplace",
             "$ask-then-do-it",
             "$ask-requirements",
             "$ask-with-docs",
@@ -52,13 +57,20 @@ class CodexReleaseSourceTests(unittest.TestCase):
             "$implement-tdd",
             "$review-code",
             "$improve-architecture",
-            "checksums.sha256",
             "安裝",
             "更新",
             "移除",
         ):
             self.assertIn(required, body)
-        self.assertIn("不會自動", body)
+        for forbidden in (
+            "checksums.sha256",
+            "SHA-256",
+            "checksum",
+            "不會自動",
+            "personal installation",
+            "generated manifest",
+        ):
+            self.assertNotIn(forbidden, body)
 
     def test_release_identity_and_managed_codex_outputs_are_declared_once(self) -> None:
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
@@ -67,11 +79,11 @@ class CodexReleaseSourceTests(unittest.TestCase):
         self.assertEqual(
             config["display_name"], "Ask Then Do It"
         )
-        self.assertEqual(config["release_version"], "1.0.0")
-        self.assertEqual(config["core_version"], "1.0.0")
+        self.assertEqual(config["release_version"], "1.0.1")
+        self.assertEqual(config["core_version"], "1.0.1")
         self.assertEqual(config["codex"]["source"], "adapters/codex/plugin/ask-then-do-it")
         self.assertEqual(config["codex"]["directory"], "codex/ask-then-do-it")
-        self.assertEqual(config["codex"]["archive"], "codex/ask-then-do-it-1.0.0.zip")
+        self.assertEqual(config["codex"]["archive"], "codex/ask-then-do-it-1.0.1.zip")
         self.assertIn("checksums.sha256", config["managed_outputs"])
 
     def test_plugin_root_matches_manifest_and_is_the_only_skill_source(self) -> None:
@@ -80,7 +92,7 @@ class CodexReleaseSourceTests(unittest.TestCase):
         )
         self.assertEqual(PLUGIN.name, "ask-then-do-it")
         self.assertEqual(manifest["name"], PLUGIN.name)
-        self.assertEqual(manifest["version"], "1.0.0")
+        self.assertEqual(manifest["version"], "1.0.1")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertFalse((ROOT / "adapters" / "codex" / "skills").exists())
         self.assertEqual(
@@ -111,11 +123,11 @@ class CodexReleaseBuildTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
 
             package = output_root / "codex" / "ask-then-do-it"
-            archive = output_root / "codex" / "ask-then-do-it-1.0.0.zip"
+            archive = output_root / "codex" / "ask-then-do-it-1.0.1.zip"
             checksums = output_root / "checksums.sha256"
             expected_files = {
                 ".codex-plugin/plugin.json",
-                "START-HERE.zh-TW.md",
+                *START_GUIDES,
                 "LICENSE",
                 "THIRD_PARTY_NOTICES.md",
                 *{
@@ -125,10 +137,8 @@ class CodexReleaseBuildTests(unittest.TestCase):
                 },
             }
             self.assertEqual(relative_files(package), expected_files)
-            self.assertEqual(
-                (package / "START-HERE.zh-TW.md").read_bytes(),
-                START_GUIDE.read_bytes(),
-            )
+            for name, source in START_GUIDES.items():
+                self.assertEqual((package / name).read_bytes(), source.read_bytes())
             for source_file in SKILLS.rglob("*"):
                 if source_file.is_file():
                     relative = source_file.relative_to(SKILLS).as_posix()
@@ -152,7 +162,7 @@ class CodexReleaseBuildTests(unittest.TestCase):
 
             self.assertEqual(
                 checksums.read_text(encoding="ascii"),
-                f"{sha256(archive)}  codex/ask-then-do-it-1.0.0.zip\n",
+                f"{sha256(archive)}  codex/ask-then-do-it-1.0.1.zip\n",
             )
 
             forbidden_names = {

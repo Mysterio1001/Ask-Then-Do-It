@@ -1,9 +1,9 @@
 # Generic Architecture Improvement Prompt
 
 Prompt ID: `generic.architecture-improvement`
-Prompt version: `1.0.0`
+Prompt version: `1.0.1`
 Required capability: `conversation`
-Core version: `1.0.0`
+Core version: `1.0.1`
 
 ## Required inputs
 

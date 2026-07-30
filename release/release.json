@@ -2,12 +2,12 @@
   "schema_version": 2,
   "package_id": "ask-then-do-it",
   "display_name": "Ask Then Do It",
-  "release_version": "1.0.0",
-  "core_version": "1.0.0",
+  "release_version": "1.0.1",
+  "core_version": "1.0.1",
   "codex": {
     "source": "adapters/codex/plugin/ask-then-do-it",
     "directory": "codex/ask-then-do-it",
-    "archive": "codex/ask-then-do-it-1.0.0.zip",
+    "archive": "codex/ask-then-do-it-1.0.1.zip",
     "skills": [
       "ask-then-do-it",
       "ask-requirements",
@@ -21,8 +21,8 @@
   },
   "generic": {
     "source": "adapters/generic-prompts",
-    "directory": "generic/ask-then-do-it-generic-1.0.0",
-    "archive": "generic/ask-then-do-it-generic-1.0.0.zip",
+    "directory": "generic/ask-then-do-it-generic-1.0.1",
+    "archive": "generic/ask-then-do-it-generic-1.0.1.zip",
     "entrypoint": "generic-workflow.md",
     "start_guide": "release/generic/START-HERE.zh-TW.md",
     "modules": [

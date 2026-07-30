@@ -63,12 +63,12 @@ def text(path: Path) -> str:
 
 
 class CleanSlateContractTests(unittest.TestCase):
-    def test_all_active_component_versions_are_1_0_0(self) -> None:
+    def test_all_active_component_versions_are_1_0_1(self) -> None:
         config = json.loads(text(RELEASE))
-        self.assertEqual(config["release_version"], "1.0.0")
-        self.assertEqual(config["core_version"], "1.0.0")
-        self.assertIn("Core version: `1.0.0`", text(ROOT / "core" / "CORE.md"))
-        self.assertIn("core_version: 1.0.0", text(ROOT / "core" / "rules" / "rules.yaml"))
+        self.assertEqual(config["release_version"], "1.0.1")
+        self.assertEqual(config["core_version"], "1.0.1")
+        self.assertIn("Core version: `1.0.1`", text(ROOT / "core" / "CORE.md"))
+        self.assertIn("core_version: 1.0.1", text(ROOT / "core" / "rules" / "rules.yaml"))
 
         for manifest in (
             CODEX / "conformance.yaml",
@@ -77,16 +77,16 @@ class CleanSlateContractTests(unittest.TestCase):
         ):
             with self.subTest(manifest=manifest.relative_to(ROOT)):
                 self.assertNotIn("3.0.0", text(manifest))
-                self.assertIn("1.0.0", text(manifest))
+                self.assertIn("1.0.1", text(manifest))
 
         plugin = json.loads(
             text(CODEX / "plugin" / "ask-then-do-it" / ".codex-plugin" / "plugin.json")
         )
-        self.assertEqual(plugin["version"], "1.0.0")
+        self.assertEqual(plugin["version"], "1.0.1")
 
         for prompt in EXPECTED_PROMPTS:
             with self.subTest(prompt=prompt):
-                self.assertIn("Core version: `1.0.0`", text(GENERIC / prompt))
+                self.assertIn("Core version: `1.0.1`", text(GENERIC / prompt))
 
         for skill in EXPECTED_SKILLS:
             with self.subTest(skill=skill):
@@ -122,15 +122,15 @@ class CleanSlateContractTests(unittest.TestCase):
         config = json.loads(text(RELEASE))
         self.assertEqual(config["codex"]["directory"], "codex/ask-then-do-it")
         self.assertEqual(
-            config["codex"]["archive"], "codex/ask-then-do-it-1.0.0.zip"
+            config["codex"]["archive"], "codex/ask-then-do-it-1.0.1.zip"
         )
         self.assertEqual(
             config["generic"]["directory"],
-            "generic/ask-then-do-it-generic-1.0.0",
+            "generic/ask-then-do-it-generic-1.0.1",
         )
         self.assertEqual(
             config["generic"]["archive"],
-            "generic/ask-then-do-it-generic-1.0.0.zip",
+            "generic/ask-then-do-it-generic-1.0.1.zip",
         )
         self.assertEqual(
             config["managed_outputs"],
