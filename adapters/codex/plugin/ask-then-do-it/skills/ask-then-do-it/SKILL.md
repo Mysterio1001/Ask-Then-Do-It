@@ -1,6 +1,6 @@
 ---
 name: ask-then-do-it
-description: Coordinate repository-aware software development through documented or normal requirements, specification, ticket planning, TDD, review, and diagnostic architecture gates. Use for substantial new features, ambiguous requests, existing-system changes, cross-module work, architecture concerns, release milestones, or explicit requests for a structured end-to-end workflow. Do not invoke implicitly for trivial, fully specified fixes, formatting-only edits, or single-line changes.
+description: Coordinate repository-aware software development through requirements, specification, mode-selected Ticket planning, TDD or direct implementation, review, and diagnostic architecture gates. Use for substantial new features, ambiguous requests, existing-system changes, cross-module work, architecture concerns, release milestones, or explicit requests for a structured end-to-end workflow. Do not invoke implicitly for trivial, fully specified fixes, formatting-only edits, or single-line changes.
 ---
 
 # AI Dev Workflow
@@ -34,7 +34,7 @@ Use the full workflow when the request is ambiguous, consequential, cross-cuttin
 
 ## Honor explicit user control
 
-Honor an explicit user selection of `$ask-requirements`, `$ask-with-docs`, `$write-spec`, `$plan-tickets`, `$implement-tdd`, `$review-code`, or `$improve-architecture` over automatic routing (`ROUTE-USER-001`). Preserve every capability, safety, and approval gate; direct selection cannot bypass a missing prerequisite.
+Honor an explicit user selection of `$ask-requirements`, `$ask-with-docs`, `$write-spec`, `$plan-tickets`, `$implement-tdd`, `$implement-direct`, `$review-code`, or `$improve-architecture` over automatic routing (`ROUTE-USER-001`). Preserve every capability, safety, and approval gate; direct selection cannot bypass a missing prerequisite or a conflicting Approved Ticket mode.
 
 Do not require the user to know Skill names. Route a natural-language request by intent when the evidence is sufficient.
 
@@ -65,12 +65,21 @@ Perform focused, read-only reconnaissance:
 | Specification is draft or disputed | Present or revise it and obtain approval |
 | Approved specification exists but no ticket plan exists | Invoke `$plan-tickets` |
 | Ticket plan is draft or disputed | Present or revise it and obtain approval |
-| Approved tickets remain | Invoke `$implement-tdd` for the next eligible ticket |
+| Approved Tickets remain | Route the next eligible Ticket from its Approved mode |
 | Implementation changed | Invoke `$review-code` |
 | Review contains systemic architecture evidence | Invoke `$improve-architecture` for diagnosis only |
 | Review has no blocking findings and verification passes | Hand off the completed result |
 
 Do not force users to replay completed stages. Verify that an existing artifact is relevant, internally consistent, and explicitly approved before relying on it.
+
+## Route implementation modes
+
+- Ticket Planning collects all plain-language test choices in one batch and maps adding tests to `tdd` and declining tests to `direct`; never ask the user to choose those internal names as the initial decision.
+- Route an eligible Approved `tdd` Ticket to `$implement-tdd`.
+- Route an eligible Approved `direct` Ticket to `$implement-direct`.
+- Do not infer a default implementation mode from silence, repository conventions, risk, another Ticket, or earlier history.
+- Return a missing, unknown, conflicting, or changed mode to `$plan-tickets`; changing an Approved mode returns the plan to `Draft` and requires reapproval.
+- Preserve the selected mode in implementation evidence and `$review-code` handoff.
 
 ## Route architecture diagnosis
 

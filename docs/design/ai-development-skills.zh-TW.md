@@ -10,7 +10,7 @@ AI 很容易在資訊不足時直接產生程式碼。這通常造成三種結�
 - 不同對話對專案的理解不一致。
 - 發現架構問題後直接大改，卻沒有重新確認影響。
 
-Ask Then Do It 使用需求共識、規格、Tickets、TDD、Review 與架構改善，把這些風險拆成可確認的階段。
+Ask Then Do It 使用需求共識、規格、Tickets、每張 Ticket 由使用者選定的實作模式、Review 與架構改善，把這些風險拆成可確認的階段。
 
 ## Core、Codex Plugin 與 Generic workflow
 
@@ -19,7 +19,7 @@ Ask Then Do It 使用需求共識、規格、Tickets、TDD、Review 與架構改
 | 部分 | 作用 |
 | --- | --- |
 | Core | 定義所有模型共同遵守的流程、核准點與安全界線 |
-| Codex Plugin | 將流程提供為八個可由 Codex 選擇的 Skills |
+| Codex Plugin | 將流程提供為九個可由 Codex 選擇的 Skills |
 | Generic workflow | 將相同流程整理成可貼到 Gemini 或其他 AI 的長文字工作流 |
 
 Codex 和其他 AI 的操作方式不同，但需求核准、規格核准與 Ticket 規劃核准不能被省略。
@@ -36,13 +36,17 @@ flowchart TD
     E --> F{"規格核准"}
     F -->|修改| E
     F -->|核准| G["拆分垂直 Tickets"]
-    G --> H{"Ticket 規劃核准"}
-    H -->|修改| G
-    H -->|核准| I["逐張 Ticket 進行 TDD"]
-    I --> J["Review"]
-    J -->|局部問題| K["修正或完成"]
-    J -->|系統問題| L["架構改善分析"]
-    L --> E
+    G --> H["提供測試建議並一次決定是否加上測試"]
+    H --> I{"Ticket 規劃核准"}
+    I -->|修改| G
+    I -->|核准| J{"測試選擇對應的內部路徑"}
+    J -->|tdd| K["Red、Green、Refactor"]
+    J -->|direct| L["不執行行為測試直接實作"]
+    K --> M["Review"]
+    L --> M
+    M -->|局部問題| N["修正或完成"]
+    M -->|系統問題| O["架構改善分析"]
+    O --> E
 ```
 
 ## 為什麼一次只問一題
@@ -71,9 +75,9 @@ Project Knowledge Base 是專案的長期知識庫，保存已核准的名詞、
 
 每張 Ticket 都應交付一個可以獨立驗證的使用者結果。若依資料庫、後端、前端分開拆工作，任何一張 Ticket 完成時都可能看不到可用功能。
 
-垂直拆分會讓一張 Ticket 同時包含完成該結果所需的資料、邏輯、介面與測試。
+垂直拆分會讓一張 Ticket 同時包含完成該結果所需的資料、邏輯與介面。所有 Tickets 列出後，流程會逐張提供測試建議與工時、風險提醒。使用者在一次回覆中決定每張 Ticket 是否加上測試，可以全部加上、全部不加，或指定部分 Tickets；所有選擇完成後才核准規劃。
 
-## TDD 與實作證據
+## TDD、direct 實作與證據
 
 TDD 使用 Red、Green、Refactor：
 
@@ -82,6 +86,8 @@ TDD 使用 Red、Green、Refactor：
 - Refactor 在測試保護下整理設計。
 
 流程要求保留實際命令與測試結果，避免只用文字宣稱功能已完成。
+
+使用者選擇不加測試時，流程會使用內部 `direct` 路徑；所有 Tickets 都不加測試也有效。direct 路徑不建立也不執行行為測試，但可以執行 lint、type-check 或 build。它的證據與 Review 保留 `tests: skipped-by-user`、指出未測試行為，也不宣稱具備與 TDD 相同的信心。
 
 ## Review 與十二項視角
 
@@ -98,7 +104,7 @@ Review 會重新對照核准內容、程式差異與驗證結果，並使用固�
 - 模擬移除某個模組會造成什麼結果。
 - 排定改善優先順序。
 
-接受分析不等於允許動工。真正修改仍要回到規格、Ticket 規劃與 TDD。
+接受分析不等於允許動工。真正修改仍要回到規格、Ticket 規劃、每張 Ticket 的使用者模式選擇與對應實作路徑。
 
 ## 不同 AI 能力下的做法
 

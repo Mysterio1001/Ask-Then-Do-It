@@ -107,8 +107,8 @@ class ReleaseSafetyTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
 
             for name in (
-                "codex/ask-then-do-it-1.0.1.zip",
-                "generic/ask-then-do-it-generic-1.0.1.zip",
+                "codex/ask-then-do-it-1.1.0.zip",
+                "generic/ask-then-do-it-generic-1.1.0.zip",
                 "checksums.sha256",
             ):
                 self.assertEqual(
@@ -118,11 +118,11 @@ class ReleaseSafetyTests(unittest.TestCase):
                 )
 
             pairs = (
-                ("codex/ask-then-do-it", "codex/ask-then-do-it-1.0.1.zip", "ask-then-do-it"),
+                ("codex/ask-then-do-it", "codex/ask-then-do-it-1.1.0.zip", "ask-then-do-it"),
                 (
-                    "generic/ask-then-do-it-generic-1.0.1",
-                    "generic/ask-then-do-it-generic-1.0.1.zip",
-                    "ask-then-do-it-generic-1.0.1",
+                    "generic/ask-then-do-it-generic-1.1.0",
+                    "generic/ask-then-do-it-generic-1.1.0.zip",
+                    "ask-then-do-it-generic-1.1.0",
                 ),
             )
             for directory_name, archive_name, archive_root in pairs:

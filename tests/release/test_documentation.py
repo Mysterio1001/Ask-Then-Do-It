@@ -42,8 +42,129 @@ USER_LOCALIZED_DOCUMENTS = tuple(
     for locale in ("en", "ja")
 )
 
+ROOT_START_BY_LOCALE = {
+    "zh-TW": START_HERE,
+    "en": localized_sibling(START_HERE, "en"),
+    "ja": localized_sibling(START_HERE, "ja"),
+}
+
+CODEX_START_BY_LOCALE = {
+    "zh-TW": CODEX_START_GUIDE,
+    "en": localized_sibling(CODEX_START_GUIDE, "en"),
+    "ja": localized_sibling(CODEX_START_GUIDE, "ja"),
+}
+
+GENERIC_START_BY_LOCALE = {
+    "zh-TW": GENERIC_START_GUIDE,
+    "en": localized_sibling(GENERIC_START_GUIDE, "en"),
+    "ja": localized_sibling(GENERIC_START_GUIDE, "ja"),
+}
+
+FLOW_DOCUMENTS_BY_LOCALE = {
+    "zh-TW": USER_ZH_DOCUMENTS,
+    "en": tuple(
+        localized_sibling(document, "en")
+        for document in USER_ZH_DOCUMENTS
+        if document != README
+    ),
+    "ja": tuple(
+        localized_sibling(document, "ja")
+        for document in USER_ZH_DOCUMENTS
+        if document != README
+    ),
+}
+
 
 class ReleaseDocumentationTests(unittest.TestCase):
+    def test_all_nine_start_pages_use_plain_language_batch_test_choices(self) -> None:
+        expected = {
+            "zh-TW": ("一次", "是否加上測試"),
+            "en": ("one response", "whether to add tests"),
+            "ja": ("一度に", "テストを追加するか"),
+        }
+        root_sequences = {
+            "zh-TW": "AI 會先提出一個重要問題，等你確認需求後才進入下一階段。Tickets 建立後，AI 會逐張提供測試建議，再由你一次決定每張 Ticket 是否加上測試，最後才核准完整規劃。",
+            "en": "The AI will ask one important question first. It will not move to the next stage until you confirm the requirements. After the Tickets are drafted, it gives a test recommendation for each Ticket, then asks you in one response whether to add tests to each Ticket before you approve the complete plan.",
+            "ja": "AI は最初に重要な質問を一つ行い、要件が確認されてから次の段階へ進みます。Tickets の作成後、AI は各 Ticket のテスト方針を提案し、すべての Ticket についてテストを追加するかどうかを一度に確認します。最後に計画全体を承認します。",
+        }
+        for locale, document in ROOT_START_BY_LOCALE.items():
+            self.assertIn(
+                root_sequences[locale],
+                document.read_text(encoding="utf-8"),
+            )
+        for group in (
+            ROOT_START_BY_LOCALE,
+            CODEX_START_BY_LOCALE,
+            GENERIC_START_BY_LOCALE,
+        ):
+            for locale, document in group.items():
+                body = document.read_text(encoding="utf-8")
+                for phrase in expected[locale]:
+                    with self.subTest(
+                        document=document.relative_to(ROOT), phrase=phrase
+                    ):
+                        self.assertIn(phrase, body)
+
+    def test_all_localized_flow_documents_avoid_mode_jargon_as_the_choice(self) -> None:
+        expected = {
+            "zh-TW": ("一次", "是否加上測試"),
+            "en": ("one response", "whether to add tests"),
+            "ja": ("一度に", "テストを追加するか"),
+        }
+        forbidden = (
+            "選擇 `tdd` 或 `direct`",
+            "choose `tdd` or `direct`",
+            "select `tdd` or `direct`",
+            "tdd or direct",
+            "tdd または direct",
+            "tdd か direct",
+        )
+        for locale, documents in FLOW_DOCUMENTS_BY_LOCALE.items():
+            for document in documents:
+                body = document.read_text(encoding="utf-8")
+                for phrase in expected[locale]:
+                    with self.subTest(
+                        document=document.relative_to(ROOT), phrase=phrase
+                    ):
+                        self.assertIn(phrase, body)
+                for phrase in forbidden:
+                    with self.subTest(
+                        document=document.relative_to(ROOT), forbidden=phrase
+                    ):
+                        self.assertNotIn(phrase, body.lower())
+                for line in body.splitlines():
+                    if "`tdd`" in line and "`direct`" in line:
+                        with self.subTest(
+                            document=document.relative_to(ROOT), line=line
+                        ):
+                            normalized = line.lower()
+                            self.assertTrue(
+                                any(
+                                    marker in normalized
+                                    for marker in (
+                                        "internal",
+                                        "record",
+                                        "map",
+                                        "內部",
+                                        "記錄",
+                                        "對應",
+                                        "内部",
+                                        "記録",
+                                        "対応",
+                                    )
+                                ),
+                                "Internal values may appear together only in a mapping explanation",
+                            )
+                            self.assertNotIn("?", line)
+                            self.assertNotIn("？", line)
+
+        readme = README.read_text(encoding="utf-8")
+        for phrases in expected.values():
+            for phrase in phrases:
+                self.assertIn(phrase, readme)
+        for phrase in forbidden:
+            self.assertNotIn(phrase, readme.lower())
+
     def test_root_start_page_offers_two_direct_consumer_choices(self) -> None:
         self.assertTrue(START_HERE.is_file())
         body = START_HERE.read_text(encoding="utf-8")
@@ -52,12 +173,12 @@ class ReleaseDocumentationTests(unittest.TestCase):
         self.assertLess(codex, generic)
         self.assertIn(
             "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/"
-            "v1.0.1/ask-then-do-it-1.0.1.zip",
+            "v1.1.0/ask-then-do-it-1.1.0.zip",
             body,
         )
         self.assertIn(
             "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/"
-            "v1.0.1/ask-then-do-it-generic-1.0.1.zip",
+            "v1.1.0/ask-then-do-it-generic-1.1.0.zip",
             body,
         )
         self.assertNotIn("## 維護者", body)
@@ -76,13 +197,13 @@ class ReleaseDocumentationTests(unittest.TestCase):
             "## 繁體中文快速開始",
             "Codex Plugin",
             "generic-workflow.md",
-            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.1/ask-then-do-it-1.0.1.zip",
-            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.1/ask-then-do-it-generic-1.0.1.zip",
+            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-1.1.0.zip",
+            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-generic-1.1.0.zip",
             "python scripts/build_release.py",
         ):
             self.assertIn(required, body)
-        self.assertNotIn("dist/codex/ask-then-do-it-1.0.1.zip", body)
-        self.assertNotIn("dist/generic/ask-then-do-it-generic-1.0.1.zip", body)
+        self.assertNotIn("dist/codex/ask-then-do-it-1.1.0.zip", body)
+        self.assertNotIn("dist/generic/ask-then-do-it-generic-1.1.0.zip", body)
         for obsolete in ("2.1.0", "3.0.0", "checksums-2.1.0"):
             self.assertNotIn(obsolete, body)
 
@@ -112,18 +233,23 @@ class ReleaseDocumentationTests(unittest.TestCase):
     def test_codex_guide_covers_current_manual_plugin_lifecycle(self) -> None:
         body = CODEX_GUIDE.read_text(encoding="utf-8")
         for required in (
-            "ask-then-do-it-1.0.1.zip",
+            "ask-then-do-it-1.1.0.zip",
             "## 下載與解壓縮",
             "## 手動安裝",
             "codex plugin add ask-then-do-it --marketplace <local-marketplace-name>",
             "## 第一次使用",
             "## 手動更新",
             "## 手動移除",
-            "## 八個 Skill 入口",
+            "## 九個 Skill 入口",
             "$ask-then-do-it",
             "$ask-with-docs",
+            "$implement-direct",
             "$improve-architecture",
             "Project Knowledge Base",
+            "執行測試可能增加工時",
+            "`tdd`",
+            "`direct`",
+            "`tests: skipped-by-user`",
         ):
             self.assertIn(required, body)
         for forbidden in (
@@ -147,16 +273,20 @@ class ReleaseDocumentationTests(unittest.TestCase):
     def test_generic_guide_covers_current_conversation_only_package(self) -> None:
         body = GENERIC_GUIDE.read_text(encoding="utf-8")
         for required in (
-            "ask-then-do-it-generic-1.0.1.zip",
+            "ask-then-do-it-generic-1.1.0.zip",
             "## 快速開始",
             "每個新對話",
             "generic-workflow.md",
             "## 保存進度",
             "不能直接修改你的檔案或執行測試",
             "documented-requirements.md",
+            "direct-implementation.md",
             "architecture-improvement.md",
             "Project Knowledge Base",
             "第一個需求問題",
+            "執行測試可能增加工時",
+            "`tdd`",
+            "`direct`",
         ):
             self.assertIn(required, body)
         for forbidden in (
@@ -196,7 +326,10 @@ class ReleaseDocumentationTests(unittest.TestCase):
             "Review",
             "架構改善",
             "$ask-then-do-it",
+            "$implement-direct",
             "generic-workflow.md",
+            "執行測試可能增加工時",
+            "`tests: skipped-by-user`",
         ):
             self.assertIn(required, body)
         for forbidden in (
@@ -323,22 +456,29 @@ class ReleaseDocumentationTests(unittest.TestCase):
                     "$ask-with-docs",
                     "$write-spec",
                     "$plan-tickets",
+                    "$implement-direct",
                     "$implement-tdd",
                     "$review-code",
                     "$improve-architecture",
                 ):
                     self.assertIn(skill, body)
+                for required in ("`tdd`", "`direct`", "`tests: skipped-by-user`"):
+                    self.assertIn(required, body)
 
         for source in (GENERIC_START_GUIDE, GENERIC_GUIDE):
             for locale in ("en", "ja"):
                 body = localized_sibling(source, locale).read_text(encoding="utf-8")
                 self.assertIn("generic-workflow.md", body)
-                self.assertIn("1.0.1", body)
+                self.assertIn("direct-implementation.md", body)
+                self.assertIn("1.1.0", body)
+                self.assertIn("`tdd`", body)
+                self.assertIn("`direct`", body)
 
         for locale in ("en", "ja"):
             simple = localized_sibling(SIMPLE_GUIDE, locale).read_text(encoding="utf-8")
             for required in (
                 "$ask-then-do-it",
+                "$implement-direct",
                 "generic-workflow.md",
                 "Red",
                 "Green",
@@ -347,7 +487,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
             ):
                 self.assertIn(required, simple)
             design = localized_sibling(DESIGN, locale).read_text(encoding="utf-8")
-            for required in ("Core", "Codex Plugin", "Generic workflow", "TDD", "Review"):
+            for required in ("Core", "Codex Plugin", "Generic workflow", "TDD", "direct", "Review"):
                 self.assertIn(required, design)
 
     def test_all_relative_document_links_resolve(self) -> None:

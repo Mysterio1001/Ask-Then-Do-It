@@ -2,16 +2,17 @@
   "schema_version": 2,
   "package_id": "ask-then-do-it",
   "display_name": "Ask Then Do It",
-  "release_version": "1.0.1",
-  "core_version": "1.0.1",
+  "release_version": "1.1.0",
+  "core_version": "1.1.0",
   "codex": {
     "source": "adapters/codex/plugin/ask-then-do-it",
     "directory": "codex/ask-then-do-it",
-    "archive": "codex/ask-then-do-it-1.0.1.zip",
+    "archive": "codex/ask-then-do-it-1.1.0.zip",
     "skills": [
       "ask-then-do-it",
       "ask-requirements",
       "ask-with-docs",
+      "implement-direct",
       "implement-tdd",
       "improve-architecture",
       "plan-tickets",
@@ -21,8 +22,8 @@
   },
   "generic": {
     "source": "adapters/generic-prompts",
-    "directory": "generic/ask-then-do-it-generic-1.0.1",
-    "archive": "generic/ask-then-do-it-generic-1.0.1.zip",
+    "directory": "generic/ask-then-do-it-generic-1.1.0",
+    "archive": "generic/ask-then-do-it-generic-1.1.0.zip",
     "entrypoint": "generic-workflow.md",
     "start_guide": "release/generic/START-HERE.zh-TW.md",
     "modules": [
@@ -32,6 +33,7 @@
       "documented-requirements.md",
       "specification.md",
       "ticket-planning.md",
+      "direct-implementation.md",
       "tdd-implementation.md",
       "review.md",
       "architecture-improvement.md"

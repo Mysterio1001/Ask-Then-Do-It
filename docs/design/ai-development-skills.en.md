@@ -10,7 +10,7 @@ An AI can easily start writing code without enough information. This often leads
 - Different conversations develop different understandings of the project.
 - An architecture problem triggers a large change before its impact is agreed upon.
 
-Ask Then Do It separates these risks into clear stages: requirements consensus, specification, Tickets, TDD, Review, and architecture improvement.
+Ask Then Do It separates these risks into clear stages: requirements consensus, specification, Tickets, a user-selected implementation mode for every Ticket, Review, and architecture improvement.
 
 ## Core, Codex Plugin, and Generic workflow
 
@@ -19,7 +19,7 @@ The method has three conceptual layers:
 | Part | Role |
 | --- | --- |
 | Core | Defines the workflow, approval points, and safety boundaries shared by all models |
-| Codex Plugin | Presents the workflow as eight Skills that Codex can select |
+| Codex Plugin | Presents the workflow as nine Skills that Codex can select |
 | Generic workflow | Presents the same workflow as long-form instructions for Gemini and other AI services |
 
 Codex and other AI services use different interfaces, but none may skip approval of the requirements, specification, or Ticket plan.
@@ -36,13 +36,17 @@ flowchart TD
     E --> F{"Approve the specification"}
     F -->|Revise| E
     F -->|Approve| G["Split work into vertical Tickets"]
-    G --> H{"Approve the Ticket plan"}
-    H -->|Revise| G
-    H -->|Approve| I["Use TDD for each Ticket"]
-    I --> J["Review"]
-    J -->|Local issue| K["Fix or finish"]
-    J -->|System issue| L["Analyze architecture improvement"]
-    L --> E
+    G --> H["Recommend tests and decide in one response whether to add tests"]
+    H --> I{"Approve the Ticket plan"}
+    I -->|Revise| G
+    I -->|Approve| J{"Internal route for each test choice"}
+    J -->|tdd| K["Red, Green, Refactor"]
+    J -->|direct| L["Implement without behavioral tests"]
+    K --> M["Review"]
+    L --> M
+    M -->|Local issue| N["Fix or finish"]
+    M -->|System issue| O["Analyze architecture improvement"]
+    O --> E
 ```
 
 ## Why ask only one question at a time
@@ -71,9 +75,9 @@ New information from requirements discussions first remains a temporary note. It
 
 Each Ticket should deliver a user-visible result that can be verified independently. If work is split into separate database, backend, and frontend Tickets, completing any one Ticket may still produce nothing usable.
 
-A vertical Ticket includes the data, logic, interface, and tests needed to deliver its result.
+A vertical Ticket includes the data, logic, and interface needed to deliver its result. After every Ticket is listed, the workflow gives each one a test recommendation with time and risk warnings. In one response, the user decides whether to add tests to every Ticket: all, none, or an explicit subset. The plan is approved only after every choice is resolved.
 
-## TDD and implementation evidence
+## TDD, direct implementation, and evidence
 
 TDD follows Red, Green, and Refactor:
 
@@ -82,6 +86,8 @@ TDD follows Red, Green, and Refactor:
 - Refactor improves the design while tests continue to pass.
 
 The workflow keeps the actual commands and test results so that completion is supported by evidence, not only a written claim.
+
+When the user declines tests, the workflow uses the internal `direct` path; declining tests for every Ticket is also valid. The direct path does not create or run behavioral tests, although it may run lint, type-check, or build checks. Its evidence and Review retain `tests: skipped-by-user`, identify untested behavior, and do not claim TDD-equivalent confidence.
 
 ## Review from twelve perspectives
 
@@ -98,7 +104,7 @@ Architecture problems often affect multiple features. Immediate restructuring ma
 - Examines what would happen if a module were removed.
 - Prioritizes improvement options.
 
-Accepting the analysis does not authorize implementation. Changes still return through specification, Ticket planning, and TDD.
+Accepting the analysis does not authorize implementation. Changes still return through specification, Ticket planning, the user's per-Ticket mode selection, and the matching implementation path.
 
 ## Working with different AI capabilities
 

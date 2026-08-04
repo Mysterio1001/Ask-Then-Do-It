@@ -4,7 +4,7 @@
 
 ## 下載與解壓縮
 
-[下載 ask-then-do-it-1.0.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.1/ask-then-do-it-1.0.1.zip) 並解壓縮。
+[下載 ask-then-do-it-1.1.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-1.1.0.zip) 並解壓縮。
 
 解壓後最外層應是 `ask-then-do-it/`，裡面包含：
 
@@ -53,9 +53,11 @@ AI 會先判斷你目前位於哪個階段，再提出一個最重要的問題�
 2. 規格。
 3. Ticket 規劃。
 
-第三個核准完成後，AI 才能開始正式實作。
+第三個核准前，AI 會先列出所有 Tickets，逐張提供測試建議。每張都會提醒執行測試可能增加工時，而不加測試會降低行為驗證信心。接著你用一次回覆決定每張 Ticket 是否加上測試：全部加上、全部不加，或指定部分 Tickets；沒有預設值。若只指定部分但未說明其餘項目，AI 只會追問尚未決定的 Tickets。
 
-## 八個 Skill 入口
+核准後，加上測試的 Ticket 會在內部記錄為 `tdd` 並交由 `$implement-tdd`；不加測試的 Ticket 會記錄為 `direct` 並交由 `$implement-direct`，不建立也不執行行為測試，但可執行 lint、type-check 或 build。Review 會保留 `tests: skipped-by-user` 並說明未測試風險。第三個核准完成後，AI 才能開始正式實作。
+
+## 九個 Skill 入口
 
 | Skill | 適合用途 |
 | --- | --- |
@@ -63,9 +65,10 @@ AI 會先判斷你目前位於哪個階段，再提出一個最重要的問題�
 | `$ask-requirements` | 一次釐清一個高影響需求 |
 | `$ask-with-docs` | 釐清需求並整理 Project Knowledge Base（專案知識庫） |
 | `$write-spec` | 將已核准需求整理成規格 |
-| `$plan-tickets` | 將規格拆成垂直、可測試的 Tickets |
+| `$plan-tickets` | 將規格拆成垂直 Tickets，並批次取得每張 Ticket 是否加上測試的選擇 |
+| `$implement-direct` | 不建立也不執行行為測試，直接實作已核准的 `direct` Ticket |
 | `$implement-tdd` | 依 Ticket 進行 Red、Green、Refactor |
-| `$review-code` | 根據需求、程式碼差異與測試結果進行 Review |
+| `$review-code` | 根據需求、變更、可用證據與略過測試風險進行 Review |
 | `$improve-architecture` | 分析架構問題與模組關係，提出改善方向 |
 
 你可以直接指定任何 Skill。若只使用 `$ask-then-do-it`，AI 會根據你的要求與目前進度選擇下一個階段。

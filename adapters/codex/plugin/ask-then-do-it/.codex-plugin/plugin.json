@@ -1,6 +1,6 @@
 {
   "name": "ask-then-do-it",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "An independent gated AI development workflow from requirement discovery through evidence-based review and architecture diagnosis. This project is not affiliated with or endorsed by Matt Pocock.",
   "author": {
     "name": "Ian Wu, Handle by me Tech Studio"
@@ -12,13 +12,14 @@
     "project-knowledge",
     "specification",
     "tdd",
+    "direct-implementation",
     "code-review",
     "architecture"
   ],
   "interface": {
     "displayName": "Ask Then Do It",
     "shortDescription": "Develop software through explicit gates and evidence.",
-    "longDescription": "A modular workflow for requirement grilling, evidence-backed project knowledge, specification, ticket planning, TDD implementation, twelve-lens review, and safe architecture diagnosis.",
+    "longDescription": "A modular workflow for requirement grilling, evidence-backed project knowledge, specification, user-selected TDD or direct implementation, twelve-lens review, and safe architecture diagnosis.",
     "developerName": "Ian Wu, Handle by me Tech Studio",
     "category": "Developer Tools",
     "capabilities": [
@@ -31,6 +32,7 @@
       "Use $ask-then-do-it to guide this software change.",
       "Use $ask-requirements to clarify this idea.",
       "Use $ask-with-docs to clarify this change and preserve project knowledge.",
+      "Use $implement-direct to implement an approved direct Ticket without behavioral tests.",
       "Use $improve-architecture to diagnose system structure without changing code.",
       "Use $review-code to review these changes."
     ]

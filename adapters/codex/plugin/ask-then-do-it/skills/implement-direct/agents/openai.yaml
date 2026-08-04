@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implement Direct"
+  short_description: "Implement approved direct Tickets without behavioral tests"
+  default_prompt: "Use $implement-direct to implement the approved direct Ticket without behavioral tests and disclose skipped verification."

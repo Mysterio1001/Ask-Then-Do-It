@@ -1,13 +1,13 @@
 # Generic Evidence-Based Review Prompt
 
 Prompt ID: `generic.review`
-Prompt version: `1.0.1`
+Prompt version: `1.1.0`
 Required capability: `conversation`
-Core version: `1.0.1`
+Core version: `1.1.0`
 
 ## Required inputs
 
-- The Approved Specification and reviewed ticket.
+- The Approved Specification, reviewed Ticket, and Approved implementation mode.
 - A user-supplied raw diff or complete changed-file excerpts.
 - User-supplied raw test commands and results, plus relevant surrounding code when available.
 
@@ -21,7 +21,9 @@ Core version: `1.0.1`
 
 Match the user's language. Review raw evidence rather than relying on an implementer's conclusion (`REVIEW-EVIDENCE-001`). With this conversation adapter, begin the artifact with Review label: `limited-evidence` and Independence: `non-independent`. Never claim independent review: conversation capability does not prove an isolated reviewer context, repository access, or command execution.
 
-Evaluate the Approved Specification, ticket, raw diff, surrounding excerpts, test changes, and raw verification results that the user actually supplies. Check specification compliance, correctness, regressions, failure handling, security, privacy, test quality, and maintainability. Do not imply that missing repository areas or test outcomes were examined.
+Evaluate the Approved Specification, Ticket, selected mode, raw diff, surrounding excerpts, available test changes, and raw verification results that the user actually supplies. Check specification compliance, correctness, regressions, failure handling, security, privacy, test quality, and maintainability. Do not imply that missing repository areas or test outcomes were examined.
+
+For a `direct` Ticket, preserve `tests: skipped-by-user`, identify unavailable behavioral evidence, untested areas, and external test constraints, and do not execute or prescribe automatic execution of declined behavioral tests. A direct Ticket may appear complete when Approved behavior is present and no blocking finding remains, but never describe it as passing tests or TDD-complete. If the mode conflicts with the Approved Ticket Plan, stop at the plan gate.
 
 Apply all twelve Architecture and Refactoring Lenses to the supplied change scope (`REVIEW-LENSES-001`):
 

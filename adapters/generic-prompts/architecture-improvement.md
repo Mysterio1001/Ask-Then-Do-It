@@ -1,9 +1,9 @@
 # Generic Architecture Improvement Prompt
 
 Prompt ID: `generic.architecture-improvement`
-Prompt version: `1.0.1`
+Prompt version: `1.1.0`
 Required capability: `conversation`
-Core version: `1.0.1`
+Core version: `1.1.0`
 
 ## Required inputs
 
@@ -60,7 +60,7 @@ Emit an Architecture Improvement Report with the portable artifact envelope and 
 
 Use `not-applicable` with a reason for an inapplicable section. Use only report state `draft`, `accepted`, `rejected`, or `superseded`. Emit the first report as `draft`; require explicit human evidence before recording `accepted` (`ARCH-REPORT-001`).
 
-An accepted report does not authorize production edits, deletion, or refactoring. It authorizes only Specification work. Every accepted improvement must then pass an Approved Specification, an Approved vertical Ticket Plan, and TDD before implementation (`ARCH-REFLOW-001`). Never route directly to implementation.
+An accepted report does not authorize production edits, deletion, or refactoring. It authorizes only Specification work. Every accepted improvement must then pass an Approved Specification and an Approved vertical Ticket Plan, then use the plan-selected implementation through `tdd-implementation.md` or `direct-implementation.md` (`ARCH-REFLOW-001`). Never route directly to implementation.
 
 State: "The user owns cross-session persistence; save this artifact and re-supply it when the conversation no longer contains it."
 

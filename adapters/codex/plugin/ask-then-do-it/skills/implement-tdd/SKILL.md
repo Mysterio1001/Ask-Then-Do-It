@@ -5,7 +5,7 @@ description: Implement an approved software ticket with red-green-refactor evide
 
 # Implement TDD
 
-Implement one approved ticket at a time. Use executable tests to prevent the implementation from redefining the intended behavior.
+Implement one Approved `tdd` Ticket at a time. Use executable tests to prevent the implementation from redefining the intended behavior.
 
 <!-- Maintainer note: Observing the expected red state proves the test can detect the missing behavior instead of merely agreeing with existing code. -->
 
@@ -13,12 +13,13 @@ Match user-facing communication and generated artifacts to the user's language w
 
 ## Verify readiness
 
-1. Read repository instructions, the approved specification, the approved plan, and the selected ticket.
-2. Inspect relevant code, tests, commands, and current changes.
-3. Confirm dependencies are complete and the ticket remains compatible with repository state.
-4. Preserve unrelated user changes and stay inside the ticket boundary.
+1. Read repository instructions, the Approved Specification, the Approved Ticket Plan, and the selected Ticket.
+2. Confirm the selected Ticket has Approved mode `tdd`. Never infer TDD mode from risk, repository conventions, or another Ticket.
+3. Inspect relevant code, tests, commands, and current changes.
+4. Confirm dependencies are complete and the Ticket remains compatible with repository state.
+5. Preserve unrelated user changes and stay inside the Ticket boundary.
 
-If an artifact is missing, draft, contradictory, or no longer feasible, stop and return to the earliest affected workflow gate.
+If an artifact is missing, Draft, contradictory, no longer feasible, or does not prove an Approved `tdd` Ticket, stop and return to the earliest affected workflow gate.
 
 ## Establish red
 
@@ -52,6 +53,6 @@ Use parallel agents only when the approved plan marks the tickets safe, contract
 
 ## Report evidence
 
-Emit Implementation Evidence only for work actually performed with the `tools` profile. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.0.1`, evidence `status`, upstream `inputs`, `assumptions`, `deferred` work, and reviewer `handoff`.
+Emit Implementation Evidence only for work actually performed with the `tools` profile. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.1.0`, evidence `status`, upstream `inputs`, `assumptions`, `deferred` work, and reviewer `handoff`.
 
 Record the ticket outcome, files changed, raw commands and raw results for the observed red failure, focused green, post-refactor verification, and broader checks. Include any test-first exception rationale and alternative verification, incomplete checks, and residual risks. Do not set a completed status while a required check fails or is blocked. After all eligible tickets complete, hand the approved artifacts, final diff, surrounding code, test changes, and raw results to `$review-code`.

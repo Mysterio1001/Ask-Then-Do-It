@@ -33,7 +33,9 @@ def read_object(path: Path, label: str) -> dict[str, Any]:
     return value
 
 
-def validate(config_path: Path, ledger_path: Path, evidence_path: Path) -> str:
+def validate(
+    config_path: Path, ledger_path: Path, evidence_path: Path
+) -> tuple[str, bool]:
     config = read_object(config_path, "release configuration")
     ledger = read_object(ledger_path, "validation ledger")
     version = config.get("release_version")
@@ -61,10 +63,18 @@ def validate(config_path: Path, ledger_path: Path, evidence_path: Path) -> str:
     if extra:
         raise EvidenceError(f"Unknown validation checks: {extra}")
 
+    tests_skipped = False
     for check_id in required:
         item = indexed[check_id]
         status = item.get("status")
-        if status != "passed":
+        if check_id == "automated-tests" and status == "skipped-by-user":
+            tests_skipped = True
+            for field in ("reason", "approval"):
+                if not isinstance(item.get(field), str) or not item[field].strip():
+                    raise EvidenceError(
+                        f"Skipped automated-tests lacks {field} metadata"
+                    )
+        elif status != "passed":
             raise EvidenceError(f"Required check {check_id} is {status!r}, not passed")
         for field in ("command", "outcome"):
             if not isinstance(item.get(field), str) or not item[field].strip():
@@ -78,17 +88,29 @@ def validate(config_path: Path, ledger_path: Path, evidence_path: Path) -> str:
         raise EvidenceError("Release evidence is not marked Status: Completed")
     if f"Release version: `{version}`" not in evidence:
         raise EvidenceError("Release evidence version does not match release")
-    return version
+    if tests_skipped and "Tests: `skipped-by-user`" not in evidence:
+        raise EvidenceError(
+            "Release evidence lacks Tests: `skipped-by-user` disclosure"
+        )
+    return version, tests_skipped
 
 
 def main() -> int:
     args = parse_args()
     try:
-        version = validate(args.config, args.ledger, args.evidence)
+        version, tests_skipped = validate(
+            args.config, args.ledger, args.evidence
+        )
     except EvidenceError as exc:
         print(f"Release evidence validation failed: {exc}", file=sys.stderr)
         return 1
-    print(f"Release evidence {version} validated: all required checks passed")
+    if tests_skipped:
+        print(
+            f"Release evidence {version} validated: automated tests "
+            "skipped-by-user; all other required checks passed"
+        )
+    else:
+        print(f"Release evidence {version} validated: all required checks passed")
     return 0
 
 

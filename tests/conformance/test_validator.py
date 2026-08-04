@@ -88,7 +88,7 @@ class ConformanceValidatorTests(unittest.TestCase):
     def test_core_defines_documented_requirements_artifacts(self) -> None:
         with CATALOG.open(encoding="utf-8") as handle:
             catalog = yaml.safe_load(handle)
-        self.assertEqual(catalog["core_version"], "1.0.1")
+        self.assertEqual(catalog["core_version"], "1.1.0")
 
         knowledge = (
             ROOT / "core" / "artifacts" / "project-knowledge-base.md"
@@ -175,7 +175,7 @@ class ConformanceValidatorTests(unittest.TestCase):
             self.assertIn(gate, module)
         self.assertIn("Specification", module)
         self.assertIn("Ticket Plan", module)
-        self.assertIn("TDD", module)
+        self.assertIn("plan-selected implementation path", module)
 
         report = (
             ROOT / "core" / "artifacts" / "architecture-improvement-report.md"
@@ -221,6 +221,127 @@ class ConformanceValidatorTests(unittest.TestCase):
         self.assertIn("MUST NOT run after every Ticket", orchestration)
         self.assertIn("accepted Architecture Improvement Report", orchestration)
         self.assertIn("Specification", orchestration)
+
+    def test_core_defines_user_selected_implementation_modes(self) -> None:
+        planning = (ROOT / "core" / "modules" / "ticket-planning.md").read_text(
+            encoding="utf-8"
+        )
+        for phrase in (
+            "risk-based test recommendation",
+            "tests may increase work time",
+            "For every Ticket, warn that tests may increase work time",
+            "complete Ticket definitions and all recommendations before requesting one batch test choice",
+            "`Add tests`",
+            "`Do not add tests`",
+            "all Tickets",
+            "explicit mixed selection",
+            "unresolved Tickets",
+            "map `Add tests` to internal mode `tdd`",
+            "map `Do not add tests` to internal mode `direct`",
+            "`tdd`",
+            "`direct`",
+            "MUST NOT become `Approved`",
+        ):
+            self.assertIn(phrase, planning)
+        self.assertLess(
+            planning.index("Present a risk-based test recommendation"),
+            planning.index("Request all per-Ticket choices in one batch"),
+        )
+        self.assertLess(
+            planning.index("For every Ticket, warn that tests may increase work time"),
+            planning.index("Request all per-Ticket choices in one batch"),
+        )
+        prohibition = (
+            "Do not ask the user to choose between `tdd` and `direct` as the initial decision"
+        )
+        self.assertIn(prohibition, planning)
+        for line in planning.splitlines():
+            if "choose between `tdd` and `direct`" in line.lower():
+                self.assertIn("do not", line.lower())
+        self.assertIn(
+            "Retain resolved choices from an incomplete mixed selection and ask only about unresolved Tickets",
+            planning,
+        )
+        for forbidden in (
+            "select exactly one implementation mode",
+            "choose `tdd` or `direct`",
+            "select `tdd` or `direct`",
+            "one conversational round trip per Ticket",
+            "one response per Ticket",
+            "one Ticket at a time",
+            "ask each Ticket separately",
+        ):
+            self.assertNotIn(forbidden, planning)
+        for risk in (
+            "correctness",
+            "regression",
+            "security",
+            "privacy",
+            "migration",
+            "integration",
+            "destructive behavior",
+            "release risk",
+        ):
+            self.assertIn(risk, planning)
+
+        ticket_plan = (ROOT / "core" / "artifacts" / "ticket-plan.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("plain-language test choice", ticket_plan)
+        self.assertIn("mapped internal implementation mode", ticket_plan)
+        self.assertIn("one batch", ticket_plan)
+        self.assertIn("no default", ticket_plan)
+
+        orchestration = (
+            ROOT / "core" / "modules" / "orchestration.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("approved `tdd` Ticket", orchestration)
+        self.assertIn("approved `direct` Ticket", orchestration)
+        self.assertIn("MUST NOT infer a default implementation mode", orchestration)
+        self.assertIn("all plain-language test choices in one batch", orchestration)
+
+        direct = (
+            ROOT / "core" / "modules" / "direct-implementation.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("MUST NOT create, modify, or execute behavioral tests", direct)
+        self.assertIn("`tests: skipped-by-user`", direct)
+        self.assertIn("external CI, hosting, or release system", direct)
+        self.assertIn("MUST NOT claim that `direct` bypasses", direct)
+        for check in ("lint", "type-check", "build"):
+            self.assertIn(check, direct)
+
+        direct_evidence = (
+            ROOT / "core" / "artifacts" / "direct-implementation-evidence.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("`tests: skipped-by-user`", direct_evidence)
+        self.assertIn("unavailable behavioral evidence", direct_evidence)
+
+        review = (ROOT / "core" / "modules" / "review.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            "MUST NOT execute or prescribe automatic execution of declined behavioral tests",
+            review,
+        )
+        self.assertIn("`tests: skipped-by-user`", review)
+
+        architecture = (
+            ROOT / "core" / "modules" / "architecture-improvement.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("plan-selected implementation path", architecture)
+
+        index = (ROOT / "core" / "CORE.md").read_text(encoding="utf-8")
+        self.assertIn("Direct implementation", index)
+        self.assertIn("Direct Implementation Evidence", index)
+
+        with CATALOG.open(encoding="utf-8") as handle:
+            catalog = yaml.safe_load(handle)
+        statements = {rule["id"]: rule["statement"] for rule in catalog["rules"]}
+        self.assertIn("plain-language test choices in one batch", statements["GATE-PLAN-001"])
+        self.assertIn("internal implementation mode", statements["GATE-PLAN-001"])
+        self.assertIn("Ticket implementation mode", statements["ROUTE-USER-001"])
+        self.assertIn("skipped tests", statements["REVIEW-EVIDENCE-001"])
+        self.assertIn("plan-selected implementation", statements["ARCH-REFLOW-001"])
 
     def test_core_contract_is_provider_neutral(self) -> None:
         core = ROOT / "core"

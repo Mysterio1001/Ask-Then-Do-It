@@ -30,7 +30,7 @@ If any gate is missing, fall back to simulated deletion. When all gates exist, r
 - Produce an Architecture Improvement Report with every required section (`ARCH-REPORT-001`).
 - Keep the first report `draft` and require explicit user evidence before changing it to `accepted`.
 - Treat `accepted` as agreement with the diagnosis only. It does not authorize edits, deletion, or refactoring.
-- Route every accepted structural or behavioral proposal to Specification, then an approved vertical Ticket Plan, then TDD (`ARCH-REFLOW-001`).
+- Route every accepted structural or behavioral proposal to Specification, then an approved vertical Ticket Plan, then the plan-selected implementation path (`ARCH-REFLOW-001`).
 - Never route an accepted report directly to implementation.
 
 ## Capability downgrade

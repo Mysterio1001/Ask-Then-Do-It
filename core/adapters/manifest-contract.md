@@ -12,6 +12,8 @@ Every adapter MUST provide a machine-readable manifest with:
 - `capability_evidence`: non-empty validation evidence for every declared profile.
 - `validation.status`: current validation claim.
 - `validation.environment`: tested environment.
+
+Adapters that expose implementation MUST represent both Approved Ticket modes consistently: `tdd` routes to test-driven implementation and `direct` routes to direct implementation. Capability limitations may change what an adapter can execute, but MUST NOT change the selected mode or fabricate evidence.
 - `validation.commands`: reproducible checks.
 
 Capability profiles are cumulative: `tools` includes `conversation`; `multi_agent` includes `conversation` and `tools`.

@@ -4,7 +4,7 @@ This guide explains how to download, install, and use Ask Then Do It. The Plugin
 
 ## Download and extract
 
-[Download ask-then-do-it-1.0.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.1/ask-then-do-it-1.0.1.zip) and extract it.
+[Download ask-then-do-it-1.1.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-1.1.0.zip) and extract it.
 
 The outermost extracted folder should be `ask-then-do-it/`, containing:
 
@@ -53,9 +53,11 @@ The workflow pauses for your explicit approval at three points:
 2. Specification.
 3. Ticket plan.
 
-Formal implementation begins only after the third approval.
+Before the third approval, the AI first lists every Ticket and gives each one a test recommendation. For every Ticket, it warns that adding tests may increase work time while declining them lowers behavioral-verification confidence. In one response, you decide whether to add tests to every Ticket: add them to all, add them to none, or name only the Tickets that should have tests. There is no default. If a partial answer does not resolve the rest, the AI asks only about the unresolved Tickets.
 
-## Eight Skill entry points
+After approval, a Ticket with tests is internally recorded as `tdd` and uses `$implement-tdd`. A Ticket without tests is recorded as `direct` and uses `$implement-direct`, which does not create or run behavioral tests but may run lint, type-check, or build checks. Its Review retains `tests: skipped-by-user` and states the untested risk. Formal implementation begins only after the third approval.
+
+## Nine Skill entry points
 
 | Skill | Best used for |
 | --- | --- |
@@ -63,9 +65,10 @@ Formal implementation begins only after the third approval.
 | `$ask-requirements` | Clarify one high-impact requirement at a time |
 | `$ask-with-docs` | Clarify requirements while maintaining a Project Knowledge Base |
 | `$write-spec` | Turn approved requirements into a specification |
-| `$plan-tickets` | Split a specification into vertical, testable Tickets |
+| `$plan-tickets` | Split a specification into vertical Tickets and collect all add-tests choices in one response |
+| `$implement-direct` | Implement an approved `direct` Ticket without creating or running behavioral tests |
 | `$implement-tdd` | Implement a Ticket through Red, Green, and Refactor |
-| `$review-code` | Review requirements, code changes, and test results |
+| `$review-code` | Review requirements, changes, and available evidence, including skipped-test risk |
 | `$improve-architecture` | Analyze architecture and module relationships, then propose improvements |
 
 You may invoke any Skill directly. If you use only `$ask-then-do-it`, the AI selects the next stage from your request and current progress.

@@ -32,12 +32,19 @@ Choose and state the Review label before findings:
 
 Never use a stronger label than the available evidence and runtime isolation can prove.
 
+## Preserve the implementation mode
+
+- Read and retain the Ticket's Approved `tdd` or `direct` mode.
+- For a `direct` Ticket, retain `tests: skipped-by-user`, identify unavailable behavioral evidence, untested areas, and external test constraints. Do not execute or prescribe automatic execution of declined behavioral tests.
+- A `direct` Ticket may appear complete when approved behavior is present and no blocking finding remains, but never describe it as passing tests or TDD-complete.
+- If the supplied mode conflicts with the Approved Ticket Plan, stop at the plan gate rather than choosing a route.
+
 ## Review in priority order
 
 1. Verify every changed behavior against the approved specification and acceptance criteria.
 2. Trace correctness, state transitions, failure paths, compatibility, and regressions.
 3. Examine trust boundaries, authorization, validation, secrets, privacy, and destructive behavior.
-4. Evaluate whether tests would fail for the likely defects and whether important paths are missing.
+4. Evaluate whether available tests would fail for likely defects and identify important untested paths without running tests declined by an Approved `direct` mode.
 5. Apply all twelve Architecture and Refactoring Lenses to the changed code and its relevant impact area (`REVIEW-LENSES-001`).
 
 Ignore purely stylistic preferences unless they create a material maintenance, correctness, or repository-convention problem.
@@ -92,4 +99,4 @@ After findings, state:
 
 If no actionable findings exist, say so explicitly and still identify residual risks or verification gaps. Do not modify code unless the user separately asks for fixes.
 
-Emit a Review Report that includes or unambiguously conveys `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.0.1`, review `status`, reviewed `inputs`, `assumptions`, `deferred` checks, and the next `handoff`. Preserve the stated Review label, evidence unavailable, residual risks, untested areas, and completion assessment in the artifact.
+Emit a Review Report that includes or unambiguously conveys `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.1.0`, review `status`, reviewed `inputs`, `assumptions`, `deferred` checks, and the next `handoff`. Preserve the stated Review label, evidence unavailable, residual risks, untested areas, and completion assessment in the artifact.

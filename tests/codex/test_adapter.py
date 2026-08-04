@@ -16,6 +16,7 @@ EXPECTED_SKILLS = {
     "ask-then-do-it",
     "ask-requirements",
     "ask-with-docs",
+    "implement-direct",
     "implement-tdd",
     "improve-architecture",
     "plan-tickets",
@@ -129,7 +130,7 @@ class CodexAdapterTests(unittest.TestCase):
         skill = SKILLS / "ask-with-docs"
         text = (skill / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("name: ask-with-docs", text)
-        self.assertIn("core_version` `1.0.1`", text)
+        self.assertIn("core_version` `1.1.0`", text)
         self.assertIn("exactly one question", text)
         self.assertIn("Draft Working Notes", text)
         for state in ("`proposed`", "`confirmed`", "`unresolved`"):
@@ -200,6 +201,7 @@ class CodexAdapterTests(unittest.TestCase):
             "ask-with-docs": "Requirement Decision Record",
             "write-spec": "Specification",
             "plan-tickets": "Ticket Plan",
+            "implement-direct": "Direct Implementation Evidence",
             "implement-tdd": "Implementation Evidence",
             "review-code": "Review Report",
             "improve-architecture": "Architecture Improvement Report",
@@ -244,6 +246,116 @@ class CodexAdapterTests(unittest.TestCase):
         )
         for label in ("`independent`", "`non-independent`", "`limited-evidence`"):
             self.assertIn(label, review)
+
+    def test_codex_routes_user_selected_tdd_and_direct_modes(self) -> None:
+        planning = (SKILLS / "plan-tickets" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        for phrase in (
+            "risk-based test recommendation",
+            "tests may increase work time",
+            "For every Ticket, warn that tests may increase work time",
+            "complete Ticket definitions and all recommendations before requesting one batch test choice",
+            "`Add tests to all Tickets`",
+            "`Do not add tests to all Tickets`",
+            "explicit mixed selection",
+            "unresolved Tickets",
+            "map `Add tests` to internal mode `tdd`",
+            "map `Do not add tests` to internal mode `direct`",
+            "`tdd`",
+            "`direct`",
+            "There is no default",
+        ):
+            self.assertIn(phrase, planning)
+        self.assertLess(
+            planning.index("Give every Ticket a risk-based test recommendation"),
+            planning.index("Ask in the user's language whether tests should be added"),
+        )
+        self.assertLess(
+            planning.index("For every Ticket, warn that tests may increase work time"),
+            planning.index("Ask in the user's language whether tests should be added"),
+        )
+        prohibition = (
+            "Do not present `tdd` and `direct` as the initial user-facing options"
+        )
+        self.assertIn(prohibition, planning)
+        for line in planning.splitlines():
+            if "choose between `tdd` and `direct`" in line.lower():
+                self.assertTrue(
+                    any(word in line.lower() for word in ("do not", "must not", "never"))
+                )
+        self.assertIn(
+            "Retain choices from an incomplete mixed selection and ask only about unresolved Tickets",
+            planning,
+        )
+        for forbidden in (
+            "select exactly one implementation mode",
+            "choose `tdd` or `direct`",
+            "select `tdd` or `direct`",
+            "one conversational round trip per Ticket",
+            "one response per Ticket",
+            "one Ticket at a time",
+            "ask each Ticket separately",
+        ):
+            self.assertNotIn(forbidden, planning)
+        for risk in (
+            "correctness",
+            "regression",
+            "security",
+            "privacy",
+            "migration",
+            "integration",
+            "destructive behavior",
+            "release risk",
+        ):
+            self.assertIn(risk, planning)
+        self.assertIn("must remain `Draft`", planning)
+
+        direct_dir = SKILLS / "implement-direct"
+        self.assertTrue((direct_dir / "SKILL.md").is_file())
+        self.assertTrue((direct_dir / "agents" / "openai.yaml").is_file())
+        direct = (direct_dir / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("name: implement-direct", direct)
+        self.assertIn("Approved `direct` Ticket", direct)
+        self.assertIn("Do not create, modify, or execute behavioral tests", direct)
+        self.assertIn("`tests: skipped-by-user`", direct)
+        self.assertIn("external CI, hosting, or release system", direct)
+        self.assertIn("must not claim that `direct` bypasses", direct.lower())
+        self.assertIn("Direct Implementation Evidence", direct)
+        for check in ("lint", "type-check", "build"):
+            self.assertIn(check, direct)
+
+        metadata = load_yaml(direct_dir / "agents" / "openai.yaml")
+        interface = metadata.get("interface", {})
+        self.assertEqual(interface.get("display_name"), "Implement Direct")
+        self.assertIn("$implement-direct", interface.get("default_prompt", ""))
+
+        orchestrator = (SKILLS / "ask-then-do-it" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("Approved `tdd` Ticket", orchestrator)
+        self.assertIn("$implement-tdd", orchestrator)
+        self.assertIn("Approved `direct` Ticket", orchestrator)
+        self.assertIn("$implement-direct", orchestrator)
+        self.assertIn("Do not infer a default implementation mode", orchestrator)
+        self.assertIn("all plain-language test choices in one batch", orchestrator)
+
+        tdd = (SKILLS / "implement-tdd" / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("Approved `tdd` Ticket", tdd)
+
+        review = (SKILLS / "review-code" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("`tests: skipped-by-user`", review)
+        self.assertIn(
+            "Do not execute or prescribe automatic execution of declined behavioral tests",
+            review,
+        )
+
+        architecture = (SKILLS / "improve-architecture" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("plan-selected implementation", architecture)
 
     def test_review_code_applies_all_twelve_lenses_with_evidence(self) -> None:
         review = (SKILLS / "review-code" / "SKILL.md").read_text(
@@ -303,7 +415,9 @@ class CodexAdapterTests(unittest.TestCase):
         self.assertIn("accepted report does not authorize", text.lower())
         self.assertIn("Specification", text)
         self.assertIn("Ticket Plan", text)
-        self.assertIn("TDD", text)
+        self.assertIn("plan-selected implementation", text)
+        self.assertIn("$implement-tdd", text)
+        self.assertIn("$implement-direct", text)
         self.assertIn("Match user-facing", text)
 
         metadata = load_yaml(skill / "agents" / "openai.yaml")

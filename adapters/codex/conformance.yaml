@@ -1,7 +1,7 @@
 adapter_id: codex
-adapter_version: 1.0.1
+adapter_version: 1.1.0
 target: Codex skill runtime
-core_version: 1.0.1
+core_version: 1.1.0
 capabilities:
   - conversation
   - tools
@@ -38,6 +38,7 @@ capability_evidence:
     - adapters/codex/plugin/ask-then-do-it/skills/ask-with-docs/SKILL.md
     - adapters/codex/plugin/ask-then-do-it/skills/improve-architecture/SKILL.md
   tools:
+    - adapters/codex/plugin/ask-then-do-it/skills/implement-direct/SKILL.md
     - adapters/codex/plugin/ask-then-do-it/skills/implement-tdd/SKILL.md
     - adapters/codex/plugin/ask-then-do-it/skills/improve-architecture/SKILL.md
     - tests/codex/test_adapter.py

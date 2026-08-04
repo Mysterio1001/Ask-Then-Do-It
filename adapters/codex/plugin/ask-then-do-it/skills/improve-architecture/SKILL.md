@@ -7,7 +7,7 @@ description: Diagnose module or system architecture with evidence-based refactor
 
 Assess architecture without changing it. Keep this skill diagnostic-only by default and Match user-facing communication and generated artifacts to the user's language when discoverable.
 
-<!-- Maintainer note: Diagnosis and implementation stay separate so an attractive refactor cannot bypass product intent, planning, or TDD. -->
+<!-- Maintainer note: Diagnosis and implementation stay separate so an attractive refactor cannot bypass product intent, planning, or the user's implementation-mode choice. -->
 
 ## Declare scope and capability
 
@@ -60,7 +60,7 @@ If any gate is absent, continue only with simulation. When all gates are proven,
 
 ## Emit the architecture report
 
-Emit an Architecture Improvement Report with `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.0.1`, `status`, `inputs`, `assumptions`, `deferred`, `handoff`, and `approval` evidence when accepted.
+Emit an Architecture Improvement Report with `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.1.0`, `status`, `inputs`, `assumptions`, `deferred`, `handoff`, and `approval` evidence when accepted.
 
 Include every section:
 
@@ -81,7 +81,7 @@ Use `not-applicable` with a reason rather than silently omitting a section.
 
 Use only `draft`, `accepted`, `rejected`, or `superseded`. Emit the first report as `draft`. Require explicit user evidence before changing it to `accepted`.
 
-An accepted report does not authorize production edits, deletion, or refactoring. It authorizes only a return to `$write-spec`. Every accepted improvement must then pass an Approved Specification, an Approved vertical Ticket Plan through `$plan-tickets`, and TDD through `$implement-tdd` before implementation (`ARCH-REPORT-001`, `ARCH-REFLOW-001`). Never route directly from this skill to implementation.
+An accepted report does not authorize production edits, deletion, or refactoring. It authorizes only a return to `$write-spec`. Every accepted improvement must then pass an Approved Specification and an Approved vertical Ticket Plan through `$plan-tickets`, then use the plan-selected implementation through `$implement-tdd` or `$implement-direct` (`ARCH-REPORT-001`, `ARCH-REFLOW-001`). Never route directly from this skill to implementation.
 
 ## Downgrade honestly
 

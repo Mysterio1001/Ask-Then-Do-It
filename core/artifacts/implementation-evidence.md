@@ -7,6 +7,7 @@ Completed Implementation Evidence requires `tools`.
 ## Required content
 
 - Approved ticket and upstream artifact references.
+- Approved `tdd` implementation mode.
 - Changed files or ownership areas.
 - Expected red command, result, and failure reason.
 - Focused green command and result.

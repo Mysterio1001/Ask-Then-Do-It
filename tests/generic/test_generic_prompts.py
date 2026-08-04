@@ -15,6 +15,7 @@ PROMPTS = {
     "orchestration.md",
     "requirements.md",
     "documented-requirements.md",
+    "direct-implementation.md",
     "architecture-improvement.md",
     "specification.md",
     "ticket-planning.md",
@@ -28,7 +29,7 @@ def prompt(name: str) -> str:
 
 
 class GenericPromptContractTests(unittest.TestCase):
-    def test_adapter_has_exactly_one_bootstrap_and_eight_module_prompts(self) -> None:
+    def test_adapter_has_exactly_one_bootstrap_and_nine_module_prompts(self) -> None:
         actual = {path.name for path in ADAPTER.glob("*.md")}
         self.assertEqual(actual, PROMPTS)
 
@@ -37,9 +38,9 @@ class GenericPromptContractTests(unittest.TestCase):
             text = prompt(name)
             with self.subTest(prompt=name):
                 self.assertRegex(text, r"(?m)^Prompt ID: `[^`]+`$")
-                self.assertRegex(text, r"(?m)^Prompt version: `1\.0\.1`$")
+                self.assertRegex(text, r"(?m)^Prompt version: `1\.1\.0`$")
                 self.assertRegex(text, r"(?m)^Required capability: `[^`]+`$")
-                self.assertRegex(text, r"(?m)^Core version: `1\.0\.1`$")
+                self.assertRegex(text, r"(?m)^Core version: `1\.1\.0`$")
                 for heading in (
                     "## Required inputs",
                     "## Expected outputs",
@@ -189,6 +190,101 @@ class GenericPromptScenarioTests(unittest.TestCase):
         for phrase in required:
             self.assertIn(phrase, text)
 
+    def test_generic_routes_user_selected_tdd_and_direct_modes(self) -> None:
+        planning = prompt("ticket-planning.md")
+        for phrase in (
+            "risk-based test recommendation",
+            "tests may increase work time",
+            "For every Ticket, warn that tests may increase work time",
+            "complete Ticket definitions and all recommendations before requesting one batch test choice",
+            "`Add tests to all Tickets`",
+            "`Do not add tests to all Tickets`",
+            "explicit mixed selection",
+            "unresolved Tickets",
+            "map `Add tests` to internal mode `tdd`",
+            "map `Do not add tests` to internal mode `direct`",
+            "`tdd`",
+            "`direct`",
+            "There is no default",
+        ):
+            self.assertIn(phrase, planning)
+        self.assertLess(
+            planning.index("Give every Ticket a risk-based test recommendation"),
+            planning.index("Ask in the user's language whether tests should be added"),
+        )
+        self.assertLess(
+            planning.index("For every Ticket, warn that tests may increase work time"),
+            planning.index("Ask in the user's language whether tests should be added"),
+        )
+        prohibition = (
+            "Do not present `tdd` and `direct` as the initial user-facing options"
+        )
+        self.assertIn(prohibition, planning)
+        for line in planning.splitlines():
+            if "choose between `tdd` and `direct`" in line.lower():
+                self.assertTrue(
+                    any(word in line.lower() for word in ("do not", "must not", "never"))
+                )
+        self.assertIn(
+            "Retain choices from an incomplete mixed selection and ask only about unresolved Tickets",
+            planning,
+        )
+        for forbidden in (
+            "select exactly one implementation mode",
+            "choose `tdd` or `direct`",
+            "select `tdd` or `direct`",
+            "one conversational round trip per Ticket",
+            "one response per Ticket",
+            "one Ticket at a time",
+            "ask each Ticket separately",
+        ):
+            self.assertNotIn(forbidden, planning)
+        for risk in (
+            "correctness",
+            "regression",
+            "security",
+            "privacy",
+            "migration",
+            "integration",
+            "destructive behavior",
+            "release risk",
+        ):
+            self.assertIn(risk, planning)
+        self.assertIn("must remain `Draft`", planning)
+
+        orchestration = prompt("orchestration.md")
+        self.assertIn("Approved `tdd` Ticket", orchestration)
+        self.assertIn("tdd-implementation.md", orchestration)
+        self.assertIn("Approved `direct` Ticket", orchestration)
+        self.assertIn("direct-implementation.md", orchestration)
+        self.assertIn("Never infer a default implementation mode", orchestration)
+        self.assertIn("all plain-language test choices in one batch", orchestration)
+
+        direct = prompt("direct-implementation.md")
+        for phrase in (
+            "UNEXECUTED DIRECT IMPLEMENTATION GUIDANCE",
+            "do not create or modify behavioral tests",
+            "do not run or claim to run commands or tests",
+            "external CI, hosting, or release system",
+            "must not claim that `direct` bypasses",
+            "`tests: skipped-by-user`",
+            "Direct Implementation Evidence",
+            "Stop after the unexecuted handoff",
+        ):
+            self.assertIn(phrase, direct)
+
+        review = prompt("review.md")
+        self.assertIn("`tests: skipped-by-user`", review)
+        self.assertIn(
+            "do not execute or prescribe automatic execution of declined behavioral tests",
+            review.lower(),
+        )
+
+        architecture = prompt("architecture-improvement.md")
+        self.assertIn("plan-selected implementation", architecture)
+        self.assertIn("tdd-implementation.md", architecture)
+        self.assertIn("direct-implementation.md", architecture)
+
     def test_supplied_diff_review_is_limited_and_non_independent(self) -> None:
         text = prompt("review.md")
         self.assertIn("Review label: `limited-evidence`", text)
@@ -249,7 +345,9 @@ class GenericPromptScenarioTests(unittest.TestCase):
         self.assertIn("accepted report does not authorize", text.lower())
         self.assertIn("Specification", text)
         self.assertIn("Ticket Plan", text)
-        self.assertIn("TDD", text)
+        self.assertIn("plan-selected implementation", text)
+        self.assertIn("tdd-implementation.md", text)
+        self.assertIn("direct-implementation.md", text)
         for label in ("`unverified`", "`unavailable`"):
             self.assertIn(label, text)
 

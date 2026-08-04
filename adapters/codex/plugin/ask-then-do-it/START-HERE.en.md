@@ -1,12 +1,12 @@
-# Ask Then Do It Codex Plugin 1.0.1 Guide
+# Ask Then Do It Codex Plugin 1.1.0 Guide
 
-This Plugin includes eight Skills that guide a project from requirements discovery through implementation, review, and architecture improvement.
+This Plugin includes nine Skills that guide a project from requirements discovery through implementation, review, and architecture improvement.
 
 This independent project was inspired by Matt Pocock's skills repository. It is not affiliated with or endorsed by Matt Pocock. See `LICENSE` and `THIRD_PARTY_NOTICES.md` in this package for license and attribution information.
 
 ## Download and extract
 
-After extracting `ask-then-do-it-1.0.1.zip`, the outermost folder should be `ask-then-do-it/`. Keep the complete folder together; do not copy only `skills/`.
+After extracting `ask-then-do-it-1.1.0.zip`, the outermost folder should be `ask-then-do-it/`. Keep the complete folder together; do not copy only `skills/`.
 
 ## Manual installation
 
@@ -26,9 +26,11 @@ Enter this in a new Codex task:
 Use $ask-then-do-it to help me build this feature: ...
 ```
 
-The AI will identify the current stage and ask one important question first. You must explicitly approve the requirements, specification, and Ticket plan. Formal implementation must not begin before those approvals.
+The AI will identify the current stage and ask one important question first. You must explicitly approve the requirements, specification, and Ticket plan. After all Tickets are listed, the AI gives each Ticket a test recommendation and warns that adding tests may increase work time while declining them lowers verification confidence. In one response, you decide whether to add tests to every Ticket: add them to all, add them to none, or name only the Tickets that should have tests. You then approve the complete plan. Formal implementation must not begin before those approvals.
 
-## Eight Skill entry points
+Internally, "Add tests" is recorded as `tdd` and "Do not add tests" as `direct`; you do not need to answer with those names.
+
+## Nine Skill entry points
 
 Start with `$ask-then-do-it` in most cases. To select a specific stage, use one of these Skills directly:
 
@@ -38,9 +40,10 @@ Start with `$ask-then-do-it` in most cases. To select a specific stage, use one 
 | `$ask-requirements` | Ask one question at a time to clarify requirements |
 | `$ask-with-docs` | Clarify requirements while maintaining long-term project knowledge |
 | `$write-spec` | Turn approved requirements into a specification |
-| `$plan-tickets` | Split the specification into vertical, testable Tickets |
+| `$plan-tickets` | Split the specification into vertical Tickets and collect every add-tests choice in one response |
+| `$implement-direct` | Implement an approved `direct` Ticket without creating or running behavioral tests |
 | `$implement-tdd` | Implement a Ticket through Red, Green, and Refactor |
-| `$review-code` | Review the code against requirements and test evidence |
+| `$review-code` | Review the code and preserve `tests: skipped-by-user` when a `direct` Ticket has no behavioral-test evidence |
 | `$improve-architecture` | Analyze architecture problems and propose improvements |
 
 ## Manual update

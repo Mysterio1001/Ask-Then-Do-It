@@ -22,13 +22,17 @@ flowchart TD
     E --> F{"Approve the specification"}
     F -->|Revise| E
     F -->|Approve| G["Split work into Tickets"]
-    G --> H{"Approve the Ticket plan"}
-    H -->|Revise| G
-    H -->|Approve| I["Implement with TDD"]
-    I --> J["Review"]
-    J -->|Local issue| K["Fix or finish"]
-    J -->|System issue| L["Improve architecture"]
-    L --> E
+    G --> H["Decide in one response whether to add tests"]
+    H --> I{"Approve the Ticket plan"}
+    I -->|Revise| G
+    I -->|Approve| J{"Internal route for each test choice"}
+    J -->|tdd| K["Implement with TDD"]
+    J -->|direct| L["Implement without behavioral tests"]
+    K --> M["Review"]
+    L --> M
+    M -->|Local issue| N["Fix or finish"]
+    M -->|System issue| O["Improve architecture"]
+    O --> E
 ```
 
 ## 1. Ask one question at a time
@@ -57,19 +61,21 @@ This stage describes behavior instead of inserting production code. Once the con
 
 ## 4. Split the work into Tickets
 
-The AI divides the larger job into small tasks that can be completed and tested independently. Each Ticket should deliver a visible result, not only "build the database" or "build the screen."
+The AI divides the larger job into small tasks that can be completed independently. Each Ticket should deliver a visible result, not only "build the database" or "build the screen."
 
-After confirming scope and order, you give the third approval.
+After listing every Ticket, the AI gives each one a test recommendation. For every Ticket, it warns that adding tests may increase work time while declining them lowers confidence. In one response, you decide whether to add tests to every Ticket: add them to all, add them to none, or name only the Tickets that should have tests. If the rest are not specified, the AI asks only about unresolved Tickets. After confirming the complete list, order, and test choices, you give the third approval.
 
-## 5. Implement with TDD
+## 5. Implement using the selected mode
 
-TDD has three steps:
+For a `tdd` Ticket, `$implement-tdd` uses three steps:
 
 1. `Red`: Write a test and show that it fails because the feature is missing.
 2. `Green`: Add the smallest implementation needed to make the test pass.
 3. `Refactor`: Improve the code while keeping the tests passing.
 
 Test results are implementation evidence. The AI should provide actual results instead of saying the feature "should work."
+
+For a `direct` Ticket, `$implement-direct` implements the approved work without creating or running behavioral tests. It may still run lint, type-check, or build checks. Its evidence and Review must state `tests: skipped-by-user` and explain what remains untested.
 
 ## 6. Review the result
 
@@ -91,7 +97,7 @@ After installing the Plugin, enter this in a new Codex task:
 $ask-then-do-it I want to build...
 ```
 
-The AI identifies current progress and begins asking one question at a time.
+The AI identifies current progress and begins asking one question at a time. Approved `direct` Tickets route to `$implement-direct`.
 
 ## Start in Gemini or another AI
 
@@ -111,6 +117,7 @@ The AI should continue from the first unfinished stage.
 
 - [ ] The AI asks only one question at a time.
 - [ ] You approved the requirements, specification, and Ticket plan.
-- [ ] TDD includes actual Red, Green, and Refactor results.
+- [ ] After the time-and-risk warnings, you decided in one response whether to add tests to every Ticket.
+- [ ] TDD includes actual Red, Green, and Refactor results; direct implementation states `tests: skipped-by-user`.
 - [ ] Review distinguishes verified facts from missing evidence.
 - [ ] Architecture problems are analyzed before returning to specification and Ticket planning.

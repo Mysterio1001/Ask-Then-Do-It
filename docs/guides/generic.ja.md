@@ -4,13 +4,13 @@
 
 ## ダウンロードと展開
 
-[ask-then-do-it-generic-1.0.1.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.0.1/ask-then-do-it-generic-1.0.1.zip)して展開します。
+[ask-then-do-it-generic-1.1.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-generic-1.1.0.zip)して展開します。
 
 パッケージの主なファイルは次のとおりです。
 
 - `START-HERE.ja.md`：簡単な使用方法。
 - `generic-workflow.md`：通常使用する完全なワークフロー。
-- `prompts/`：段階別の 9 個のモジュール。
+- `prompts/`：段階別の 10 個のモジュール。
 - `LICENSE` と `THIRD_PARTY_NOTICES.md`：ライセンスと出典に関する情報。
 
 ## すぐに始める
@@ -39,7 +39,9 @@ Ask Then Do It は、次の 3 か所であなたの明確な承認を待ちま�
 2. 仕様が期待する結果を正しく表しているとき。
 3. Ticket 計画を実行できる状態になったとき。
 
-3 回目の承認後に実装段階へ進みます。変更を依頼した場合、AI は現在の段階にとどまり、内容を修正します。
+3 回目の承認前に、AI はまずすべての Tickets を示し、各 Ticket のテスト方針を提案します。Ticket ごとに、テストを追加すると作業時間が増える可能性があり、追加しないと確認の信頼度が下がることを説明します。すべての Ticket についてテストを追加するかどうかを一度に回答でき、全部に追加、全部に追加しない、または一部だけを指定できます。既定値はありません。一部だけを指定して残りを説明しなかった場合、AI は未決定の Tickets だけを確認します。
+
+承認後、テストを追加する Ticket は内部で `tdd` と記録されて TDD モジュールに進みます。テストを追加しない Ticket は `direct` と記録されて `direct-implementation.md` に進みます。direct のガイダンスは振る舞いテストを作成も実行もせず、Review は `tests: skipped-by-user` を保持します。3 回目の承認後に実装段階へ進みます。変更を依頼した場合、AI は現在の段階にとどまり、内容を修正します。
 
 ## できることの範囲
 
@@ -54,7 +56,7 @@ Review も、会話に貼り付けたコード、文書、テスト結果だけ�
 - 要件記録。
 - Project Knowledge Base。
 - 仕様。
-- Ticket 計画。
+- 各 Ticket にテストを追加するかと、内部経路を含む Ticket 計画。
 - Review またはアーキテクチャ改善レポート。
 
 新しい会話で続けるときは：
@@ -65,7 +67,7 @@ Review も、会話に貼り付けたコード、文書、テスト結果だけ�
 
 AI は提示された内容を確認し、最初の未完了段階へ進みます。
 
-## 9 個の詳細モジュール
+## 10 個の詳細モジュール
 
 通常は `generic-workflow.md` を使用します。流れに慣れたら、`prompts/` 内の特定のモジュールを直接貼り付けられます。
 
@@ -76,7 +78,8 @@ AI は提示された内容を確認し、最初の未完了段階へ進みま�
 | `requirements.md` | 要件について一度に一つ質問する |
 | `documented-requirements.md` | 要件を確認し、長期的なプロジェクト知識を整理する |
 | `specification.md` | 承認済みの要件を仕様にまとめる |
-| `ticket-planning.md` | 仕様を縦割りの Tickets に分ける |
+| `ticket-planning.md` | 仕様を縦割りの Tickets に分け、テストを追加するかを一度に確認する |
+| `direct-implementation.md` | 振る舞いテストなしの直接実装ガイダンスを提示する |
 | `tdd-implementation.md` | Ticket ごとにテストと実装を準備する |
 | `review.md` | 会話で提示された内容を Review する |
 | `architecture-improvement.md` | アーキテクチャ上の問題と改善案を分析する |

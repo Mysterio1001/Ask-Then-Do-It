@@ -1,4 +1,4 @@
-core_version: 1.0.1
+core_version: 1.1.0
 capability_profiles:
   conversation:
     includes: []
@@ -32,7 +32,7 @@ rules:
   - id: GATE-PLAN-001
     mandatory: true
     module: ticket-planning
-    statement: Require explicit human approval before marking a Ticket Plan Approved.
+    statement: Require explicit plain-language test choices in one batch, map every choice to an internal implementation mode, and obtain explicit human approval before marking a Ticket Plan Approved.
   - id: GRILL-ONE-001
     mandatory: true
     module: requirements
@@ -52,7 +52,7 @@ rules:
   - id: REVIEW-EVIDENCE-001
     mandatory: true
     module: review
-    statement: Review raw evidence rather than relying on an implementer conclusion.
+    statement: Review raw evidence, preserve the Approved Ticket mode, and disclose skipped tests rather than relying on an implementer conclusion.
   - id: ART-STATE-001
     mandatory: true
     module: artifacts
@@ -92,11 +92,11 @@ rules:
   - id: ARCH-REFLOW-001
     mandatory: true
     module: architecture-improvement
-    statement: Return accepted architecture improvements through Specification, Ticket Plan, and TDD before implementation.
+    statement: Return accepted architecture improvements through Specification, Ticket Plan, and the plan-selected implementation path.
   - id: ROUTE-USER-001
     mandatory: true
     module: orchestration
-    statement: Honor an explicit user-selected module or requirement mode over automatic routing unless it violates a safety or approval gate.
+    statement: Honor an explicit user-selected module, requirement mode, or Ticket implementation mode over automatic routing unless it violates a safety or approval gate.
   - id: ROUTE-DOCS-001
     mandatory: true
     module: orchestration

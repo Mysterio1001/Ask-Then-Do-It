@@ -1,7 +1,7 @@
 adapter_id: generic-prompts
-adapter_version: 1.0.1
+adapter_version: 1.1.0
 target: copyable-general-language-model-prompts
-core_version: 1.0.1
+core_version: 1.1.0
 capabilities:
   - conversation
 artifact_persistence: user-managed-markdown
@@ -33,6 +33,7 @@ capability_evidence:
     - tests/generic/test_generic_prompts.py
     - adapters/generic-prompts/bootstrap.md
     - adapters/generic-prompts/tdd-implementation.md
+    - adapters/generic-prompts/direct-implementation.md
     - adapters/generic-prompts/review.md
     - adapters/generic-prompts/documented-requirements.md
     - adapters/generic-prompts/architecture-improvement.md

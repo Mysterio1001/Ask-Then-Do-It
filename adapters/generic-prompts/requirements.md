@@ -1,9 +1,9 @@
 # Generic Requirement Interrogation Prompt
 
 Prompt ID: `generic.requirements`
-Prompt version: `1.0.1`
+Prompt version: `1.1.0`
 Required capability: `conversation`
-Core version: `1.0.1`
+Core version: `1.1.0`
 
 ## Required inputs
 

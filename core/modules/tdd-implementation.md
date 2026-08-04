@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Implement one approved ticket at a time while preserving executable evidence that tests can detect the intended behavior.
+Implement one approved `tdd` Ticket at a time while preserving executable evidence that tests can detect the intended behavior.
 
 ## Capability requirement
 
@@ -10,7 +10,7 @@ Formal completion requires `tools`. A `conversation` host MAY provide an explici
 
 ## Contract
 
-- Require approved upstream artifacts and an eligible ticket.
+- Require approved upstream artifacts and an eligible Ticket whose Approved implementation mode is `tdd`.
 - Preserve unrelated user changes and stay inside the ticket boundary.
 - Add or identify the smallest meaningful test for approved behavior.
 - Execute it and observe failure for the expected missing-behavior reason (`TDD-RED-001`).

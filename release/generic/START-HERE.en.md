@@ -1,4 +1,4 @@
-# Ask Then Do It Generic 1.0.1 Guide
+# Ask Then Do It Generic 1.1.0 Guide
 
 This package is for Gemini and other AI services that accept long text. Paste the workflow into a conversation to begin with requirements discovery.
 
@@ -17,7 +17,10 @@ The AI's first effective response will briefly state the current stage, then ask
 
 - The AI asks one important question at a time.
 - Requirements, the specification, and the Ticket plan each need your explicit approval.
-- Implementation begins only after you approve the Ticket plan.
+- After all Tickets are listed, the AI gives each Ticket a test recommendation and warns that adding tests may increase work time while declining them lowers verification confidence.
+- In one response, you decide whether to add tests to every Ticket: add them to all, add them to none, or name only the Tickets that should have tests. You then approve the complete plan. A Ticket without tests follows `direct-implementation.md` without creating or running behavioral tests.
+- Internally, "Add tests" is recorded as `tdd` and "Do not add tests" as `direct`; you do not need to answer with those names.
+- Implementation begins only after you approve the complete Ticket plan.
 - Review distinguishes what can be verified from what cannot be verified with the supplied information.
 
 ## Capability limits
@@ -32,4 +35,4 @@ Paste `generic-workflow.md` again in every new conversation. To continue earlier
 
 ## Advanced use
 
-The `prompts/` folder contains nine stage-specific modules. Once you know the workflow, you may select a module directly. For normal use, start with `generic-workflow.md`.
+The `prompts/` folder contains ten stage-specific modules, including `direct-implementation.md`. Once you know the workflow, you may select a module directly. For normal use, start with `generic-workflow.md`.

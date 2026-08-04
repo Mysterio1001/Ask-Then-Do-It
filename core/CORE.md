@@ -1,6 +1,6 @@
 # Portable AI Development Workflow Core
 
-Core version: `1.0.1`
+Core version: `1.1.0`
 
 This directory is the normative, host-neutral contract for an AI-assisted software development workflow. Adapter wording may vary, but mapped rule semantics must remain compatible with this core.
 
@@ -18,8 +18,9 @@ This directory is the normative, host-neutral contract for an AI-assisted softwa
 4. [Specification](modules/specification.md)
 5. [Ticket planning](modules/ticket-planning.md)
 6. [Test-driven implementation](modules/tdd-implementation.md)
-7. [Evidence-based review](modules/review.md)
-8. [Architecture improvement](modules/architecture-improvement.md)
+7. [Direct implementation](modules/direct-implementation.md)
+8. [Evidence-based review](modules/review.md)
+9. [Architecture improvement](modules/architecture-improvement.md)
 
 ## Shared contracts
 
@@ -30,6 +31,7 @@ This directory is the normative, host-neutral contract for an AI-assisted softwa
 - [Specification artifact](artifacts/specification.md)
 - [Ticket Plan](artifacts/ticket-plan.md)
 - [Implementation Evidence](artifacts/implementation-evidence.md)
+- [Direct Implementation Evidence](artifacts/direct-implementation-evidence.md)
 - [Review Report](artifacts/review-report.md)
 - [Architecture Improvement Report](artifacts/architecture-improvement-report.md)
 - [Adapter manifest contract](adapters/manifest-contract.md)

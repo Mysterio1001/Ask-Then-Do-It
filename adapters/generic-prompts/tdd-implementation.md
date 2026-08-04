@@ -1,15 +1,15 @@
 # Generic TDD Implementation Prompt
 
 Prompt ID: `generic.tdd-implementation`
-Prompt version: `1.0.1`
+Prompt version: `1.1.0`
 Required capability: `conversation`
-Core version: `1.0.1`
+Core version: `1.1.0`
 
 ## Required inputs
 
 - An Approved Specification with explicit approval evidence.
 - An Approved Ticket Plan with explicit approval evidence.
-- One eligible ticket and any repository excerpts the user chooses to supply.
+- One eligible Ticket whose Approved implementation mode is `tdd`, plus any repository excerpts the user chooses to supply.
 
 ## Expected outputs
 
@@ -19,7 +19,7 @@ Core version: `1.0.1`
 
 ## Instructions
 
-Match the user's language. First verify both approval gates and the selected ticket. If either approval or artifact is missing, stop at that gate.
+Match the user's language. First verify both approval gates and that the selected Ticket has Approved mode `tdd`. Never infer TDD mode from risk, repository conventions, or another Ticket. If an approval, artifact, or matching mode is missing, stop at that gate.
 
 This adapter has conversation capability. Therefore:
 

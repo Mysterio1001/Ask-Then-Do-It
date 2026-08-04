@@ -1,0 +1,77 @@
+{
+  "release_version": "1.1.0",
+  "checks": [
+    {
+      "id": "automated-tests",
+      "status": "passed",
+      "command": "python -m unittest discover -s tests",
+      "outcome": "After package markers fixed top-level discovery to include Codex and conformance, an atomic temporary-directory replacement had one transient Windows WinError 5; the affected test passed alone (1/1), and the repeated final full run passed: Ran 98 tests in 5.134s; OK"
+    },
+    {
+      "id": "codex-skill-validation",
+      "status": "passed",
+      "command": "quick_validate.py for nine canonical and nine packaged Skills",
+      "outcome": "All 18 Skill instances returned Skill is valid!"
+    },
+    {
+      "id": "codex-plugin-validation",
+      "status": "passed",
+      "command": "validate_plugin.py for canonical and packaged Plugin",
+      "outcome": "Both Plugin validations passed"
+    },
+    {
+      "id": "codex-conformance",
+      "status": "passed",
+      "command": "python scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/codex/conformance.yaml",
+      "outcome": "Conformance passed: codex against core 1.1.0"
+    },
+    {
+      "id": "generic-conformance",
+      "status": "passed",
+      "command": "python scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/generic-prompts/manifest.yaml",
+      "outcome": "Conformance passed: generic-prompts against core 1.1.0"
+    },
+    {
+      "id": "codex-package-inventory",
+      "status": "passed",
+      "command": "tests.release.test_codex_release and official packaged Plugin validators",
+      "outcome": "Generated Plugin contains exactly nine Skills including implement-direct and matches canonical source"
+    },
+    {
+      "id": "generic-package-inventory",
+      "status": "passed",
+      "command": "tests.release.test_generic_release",
+      "outcome": "Generated Generic package contains exactly ten prompt files including direct-implementation.md and matches canonical source"
+    },
+    {
+      "id": "reproducible-build",
+      "status": "passed",
+      "command": "tests.release.test_release_safety.ReleaseSafetyTests.test_clean_builds_are_byte_reproducible_and_zips_match_directories",
+      "outcome": "Two isolated complete builds produced byte-identical archives and checksums"
+    },
+    {
+      "id": "zip-equivalence",
+      "status": "passed",
+      "command": "Release safety and provider package ZIP-to-directory equivalence tests",
+      "outcome": "Both ZIP files exactly match their generated package directories"
+    },
+    {
+      "id": "sha256-verification",
+      "status": "passed",
+      "command": "tests.release.test_release_contract.ReleaseContractTests.test_current_distribution_has_exactly_two_verified_archives",
+      "outcome": "Exactly two current checksum entries match the 1.1.0 archives"
+    },
+    {
+      "id": "removed-artifact-scan",
+      "status": "passed",
+      "command": "tests.release.test_clean_slate plus active-source 1.0.1 scan",
+      "outcome": "No historical distribution output or active 1.0.1 declaration remains in current source and consumer surfaces"
+    },
+    {
+      "id": "release-architecture-diagnosis",
+      "status": "passed",
+      "command": "Read-only simulated-deletion and twelve-lens release diagnosis followed by Final Review after fixes",
+      "outcome": "The existing read-only release diagnosis has no blocking architecture finding; Ticket 5 also passed an independent twelve-lens review after fixes, and Ticket 6 final review covers the integrated localized release"
+    }
+  ]
+}

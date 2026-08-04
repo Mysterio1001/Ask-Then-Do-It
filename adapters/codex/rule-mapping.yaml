@@ -1,4 +1,4 @@
-core_version: 1.0.1
+core_version: 1.1.0
 rules:
   CAP-DECLARE-001:
     - file: conformance.yaml
@@ -28,7 +28,7 @@ rules:
   GATE-PLAN-001:
     - file: plugin/ask-then-do-it/skills/plan-tickets/SKILL.md
       section: Run the plan gate
-      implementation: Requires explicit approval before implementation can begin.
+      implementation: Collects every plain-language test choice in one batch, maps each choice to an internal mode, and requires approval of the displayed complete plan before implementation can begin.
   GRILL-ONE-001:
     - file: plugin/ask-then-do-it/skills/ask-requirements/SKILL.md
       section: Ask exactly one question
@@ -48,7 +48,7 @@ rules:
   REVIEW-EVIDENCE-001:
     - file: plugin/ask-then-do-it/skills/review-code/SKILL.md
       section: Create an independent view
-      implementation: Supplies approved artifacts, final diff, surrounding code, test changes, and raw results without implementer conclusions.
+      implementation: Supplies approved artifacts, selected mode, final diff, surrounding code, available test changes, raw results, and skipped-test disclosure without implementer conclusions.
   ART-STATE-001:
     - file: plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md
       section: Enforce the gates
@@ -65,7 +65,7 @@ rules:
   ADAPTER-COVERAGE-001:
     - file: conformance.yaml
       section: implemented_rules
-      implementation: Enumerates every mandatory rule in core version 1.0.1 for deterministic shared validation.
+      implementation: Enumerates every mandatory rule in core version 1.1.0 for deterministic shared validation.
     - file: rule-mapping.yaml
       section: rules
       implementation: Resolves each mandatory rule to its concrete Codex adapter implementation.
@@ -100,11 +100,11 @@ rules:
   ARCH-REFLOW-001:
     - file: plugin/ask-then-do-it/skills/improve-architecture/SKILL.md
       section: Enforce report state and handoff
-      implementation: Routes accepted proposals through Specification, vertical Ticket Plan, and TDD rather than implementation.
+      implementation: Routes accepted proposals through Specification, vertical Ticket Plan, and the plan-selected TDD or direct implementation path.
   ROUTE-USER-001:
     - file: plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md
       section: Honor explicit user control
-      implementation: Gives direct module and requirement-mode selection precedence over automatic routing while preserving gates.
+      implementation: Gives direct module, requirement-mode, and Approved Ticket implementation-mode selection precedence over automatic routing while preserving gates.
   ROUTE-DOCS-001:
     - file: plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md
       section: Choose the requirement mode
