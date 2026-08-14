@@ -10,13 +10,26 @@ Upstream: [Matt Pocock skills repository](https://github.com/mattpocock/skills) 
 
 After the Tickets are drafted, the AI gives each one a test recommendation with time and risk warnings. In one response, you decide whether to add tests to every Ticket: add them to all, add them to none, or name only the Tickets that should have tests.
 
-Please read [User Guide](/START-HERE.en.md) first, then choose how you want to use it:
+Please read the [User Guide](/START-HERE.en.md) first, then choose how you want to use it.
+
+## Installation and updates
+
+### Automatic installation (CLI)
+
+#### Codex CLI
+```bash
+# Install
+codex plugin marketplace add Mysterio1001/Ask-Then-Do-It
+codex plugin add ask-then-do-it@ask-then-do-it
+# Update
+codex plugin marketplace upgrade ask-then-do-it
+```
+> **Tip: Tell AI, "Install or update Ask Then Do It from the official marketplace."**
+
+### Manual installation
+
 - Codex Plugin: [Download ask-then-do-it-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-1.2.0.zip), install it, and start with `$ask-then-do-it`.
 - Gemini or another AI: [Download ask-then-do-it-generic-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-generic-1.2.0.zip), extract it, and paste `generic-workflow.md` into each new conversation.
-
-## Install or update with AI
-
-Ask AI: `Install or update Ask Then Do It from the official marketplace.` AI must first inspect `codex plugin marketplace list` and `codex plugin list`. Only when the official marketplace is absent may it run `codex plugin marketplace add Mysterio1001/Ask-Then-Do-It`, followed by `codex plugin add ask-then-do-it@ask-then-do-it`. For a newer release, it must run `codex plugin marketplace upgrade ask-then-do-it` before the same Plugin command. A current version performs no write; uncertainty or a failed command stops the flow. Use only the documented `add` subcommand; do not choose alternate sources or automatic downgrade. After success, start a new Codex task. If marketplace installation fails, use the matching ZIP fallback.
 
 Read more:
 - [Beginner workflow](docs/guides/getting-started-simple.en.md)
@@ -30,13 +43,27 @@ Read more:
 
 Tickets 建立後，AI 會逐張提供測試建議與工時、風險提醒。你可以在一次回覆中決定每張 Ticket 是否加上測試：全部加上、全部不加，或只指定部分 Tickets。
 
-請先閱讀 [使用說明](/START-HERE.zh-TW.md)，再選擇使用方式：
+請先閱讀 [使用說明](/START-HERE.zh-TW.md)，再選擇使用方式
+
+## 安裝與更新
+
+### 自動安裝 ( CLI )
+
+#### Codex CLI
+```bash
+# 安裝
+codex plugin marketplace add Mysterio1001/Ask-Then-Do-It
+codex plugin add ask-then-do-it@ask-then-do-it
+# 更新
+codex plugin marketplace upgrade ask-then-do-it
+```
+> **提示 對 AI 說：「請從官方 marketplace 安裝或更新 Ask Then Do It。」**
+
+### 手動安裝
+
 - Codex Plugin：[下載 ask-then-do-it-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-1.2.0.zip)，安裝後從 `$ask-then-do-it` 開始。
 - Gemini 或其他 AI：[下載 ask-then-do-it-generic-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-generic-1.2.0.zip)，解壓縮後，在每個新對話貼上 `generic-workflow.md`。
 
-## 使用指令安裝與更新
-
-請對 AI 說：「請從官方 marketplace 安裝或更新 Ask Then Do It。」AI 會先執行唯讀狀態檢查，再依狀態選擇 `codex plugin marketplace add Mysterio1001/Ask-Then-Do-It`、`codex plugin marketplace upgrade ask-then-do-it` 與 `codex plugin add ask-then-do-it@ask-then-do-it`。目前版本已是最新時不寫入；遇到不確定或命令失敗就停止。只使用文件所列的 `add` 子命令，不改用其他來源或自動降級。成功後開啟新的 Codex 任務；marketplace 失敗時使用相符 ZIP 備援。
 
 更多說明：
 - [初學者流程](docs/guides/getting-started-simple.zh-TW.md)
@@ -50,13 +77,26 @@ Tickets 建立後，AI 會逐張提供測試建議與工時、風險提醒。你
 
 Tickets の作成後、AI は各 Ticket のテスト方針と、時間およびリスクへの影響を説明します。すべての Ticket についてテストを追加するかどうかを一度に回答でき、全部に追加、全部に追加しない、または一部だけを指定できます。
 
-まず [利用ガイド](/START-HERE.ja.md) を読み、その後で利用方法を選んでください：
+まず [利用ガイド](/START-HERE.ja.md) を読み、その後で利用方法を選んでください。
+
+## インストールと更新
+
+### 自動インストール（CLI）
+
+#### Codex CLI
+```bash
+# インストール
+codex plugin marketplace add Mysterio1001/Ask-Then-Do-It
+codex plugin add ask-then-do-it@ask-then-do-it
+# 更新
+codex plugin marketplace upgrade ask-then-do-it
+```
+> **ヒント：AI に「公式 marketplace から Ask Then Do It をインストールまたは更新してください」と伝えてください。**
+
+### 手動インストール
+
 - Codex Plugin：[ask-then-do-it-1.2.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-1.2.0.zip)し、インストール後に `$ask-then-do-it` から始めます。
 - Gemini またはその他の AI：[ask-then-do-it-generic-1.2.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-generic-1.2.0.zip)して展開し、新しい会話ごとに `generic-workflow.md` を貼り付けます。
-
-## AI によるインストールと更新
-
-AI に「公式 marketplace から Ask Then Do It をインストールまたは更新してください」と依頼します。AI はまず `codex plugin marketplace list` と `codex plugin list` で状態を確認し、必要な場合だけ `codex plugin marketplace add Mysterio1001/Ask-Then-Do-It` または `codex plugin marketplace upgrade ask-then-do-it` を実行してから `codex plugin add ask-then-do-it@ask-then-do-it` を実行します。最新なら書き込まず、不確実または失敗なら停止します。文書に示した `add` サブコマンドだけを使い、別ソースや自動ダウングレードは使用しません。成功後は新しい Codex タスクを開始し、marketplace が使えない場合は対応する ZIP を使います。
 
 詳しい説明：
 - [初心者向けフロー](docs/guides/getting-started-simple.ja.md)
