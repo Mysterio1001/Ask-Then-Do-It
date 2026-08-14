@@ -1,4 +1,4 @@
-# Ask Then Do It Generic 1.1.0 使用ガイド
+# Ask Then Do It Generic 1.2.0 使用ガイド
 
 このパッケージは、Gemini など長い文章を受け取れる AI サービス向けです。ワークフローを会話に貼り付けるだけで、要件の確認から始められます。
 

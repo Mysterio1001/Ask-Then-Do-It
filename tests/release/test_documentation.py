@@ -173,37 +173,39 @@ class ReleaseDocumentationTests(unittest.TestCase):
         self.assertLess(codex, generic)
         self.assertIn(
             "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/"
-            "v1.1.0/ask-then-do-it-1.1.0.zip",
+            "v1.2.0/ask-then-do-it-1.2.0.zip",
             body,
         )
         self.assertIn(
             "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/"
-            "v1.1.0/ask-then-do-it-generic-1.1.0.zip",
+            "v1.2.0/ask-then-do-it-generic-1.2.0.zip",
             body,
         )
         self.assertNotIn("## 維護者", body)
         self.assertNotIn("python scripts/build_release.py", body)
 
-    def test_readme_links_start_page_before_maintainer_build_command(self) -> None:
+    def test_readme_links_start_page_before_each_locale_more_section(self) -> None:
         body = README.read_text(encoding="utf-8")
-        self.assertLess(
-            body.index("START-HERE.zh-TW.md"),
-            body.index("python scripts/build_release.py"),
-        )
+        for start_page, more_marker in (
+            ("START-HERE.en.md", "Read more:"),
+            ("START-HERE.zh-TW.md", "更多說明："),
+            ("START-HERE.ja.md", "詳しい説明："),
+        ):
+            with self.subTest(start_page=start_page):
+                self.assertLess(body.index(start_page), body.index(more_marker))
 
     def test_root_readme_is_traditional_chinese_first_and_routes_both_users(self) -> None:
         body = README.read_text(encoding="utf-8")
         for required in (
-            "## 繁體中文快速開始",
+            "## 快速開始",
             "Codex Plugin",
             "generic-workflow.md",
-            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-1.1.0.zip",
-            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-generic-1.1.0.zip",
-            "python scripts/build_release.py",
+            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-1.2.0.zip",
+            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-generic-1.2.0.zip",
         ):
             self.assertIn(required, body)
-        self.assertNotIn("dist/codex/ask-then-do-it-1.1.0.zip", body)
-        self.assertNotIn("dist/generic/ask-then-do-it-generic-1.1.0.zip", body)
+        self.assertNotIn("dist/codex/ask-then-do-it-1.2.0.zip", body)
+        self.assertNotIn("dist/generic/ask-then-do-it-generic-1.2.0.zip", body)
         for obsolete in ("2.1.0", "3.0.0", "checksums-2.1.0"):
             self.assertNotIn(obsolete, body)
 
@@ -233,7 +235,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
     def test_codex_guide_covers_current_manual_plugin_lifecycle(self) -> None:
         body = CODEX_GUIDE.read_text(encoding="utf-8")
         for required in (
-            "ask-then-do-it-1.1.0.zip",
+            "ask-then-do-it-1.2.0.zip",
             "## 下載與解壓縮",
             "## 手動安裝",
             "codex plugin add ask-then-do-it --marketplace <local-marketplace-name>",
@@ -273,7 +275,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
     def test_generic_guide_covers_current_conversation_only_package(self) -> None:
         body = GENERIC_GUIDE.read_text(encoding="utf-8")
         for required in (
-            "ask-then-do-it-generic-1.1.0.zip",
+            "ask-then-do-it-generic-1.2.0.zip",
             "## 快速開始",
             "每個新對話",
             "generic-workflow.md",
@@ -416,9 +418,9 @@ class ReleaseDocumentationTests(unittest.TestCase):
 
         readme = README.read_text(encoding="utf-8")
         for language_link in (
-            "[繁體中文](START-HERE.zh-TW.md)",
-            "[English](START-HERE.en.md)",
-            "[日本語](START-HERE.ja.md)",
+            "[使用說明](/START-HERE.zh-TW.md)",
+            "[User Guide](/START-HERE.en.md)",
+            "[利用ガイド](/START-HERE.ja.md)",
         ):
             self.assertIn(language_link, readme)
 
@@ -470,7 +472,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
                 body = localized_sibling(source, locale).read_text(encoding="utf-8")
                 self.assertIn("generic-workflow.md", body)
                 self.assertIn("direct-implementation.md", body)
-                self.assertIn("1.1.0", body)
+                self.assertIn("1.2.0", body)
                 self.assertIn("`tdd`", body)
                 self.assertIn("`direct`", body)
 
@@ -503,7 +505,11 @@ class ReleaseDocumentationTests(unittest.TestCase):
                 if "://" in target or target.startswith("#"):
                     continue
                 path_text = target.split("#", 1)[0]
-                resolved = (document.parent / path_text).resolve()
+                resolved = (
+                    ROOT / path_text.lstrip("/")
+                    if path_text.startswith("/")
+                    else document.parent / path_text
+                ).resolve()
                 with self.subTest(document=document.relative_to(ROOT), target=target):
                     self.assertTrue(resolved.exists(), resolved)
 

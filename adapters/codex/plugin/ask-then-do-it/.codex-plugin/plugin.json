@@ -1,6 +1,6 @@
 {
   "name": "ask-then-do-it",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "An independent gated AI development workflow from requirement discovery through evidence-based review and architecture diagnosis. This project is not affiliated with or endorsed by Matt Pocock.",
   "author": {
     "name": "Ian Wu, Handle by me Tech Studio"
@@ -28,6 +28,9 @@
       "Tools",
       "Multi-agent"
     ],
+    "brandColor": "#C8262A",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png",
     "defaultPrompt": [
       "Use $ask-then-do-it to guide this software change.",
       "Use $ask-requirements to clarify this idea.",

@@ -39,6 +39,30 @@ def tree_hashes(root: Path) -> dict[str, str]:
     }
 
 
+def write_prior_release(output: Path) -> None:
+    archives = []
+    for provider, directory_name, archive_name in (
+        ("codex", "ask-then-do-it", "ask-then-do-it-1.1.0.zip"),
+        ("generic", "ask-then-do-it-generic-1.1.0", "ask-then-do-it-generic-1.1.0.zip"),
+    ):
+        package = output / provider / directory_name
+        package.mkdir(parents=True)
+        payload = package / "version.txt"
+        payload.write_text("1.1.0\n", encoding="utf-8")
+        archive = output / provider / archive_name
+        with zipfile.ZipFile(archive, "w") as bundle:
+            bundle.write(payload, f"{directory_name}/version.txt")
+        archives.append(archive)
+    (output / "checksums.sha256").write_text(
+        "".join(
+            f"{hashlib.sha256(archive.read_bytes()).hexdigest()}  "
+            f"{archive.relative_to(output).as_posix()}\n"
+            for archive in archives
+        ),
+        encoding="ascii",
+    )
+
+
 class ReleaseSafetyTests(unittest.TestCase):
     def test_unmanaged_content_blocks_build_without_mutation(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
@@ -63,6 +87,23 @@ class ReleaseSafetyTests(unittest.TestCase):
             second = run_builder(output)
             self.assertEqual(second.returncode, 0, second.stderr)
             self.assertEqual(tree_hashes(output), before)
+
+    def test_complete_verified_prior_release_can_be_upgraded_atomically(self) -> None:
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            output = Path(temporary) / "dist"
+            write_prior_release(output)
+
+            result = run_builder(output)
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertFalse((output / "codex" / "ask-then-do-it-1.1.0.zip").exists())
+            self.assertFalse(
+                (output / "generic" / "ask-then-do-it-generic-1.1.0.zip").exists()
+            )
+            self.assertTrue((output / "codex" / "ask-then-do-it-1.2.0.zip").is_file())
+            self.assertTrue(
+                (output / "generic" / "ask-then-do-it-generic-1.2.0.zip").is_file()
+            )
 
     def test_unmanaged_collision_stops_without_partial_outputs(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
@@ -107,8 +148,8 @@ class ReleaseSafetyTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
 
             for name in (
-                "codex/ask-then-do-it-1.1.0.zip",
-                "generic/ask-then-do-it-generic-1.1.0.zip",
+                "codex/ask-then-do-it-1.2.0.zip",
+                "generic/ask-then-do-it-generic-1.2.0.zip",
                 "checksums.sha256",
             ):
                 self.assertEqual(
@@ -118,11 +159,11 @@ class ReleaseSafetyTests(unittest.TestCase):
                 )
 
             pairs = (
-                ("codex/ask-then-do-it", "codex/ask-then-do-it-1.1.0.zip", "ask-then-do-it"),
+                ("codex/ask-then-do-it", "codex/ask-then-do-it-1.2.0.zip", "ask-then-do-it"),
                 (
-                    "generic/ask-then-do-it-generic-1.1.0",
-                    "generic/ask-then-do-it-generic-1.1.0.zip",
-                    "ask-then-do-it-generic-1.1.0",
+                    "generic/ask-then-do-it-generic-1.2.0",
+                    "generic/ask-then-do-it-generic-1.2.0.zip",
+                    "ask-then-do-it-generic-1.2.0",
                 ),
             )
             for directory_name, archive_name, archive_root in pairs:

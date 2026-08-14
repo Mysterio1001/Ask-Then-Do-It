@@ -4,7 +4,7 @@ This guide explains how to download, install, and use Ask Then Do It. The Plugin
 
 ## Download and extract
 
-[Download ask-then-do-it-1.1.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-1.1.0.zip) and extract it.
+[Download ask-then-do-it-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-1.2.0.zip) and extract it.
 
 The outermost extracted folder should be `ask-then-do-it/`, containing:
 
@@ -14,7 +14,40 @@ The outermost extracted folder should be `ask-then-do-it/`, containing:
 
 Install the complete folder. Do not copy only `skills/`, and do not add another version-named folder around it.
 
-## Manual installation
+## Install or update with AI
+
+Use natural language as the primary interface:
+
+```text
+Install or update Ask Then Do It from the official marketplace.
+```
+
+AI must inspect configured marketplaces and installed Plugins before writing:
+
+```powershell
+codex plugin marketplace list
+codex plugin list
+```
+
+When the official marketplace is absent, add it and then add the Plugin:
+
+```powershell
+codex plugin marketplace add Mysterio1001/Ask-Then-Do-It
+codex plugin add ask-then-do-it@ask-then-do-it
+```
+
+When it is present and a newer formal release is available, upgrade it first and then add the Plugin again:
+
+```powershell
+codex plugin marketplace upgrade ask-then-do-it
+codex plugin add ask-then-do-it@ask-then-do-it
+```
+
+If the installed version is current, report it and do not write. If source, version, CLI support, or command results are uncertain, stop and report the uncertainty. A failed write stops subsequent writes. Never remove the current Plugin first, use an alternate source, or automatically downgrade. Use only the documented `add` installation subcommand; an install alias is unsupported.
+
+After success, start a new Codex task. If the marketplace flow fails, use the matching `1.2.0` ZIP fallback. An older version is allowed only after the user explicitly chooses that version.
+
+## Manual installation fallback
 
 The current installation method requires an existing local marketplace that you can edit. The marketplace must have a name and an entry pointing to `<local-marketplace-root>/plugins/ask-then-do-it`.
 

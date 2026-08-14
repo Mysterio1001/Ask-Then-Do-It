@@ -1,0 +1,77 @@
+{
+  "release_version": "1.2.0",
+  "checks": [
+    {
+      "id": "automated-tests",
+      "status": "passed",
+      "command": "bundled python with workspace PyYAML: unittest discovery under tests",
+      "outcome": "Ran 113 tests in 7.758s; OK"
+    },
+    {
+      "id": "codex-skill-validation",
+      "status": "passed",
+      "command": "quick_validate.py contract for nine canonical and nine packaged Skills",
+      "outcome": "All 18 Skill instances returned Skill is valid!"
+    },
+    {
+      "id": "codex-plugin-validation",
+      "status": "passed",
+      "command": "plugin-creator validate_plugin.py contract for canonical and packaged Plugin",
+      "outcome": "Both Plugin validations passed"
+    },
+    {
+      "id": "codex-conformance",
+      "status": "passed",
+      "command": "validate_conformance.py contract for adapters/codex/conformance.yaml",
+      "outcome": "Conformance passed: codex against core 1.2.0"
+    },
+    {
+      "id": "generic-conformance",
+      "status": "passed",
+      "command": "validate_conformance.py contract for adapters/generic-prompts/manifest.yaml",
+      "outcome": "Conformance passed: generic-prompts against core 1.2.0"
+    },
+    {
+      "id": "codex-package-inventory",
+      "status": "passed",
+      "command": "Codex release, asset, marketplace-boundary, Plugin, and Skill validation tests",
+      "outcome": "Codex package matches canonical Plugin, contains icon and logo, and excludes marketplace metadata"
+    },
+    {
+      "id": "generic-package-inventory",
+      "status": "passed",
+      "command": "Generic release and marketplace/asset-boundary tests",
+      "outcome": "Generic package matches canonical prompts and excludes Plugin assets and marketplace metadata"
+    },
+    {
+      "id": "reproducible-build",
+      "status": "passed",
+      "command": "ReleaseSafetyTests.test_clean_builds_are_byte_reproducible_and_zips_match_directories",
+      "outcome": "Two isolated complete builds produced byte-identical archives and checksums"
+    },
+    {
+      "id": "zip-equivalence",
+      "status": "passed",
+      "command": "Release safety and provider package ZIP-to-directory equivalence tests",
+      "outcome": "Both ZIP files exactly match their generated package directories"
+    },
+    {
+      "id": "sha256-verification",
+      "status": "passed",
+      "command": "ReleaseContractTests.test_current_distribution_has_exactly_two_verified_archives",
+      "outcome": "Exactly two current checksum entries match the 1.2.0 archives"
+    },
+    {
+      "id": "removed-artifact-scan",
+      "status": "passed",
+      "command": "clean-slate, active-version, README-whitelist, package-boundary, and source-image scans",
+      "outcome": "No active 1.1.0 declaration, marketplace package leak, lighthouse asset, temporary source path, or unsupported install alias remains"
+    },
+    {
+      "id": "release-architecture-diagnosis",
+      "status": "passed",
+      "command": "Read-only simulated-deletion and twelve-lens 1.2.0 release diagnosis",
+      "outcome": "Diagnosis completed with two non-blocking maintainability findings and no accepted or required refactor"
+    }
+  ]
+}

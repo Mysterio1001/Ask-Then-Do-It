@@ -66,11 +66,11 @@ class ReleaseContractTests(unittest.TestCase):
                     f"unittest discover would skip tests/{package} without {marker.name}",
                 )
 
-    def test_first_release_identity_and_validation_gate_are_declared(self) -> None:
+    def test_current_release_identity_and_validation_gate_are_declared(self) -> None:
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
         self.assertEqual(config["schema_version"], 2)
-        self.assertEqual(config["release_version"], "1.1.0")
-        self.assertEqual(config["core_version"], "1.1.0")
+        self.assertEqual(config["release_version"], "1.2.0")
+        self.assertEqual(config["core_version"], "1.2.0")
         self.assertEqual(
             config["required_validation_checks"], REQUIRED_VALIDATION_CHECKS
         )
@@ -80,8 +80,8 @@ class ReleaseContractTests(unittest.TestCase):
             encoding="ascii"
         ).splitlines()
         expected = {
-            "codex/ask-then-do-it-1.1.0.zip",
-            "generic/ask-then-do-it-generic-1.1.0.zip",
+            "codex/ask-then-do-it-1.2.0.zip",
+            "generic/ask-then-do-it-generic-1.2.0.zip",
         }
         self.assertEqual({line.split("  ", 1)[1] for line in checksums}, expected)
         for line in checksums:
@@ -190,7 +190,6 @@ class ReleaseContractTests(unittest.TestCase):
             "import urllib",
             "import requests",
             "CODEX_HOME",
-            "marketplace.json",
             "codex plugin add",
         ):
             with self.subTest(forbidden=forbidden):

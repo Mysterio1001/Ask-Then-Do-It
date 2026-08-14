@@ -1,4 +1,4 @@
-# Ask Then Do It Generic 1.1.0 Guide
+# Ask Then Do It Generic 1.2.0 Guide
 
 This package is for Gemini and other AI services that accept long text. Paste the workflow into a conversation to begin with requirements discovery.
 

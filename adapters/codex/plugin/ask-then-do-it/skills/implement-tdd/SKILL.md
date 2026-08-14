@@ -53,6 +53,6 @@ Use parallel agents only when the approved plan marks the tickets safe, contract
 
 ## Report evidence
 
-Emit Implementation Evidence only for work actually performed with the `tools` profile. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.1.0`, evidence `status`, upstream `inputs`, `assumptions`, `deferred` work, and reviewer `handoff`.
+Emit Implementation Evidence only for work actually performed with the `tools` profile. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.2.0`, evidence `status`, upstream `inputs`, `assumptions`, `deferred` work, and reviewer `handoff`.
 
 Record the ticket outcome, files changed, raw commands and raw results for the observed red failure, focused green, post-refactor verification, and broader checks. Include any test-first exception rationale and alternative verification, incomplete checks, and residual risks. Do not set a completed status while a required check fails or is blocked. After all eligible tickets complete, hand the approved artifacts, final diff, surrounding code, test changes, and raw results to `$review-code`.

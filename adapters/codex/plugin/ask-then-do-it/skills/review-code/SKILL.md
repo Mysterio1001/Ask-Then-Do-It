@@ -99,4 +99,4 @@ After findings, state:
 
 If no actionable findings exist, say so explicitly and still identify residual risks or verification gaps. Do not modify code unless the user separately asks for fixes.
 
-Emit a Review Report that includes or unambiguously conveys `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.1.0`, review `status`, reviewed `inputs`, `assumptions`, `deferred` checks, and the next `handoff`. Preserve the stated Review label, evidence unavailable, residual risks, untested areas, and completion assessment in the artifact.
+Emit a Review Report that includes or unambiguously conveys `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.2.0`, review `status`, reviewed `inputs`, `assumptions`, `deferred` checks, and the next `handoff`. Preserve the stated Review label, evidence unavailable, residual risks, untested areas, and completion assessment in the artifact.

@@ -1,43 +1,65 @@
-# Ask Then Do It Codex Plugin 使用ガイド
+# Ask Then Do It Codex Plugin ガイド
 
-このガイドでは、Ask Then Do It のダウンロード、インストール、使用方法を説明します。Plugin には開発フローの各段階を担当する Skills が含まれています。
+このガイドでは Ask Then Do It のダウンロード、インストール、使い方を説明します。Plugin には開発ワークフローの各段階を担当する Skill が含まれています。
 
 ## ダウンロードと展開
 
-[ask-then-do-it-1.1.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-1.1.0.zip)して展開します。
+[ask-then-do-it-1.2.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-1.2.0.zip)して展開します。
 
-展開後、一番外側の `ask-then-do-it/` フォルダーには次のものが含まれます。
+展開後、一番外側のフォルダーは `ask-then-do-it/` です。次の内容を含む完全なフォルダーを使ってください。
 
 - `.codex-plugin/`
 - `skills/`
-- 使用方法、ライセンス、出典に関する文書
+- 使用方法、ライセンス、出典の文書
 
-インストールにはフォルダー全体を使用してください。`skills/` だけをコピーしたり、外側にバージョン名のフォルダーを追加したりしないでください。
+`skills/` だけをコピーしたり、別のバージョン名フォルダーで包んだりしないでください。
 
-## 手動インストール
+## AI によるインストールと更新
 
-現在の方法では、編集可能なローカル marketplace がすでに必要です。marketplace には名前と、`<local-marketplace-root>/plugins/ask-then-do-it` を指す entry が必要です。
+自然言語で AI に依頼することが主なインターフェースです。
 
-1. marketplace に既存の `plugins/ask-then-do-it/` がある場合はバックアップします。初回インストールでは省略できます。
-2. 展開した `ask-then-do-it/` フォルダー全体を `<local-marketplace-root>/plugins/ask-then-do-it/` にコピーします。
-3. Codex から marketplace が見えることを確認します。
+```text
+公式 marketplace から Ask Then Do It をインストールまたは更新してください。
+```
+
+AI は書き込みの前に marketplace とインストール済み Plugin の状態を確認します。
 
 ```powershell
 codex plugin marketplace list
+codex plugin list
 ```
 
-4. Plugin をインストールし、状態を確認します。
+公式 marketplace がない場合だけ追加し、その後に Plugin を追加します。
 
 ```powershell
+codex plugin marketplace add Mysterio1001/Ask-Then-Do-It
+codex plugin add ask-then-do-it@ask-then-do-it
+```
+
+公式 marketplace があり、新しい正式版が利用できる場合は、marketplace を先に更新します。
+
+```powershell
+codex plugin marketplace upgrade ask-then-do-it
+codex plugin add ask-then-do-it@ask-then-do-it
+```
+
+インストール済みの版が最新なら状態だけを報告し、書き込みません。ソース、バージョン、CLI の対応、または結果を確実に判定できない場合は停止して不確実性を報告します。書き込みに失敗したら後続の書き込みを止め、現在の Plugin を先に削除したり、別のソースを選んだり、自動でダウングレードしたりしません。対応する `add` サブコマンドだけを使い、ほかのインストール別名は使いません。
+
+成功後は新しい Codex タスクを開始して新しい Plugin の内容を読み込ませます。marketplace の処理ができない場合は、対応する `1.2.0` ZIP を手動のフォールバックとして使います。ダウングレードはユーザーが古い版を明示的に選んだ場合だけ許可されます。
+
+## 手動インストールのフォールバック
+
+ローカル marketplace を使う手動方式では、完全な `ask-then-do-it/` を `<local-marketplace-root>/plugins/ask-then-do-it` に置き、entry がその場所を指すことを確認します。
+
+```powershell
+codex plugin marketplace list
 codex plugin add ask-then-do-it --marketplace <local-marketplace-name>
 codex plugin list --marketplace <local-marketplace-name>
 ```
 
-5. 新しい Codex タスクを開きます。
+完了後は新しい Codex タスクを開きます。
 
-marketplace や entry がまだない場合は、[Codex Plugin 公式ガイド](https://developers.openai.com/plugins/build/plugins)に従って作成し、手順 1 に戻ってください。
-
-## 初めて使う
+## 初回使用
 
 新しい Codex タスクで次のように入力します。
 
@@ -45,55 +67,42 @@ marketplace や entry がまだない場合は、[Codex Plugin 公式ガイド](
 $ask-then-do-it を使って、この機能の開発を手伝ってください：……
 ```
 
-AI は現在の段階を判断し、最も重要な質問を一つ行います。各質問には推奨回答と主なトレードオフが添えられます。
+AI は現在の段階を判定し、最も重要な質問を一つずつ行います。要件、仕様、Ticket 計画の承認が必要です。3 回目の承認前に全 Ticket とテストの推奨を示し、どの Ticket にテストを追加するかを一度に確認します。既定値はありません。
 
-次の 3 か所では、あなたの明確な承認を待ちます。
+承認後、内部ではテストを追加する Ticket を `tdd` として `$implement-tdd` に渡し、追加しない Ticket を `direct` として `$implement-direct` に渡します。Review は `tests: skipped-by-user` を保持し、未テストのリスクを説明します。3 回目の承認が終わるまで正式な実装は始まりません。
 
-1. 要件の合意。
-2. 仕様。
-3. Ticket 計画。
+## Skill 入口
 
-3 回目の承認前に、AI はまずすべての Tickets を示し、各 Ticket のテスト方針を提案します。Ticket ごとに、テストを追加すると作業時間が増える可能性があり、追加しないと確認の信頼度が下がることを説明します。すべての Ticket についてテストを追加するかどうかを一度に回答でき、全部に追加、全部に追加しない、または一部だけを指定できます。既定値はありません。一部だけを指定して残りを説明しなかった場合、AI は未決定の Tickets だけを確認します。
-
-承認後、テストを追加する Ticket は内部で `tdd` と記録されて `$implement-tdd` を使用します。テストを追加しない Ticket は `direct` と記録されて `$implement-direct` を使用します。`$implement-direct` は振る舞いテストを作成も実行もしませんが、lint、型チェック、build は実行できます。Review では `tests: skipped-by-user` と未テストのリスクを保持します。3 回目の承認が完了してから正式な実装を始めます。
-
-## 9 個の Skill 入口
-
-| Skill | 適した用途 |
+| Skill | 用途 |
 | --- | --- |
-| `$ask-then-do-it` | 現在の段階を判断し、フロー全体を案内する。通常はここから始める |
-| `$ask-requirements` | 影響の大きい要件を一度に一つ確認する |
-| `$ask-with-docs` | 要件を確認しながら Project Knowledge Base を整理する |
-| `$write-spec` | 承認済みの要件を仕様にまとめる |
-| `$plan-tickets` | 仕様を縦割りの Tickets に分け、テストを追加するかを一度に確認する |
-| `$implement-direct` | 承認済みの `direct` Ticket を、振る舞いテストの作成や実行なしで実装する |
-| `$implement-tdd` | Ticket を Red、Green、Refactor の順で実装する |
-| `$review-code` | 要件、変更、利用可能な根拠と、テスト省略のリスクを Review する |
-| `$improve-architecture` | アーキテクチャとモジュールの関係を分析し、改善案を示す |
-
-どの Skill も直接指定できます。`$ask-then-do-it` だけを使う場合、AI は依頼内容と現在の進捗から次の段階を選びます。
+| `$ask-then-do-it` | 現在の段階を判定して全体を案内 |
+| `$ask-requirements` | 重要な要件を一つずつ確認 |
+| `$ask-with-docs` | 要件を確認し Project Knowledge Base を整理 |
+| `$write-spec` | 承認済み要件を仕様に変換 |
+| `$plan-tickets` | 仕様を Ticket に分割しテスト選択を確認 |
+| `$implement-direct` | 行動テストなしで `direct` Ticket を実装 |
+| `$implement-tdd` | Red、Green、Refactor で Ticket を実装 |
+| `$review-code` | 変更と証拠を Review |
+| `$improve-architecture` | アーキテクチャを分析し改善案を提示 |
 
 ## 手動更新
 
-1. 新しい ZIP をダウンロードして展開します。
-2. marketplace にある `plugins/ask-then-do-it/` をバックアップします。
-3. 新しい `ask-then-do-it/` フォルダー全体で置き換えます。
-4. インストールコマンドをもう一度実行し、`codex plugin list` でバージョンを確認します。
-5. 新しい Codex タスクで `$ask-then-do-it` を試します。
+1. 対応する版の ZIP をダウンロードして展開します。
+2. marketplace にある現在の `plugins/ask-then-do-it/` をバックアップします。
+3. 新しい完全なフォルダーで置き換えます。
+4. Plugin を再度有効にし、新しい Codex タスクで `$ask-then-do-it` を確認します。
 
-新しいバージョンが読み込まれない場合は、バックアップを戻して以前のバージョンを再インストールしてください。
+自動でダウングレードしないでください。古い版を使う場合は、ユーザーがその版を明示的に選択してください。
 
 ## 手動削除
-
-次のコマンドを実行します。
 
 ```powershell
 codex plugin remove ask-then-do-it --marketplace <local-marketplace-name>
 codex plugin list --marketplace <local-marketplace-name>
 ```
 
-このコマンドで Codex からインストールを削除できます。marketplace 内の `plugins/ask-then-do-it/` や entry も削除する場合は、同じ marketplace を使う環境がほかにないことを確認してください。
+Plugin を削除する前に、同じ marketplace を使うほかの環境がないことを確認してください。
 
 ## ライセンスと出典
 
-Ask Then Do It は Matt Pocock の skills repository から着想を得た独立プロジェクトであり、Matt Pocock との提携関係や同氏による推奨を示すものではありません。詳しくは Repository またはパッケージ内の `LICENSE` と `THIRD_PARTY_NOTICES.md` を参照してください。
+Ask Then Do It は Matt Pocock の skills repository に着想を得た独立プロジェクトです。Matt Pocock との提携・推奨関係はありません。詳細は `LICENSE` と `THIRD_PARTY_NOTICES.md` を参照してください。

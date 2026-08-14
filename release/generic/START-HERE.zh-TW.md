@@ -1,4 +1,4 @@
-# Ask Then Do It Generic 1.1.0 使用說明
+# Ask Then Do It Generic 1.2.0 使用說明
 
 這個套件適合 Gemini 或其他能接收長文字的 AI。你只要將工作流貼進對話，就能從需求釐清開始。
 

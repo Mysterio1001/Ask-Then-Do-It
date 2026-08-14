@@ -6,7 +6,7 @@ This independent project was inspired by the [Matt Pocock skills repository](htt
 
 ## 1. Use with Codex
 
-[Download ask-then-do-it-1.1.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-1.1.0.zip) and extract it. After installing the complete `ask-then-do-it/` Plugin folder, open a new Codex task and enter:
+[Download ask-then-do-it-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-1.2.0.zip) and extract it. After installing the complete `ask-then-do-it/` Plugin folder, open a new Codex task and enter:
 
 ```text
 $ask-then-do-it I want to build...
@@ -16,7 +16,7 @@ The AI will ask one important question first. It will not move to the next stage
 
 ## 2. Use with Gemini or another AI
 
-[Download ask-then-do-it-generic-1.1.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-generic-1.1.0.zip) and extract it. Open `generic-workflow.md`, paste the entire file into a new AI conversation, and then describe what you want to do.
+[Download ask-then-do-it-generic-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-generic-1.2.0.zip) and extract it. Open `generic-workflow.md`, paste the entire file into a new AI conversation, and then describe what you want to do.
 
 The AI will begin with one requirements question. Save the important documents created during the workflow. When you start another conversation, paste the workflow and your saved documents again. See the [Generic Guide](docs/guides/generic.en.md) for complete instructions.
 

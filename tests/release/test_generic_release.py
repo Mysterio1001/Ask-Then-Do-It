@@ -59,8 +59,8 @@ class GenericReleaseTests(unittest.TestCase):
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
         generic = config["generic"]
         self.assertEqual(generic["source"], "adapters/generic-prompts")
-        self.assertEqual(generic["directory"], "generic/ask-then-do-it-generic-1.1.0")
-        self.assertEqual(generic["archive"], "generic/ask-then-do-it-generic-1.1.0.zip")
+        self.assertEqual(generic["directory"], "generic/ask-then-do-it-generic-1.2.0")
+        self.assertEqual(generic["archive"], "generic/ask-then-do-it-generic-1.2.0.zip")
         self.assertEqual(generic["entrypoint"], "generic-workflow.md")
         self.assertEqual(
             generic["start_guide"],
@@ -89,8 +89,8 @@ class GenericReleaseTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
 
-            package = output_root / "generic" / "ask-then-do-it-generic-1.1.0"
-            archive = output_root / "generic" / "ask-then-do-it-generic-1.1.0.zip"
+            package = output_root / "generic" / "ask-then-do-it-generic-1.2.0"
+            archive = output_root / "generic" / "ask-then-do-it-generic-1.2.0.zip"
             checksums = output_root / "checksums.sha256"
             actual_files = {
                 path.relative_to(package).as_posix()
@@ -157,8 +157,8 @@ class GenericReleaseTests(unittest.TestCase):
 
             manifest = read_generated_manifest(package / "manifest.yaml")
             self.assertEqual(manifest["package_id"], "ask-then-do-it")
-            self.assertEqual(manifest["release_version"], "1.1.0")
-            self.assertEqual(manifest["core_version"], "1.1.0")
+            self.assertEqual(manifest["release_version"], "1.2.0")
+            self.assertEqual(manifest["core_version"], "1.2.0")
             self.assertEqual(manifest["adapter_id"], "generic-prompts")
             self.assertEqual(manifest["capabilities"], ["conversation"])
             self.assertEqual(manifest["source_modules"], MODULES)
@@ -166,12 +166,12 @@ class GenericReleaseTests(unittest.TestCase):
             with zipfile.ZipFile(archive) as bundle:
                 for relative in expected_files:
                     self.assertEqual(
-                        bundle.read(f"ask-then-do-it-generic-1.1.0/{relative}"),
+                        bundle.read(f"ask-then-do-it-generic-1.2.0/{relative}"),
                         (package / relative).read_bytes(),
                     )
             self.assertEqual(
                 checksums.read_text(encoding="ascii"),
-                f"{sha256(archive)}  generic/ask-then-do-it-generic-1.1.0.zip\n",
+                f"{sha256(archive)}  generic/ask-then-do-it-generic-1.2.0.zip\n",
             )
 
 

@@ -60,7 +60,7 @@ If any gate is absent, continue only with simulation. When all gates are proven,
 
 ## Emit the architecture report
 
-Emit an Architecture Improvement Report with `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.1.0`, `status`, `inputs`, `assumptions`, `deferred`, `handoff`, and `approval` evidence when accepted.
+Emit an Architecture Improvement Report with `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.2.0`, `status`, `inputs`, `assumptions`, `deferred`, `handoff`, and `approval` evidence when accepted.
 
 Include every section:
 

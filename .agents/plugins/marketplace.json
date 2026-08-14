@@ -1,0 +1,22 @@
+{
+  "name": "ask-then-do-it",
+  "interface": {
+    "displayName": "Ask Then Do It"
+  },
+  "plugins": [
+    {
+      "name": "ask-then-do-it",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/Mysterio1001/Ask-Then-Do-It.git",
+        "path": "adapters/codex/plugin/ask-then-do-it",
+        "ref": "v1.2.0"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

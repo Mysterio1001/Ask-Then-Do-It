@@ -38,7 +38,7 @@ If an artifact is missing, Draft, contradictory, no longer feasible, or does not
 
 ## Report direct evidence
 
-Emit Direct Implementation Evidence only for work actually performed with the `tools` profile. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.1.0`, evidence `status`, upstream `inputs`, `assumptions`, `deferred` work, and reviewer `handoff`.
+Emit Direct Implementation Evidence only for work actually performed with the `tools` profile. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.2.0`, evidence `status`, upstream `inputs`, `assumptions`, `deferred` work, and reviewer `handoff`.
 
 Record the Ticket outcome, changed files or ownership areas, raw non-test commands and results, final-diff inspection, the exact disclosure `tests: skipped-by-user`, unavailable behavioral evidence, external test constraints or delivery blocks, incomplete checks, and residual risks. Do not use Red, Green, passing-test, test-verified, or TDD-complete claims.
 

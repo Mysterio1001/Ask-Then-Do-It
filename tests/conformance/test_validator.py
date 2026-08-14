@@ -88,7 +88,7 @@ class ConformanceValidatorTests(unittest.TestCase):
     def test_core_defines_documented_requirements_artifacts(self) -> None:
         with CATALOG.open(encoding="utf-8") as handle:
             catalog = yaml.safe_load(handle)
-        self.assertEqual(catalog["core_version"], "1.1.0")
+        self.assertEqual(catalog["core_version"], "1.2.0")
 
         knowledge = (
             ROOT / "core" / "artifacts" / "project-knowledge-base.md"

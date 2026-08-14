@@ -14,16 +14,20 @@ import json
 import os
 import re
 import shutil
+import struct
 import sys
 import uuid
 import zipfile
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+from validate_marketplace import CatalogError, DEFAULT_CATALOG, load_and_validate
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = ROOT / "release" / "release.json"
 DEFAULT_OUTPUT = ROOT / "dist"
+MARKETPLACE_CATALOG = DEFAULT_CATALOG
 LEGAL_FILES = ("LICENSE", "THIRD_PARTY_NOTICES.md")
 START_GUIDE_FILES = (
     "START-HERE.zh-TW.md",
@@ -83,6 +87,31 @@ def read_json_object(path: Path, label: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise BuildError(f"{label} must contain a JSON object: {path}")
     return value
+
+
+def validate_png_asset(path: Path, expected_size: tuple[int, int], label: str) -> None:
+    """Validate the release-critical PNG header without adding an image dependency."""
+
+    try:
+        raw = path.read_bytes()
+    except FileNotFoundError as exc:
+        raise BuildError(f"Missing {label}: {path}") from exc
+    if len(raw) < 33 or raw[:8] != b"\x89PNG\r\n\x1a\n":
+        raise BuildError(f"{label} must be a PNG: {path}")
+    length = struct.unpack(">I", raw[8:12])[0]
+    if raw[12:16] != b"IHDR" or length != 13 or len(raw) < 29:
+        raise BuildError(f"{label} has an invalid PNG header: {path}")
+    width, height, bit_depth, color_type, compression, filter_method, interlace = struct.unpack(
+        ">IIBBBBB", raw[16:29]
+    )
+    if (width, height) != expected_size:
+        raise BuildError(
+            f"{label} must be {expected_size[0]}x{expected_size[1]}: {path}"
+        )
+    if bit_depth != 8 or color_type not in {4, 6}:
+        raise BuildError(f"{label} must have an 8-bit alpha channel: {path}")
+    if (compression, filter_method, interlace) != (0, 0, 0):
+        raise BuildError(f"{label} uses unsupported PNG encoding: {path}")
 
 
 def require_exact_keys(value: dict[str, Any], expected: set[str], label: str) -> None:
@@ -149,6 +178,16 @@ def load_config(path: Path) -> dict[str, Any]:
     for key in ("release_version", "core_version"):
         if SEMVER.fullmatch(config[key]) is None:
             raise BuildError(f"release configuration.{key} must be strict semver")
+    expected_marketplace_ref = f"v{config['release_version']}"
+    try:
+        load_and_validate(
+            MARKETPLACE_CATALOG,
+            expected_ref=expected_marketplace_ref,
+        )
+    except CatalogError as exc:
+        raise BuildError(
+            f"marketplace catalog must match {expected_marketplace_ref}: {exc}"
+        ) from exc
     core_declarations = (
         ROOT / "core" / "rules" / "rules.yaml",
         ROOT / "adapters" / "codex" / "conformance.yaml",
@@ -277,6 +316,26 @@ def validate_codex_source(config: dict[str, Any]) -> Path:
     interface = manifest.get("interface")
     if not isinstance(interface, dict) or interface.get("displayName") != config["display_name"]:
         raise BuildError("Plugin displayName must match release display_name")
+    expected_assets = {
+        "composerIcon": ("./assets/icon.png", (512, 512)),
+        "logo": ("./assets/logo.png", (1024, 1024)),
+    }
+    if interface.get("brandColor") != "#C8262A":
+        raise BuildError("Plugin brandColor must be '#C8262A'")
+    for field, (raw_path, size) in expected_assets.items():
+        if interface.get(field) != raw_path:
+            raise BuildError(f"Plugin interface.{field} must be {raw_path!r}")
+        relative = PurePosixPath(raw_path)
+        if (
+            relative.is_absolute()
+            or any(part in {"", ".", ".."} for part in relative.parts)
+            or relative.parts[0] != "assets"
+        ):
+            raise BuildError(f"Plugin interface.{field} must stay inside ./assets/")
+        asset = (plugin / Path(*relative.parts)).resolve()
+        if not asset.is_relative_to(plugin) or not asset.is_file():
+            raise BuildError(f"Missing Plugin interface asset: {asset}")
+        validate_png_asset(asset, size, f"Plugin {field}")
 
     skills_root = plugin / "skills"
     actual_skills = sorted(path.name for path in skills_root.iterdir() if path.is_dir())
@@ -294,7 +353,7 @@ def validate_codex_source(config: dict[str, Any]) -> Path:
     if missing_start_guides:
         raise BuildError(f"Codex Plugin source is missing start guides: {missing_start_guides}")
     top_level = {path.name for path in plugin.iterdir()}
-    if top_level != {".codex-plugin", "skills", *START_GUIDE_FILES}:
+    if top_level != {".codex-plugin", "skills", "assets", *START_GUIDE_FILES}:
         raise BuildError(f"Unexpected Codex Plugin source entries: {sorted(top_level)}")
     return plugin
 
@@ -433,6 +492,52 @@ def validate_output_set(
         manifest_path = root / config["generic"]["directory"] / "manifest.yaml"
         if manifest_path.read_text(encoding="utf-8") != generic_manifest(config):
             raise BuildError(f"Built Generic manifest identity mismatch: {manifest_path}")
+    return names
+
+
+def validate_existing_output_set(
+    root: Path,
+    config: dict[str, Any],
+    selected: list[str],
+) -> list[str]:
+    """Accept a complete verified managed release, including a prior version."""
+
+    names = selected_output_names(config, selected)
+    present = sorted(path.name for path in root.iterdir()) if root.exists() else []
+    if not present:
+        return []
+    if set(present) != set(names):
+        collision = (root / (present[0] if present else names[0])).resolve()
+        raise BuildError(f"Unmanaged or incomplete output collision: {collision}")
+    if any(path.is_symlink() for path in root.rglob("*")):
+        raise BuildError(f"Managed output must not contain symbolic links: {root}")
+
+    checksums = read_checksums(root / "checksums.sha256")
+    detected_archives: set[str] = set()
+    for package_id in selected:
+        provider = PurePosixPath(config[package_id]["directory"]).parts[0]
+        provider_root = root / provider
+        entries = list(provider_root.iterdir())
+        directories = [path for path in entries if path.is_dir()]
+        archives = [
+            path for path in entries if path.is_file() and path.suffix.lower() == ".zip"
+        ]
+        if len(directories) != 1 or len(archives) != 1 or len(entries) != 2:
+            raise BuildError(
+                f"Unmanaged or incomplete prior release output: {provider_root}"
+            )
+        directory = directories[0]
+        archive = archives[0]
+        relative_archive = archive.relative_to(root).as_posix()
+        detected_archives.add(relative_archive)
+        if checksums.get(relative_archive) != sha256(archive):
+            raise BuildError(f"Checksum mismatch: {archive}")
+        verify_zip_equivalence(directory, archive, directory.name)
+
+    if set(checksums) != detected_archives:
+        raise BuildError(
+            f"Checksum inventory does not match prior release archives: {root}"
+        )
     return names
 
 
@@ -640,13 +745,7 @@ def main() -> int:
             allow_absent=False,
             require_source_equivalence=True,
         )
-        existing_names = validate_output_set(
-            output_root,
-            config,
-            selected,
-            allow_absent=True,
-            require_source_equivalence=False,
-        )
+        existing_names = validate_existing_output_set(output_root, config, selected)
         commit(
             staging,
             output_root,

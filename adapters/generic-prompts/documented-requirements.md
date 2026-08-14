@@ -1,9 +1,9 @@
 # Generic Documented Requirement Interrogation Prompt
 
 Prompt ID: `generic.documented-requirements`
-Prompt version: `1.1.0`
+Prompt version: `1.2.0`
 Required capability: `conversation`
-Core version: `1.1.0`
+Core version: `1.2.0`
 
 ## Required inputs
 

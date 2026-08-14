@@ -4,7 +4,7 @@
 
 ## 下載與解壓縮
 
-[下載 ask-then-do-it-1.1.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-1.1.0.zip) 並解壓縮。
+[下載 ask-then-do-it-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-1.2.0.zip) 並解壓縮。
 
 解壓後最外層應是 `ask-then-do-it/`，裡面包含：
 
@@ -14,7 +14,40 @@
 
 安裝時請使用完整資料夾，不要只複製 `skills/`，也不要在外面多包一層版本資料夾。
 
-## 手動安裝
+## 使用 AI 指令安裝或更新
+
+主要介面是用自然語言告訴 AI：
+
+```text
+請從官方 marketplace 安裝或更新 Ask Then Do It。
+```
+
+AI 必須先唯讀檢查 marketplace 與已安裝的 Plugin：
+
+```powershell
+codex plugin marketplace list
+codex plugin list
+```
+
+官方 marketplace 不存在時，才加入它並加入 Plugin：
+
+```powershell
+codex plugin marketplace add Mysterio1001/Ask-Then-Do-It
+codex plugin add ask-then-do-it@ask-then-do-it
+```
+
+官方 marketplace 已存在且有較新的正式版本時，先升級 marketplace，再重新加入 Plugin：
+
+```powershell
+codex plugin marketplace upgrade ask-then-do-it
+codex plugin add ask-then-do-it@ask-then-do-it
+```
+
+目前版本已是最新時，只回報狀態、不寫入。來源、版本、CLI 支援或結果無法可靠判斷時，停止並回報不確定性。任何寫入失敗都停止後續寫入；不得先移除目前 Plugin、改用其他來源或自動降級。只使用文件所列的 `add` 安裝子命令，其他安裝別名不支援。
+
+成功後開啟新的 Codex 任務。如果 marketplace 流程失敗，使用相符的 `1.2.0` ZIP 備援；降級必須由使用者明確選擇舊版本。
+
+## 手動安裝備援
 
 目前的安裝方式需要一個已設定、可修改的本機 marketplace。該 marketplace 必須有名稱，並有一個指向 `<local-marketplace-root>/plugins/ask-then-do-it` 的 entry。
 

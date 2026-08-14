@@ -4,7 +4,7 @@ This guide explains how to use Ask Then Do It with Gemini or another AI service 
 
 ## Download and extract
 
-[Download ask-then-do-it-generic-1.1.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.1.0/ask-then-do-it-generic-1.1.0.zip) and extract it.
+[Download ask-then-do-it-generic-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-generic-1.2.0.zip) and extract it.
 
 The main files in the package are:
 

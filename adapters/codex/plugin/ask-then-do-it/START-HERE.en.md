@@ -1,4 +1,4 @@
-# Ask Then Do It Codex Plugin 1.1.0 Guide
+# Ask Then Do It Codex Plugin 1.2.0 Guide
 
 This Plugin includes nine Skills that guide a project from requirements discovery through implementation, review, and architecture improvement.
 
@@ -6,7 +6,40 @@ This independent project was inspired by Matt Pocock's skills repository. It is 
 
 ## Download and extract
 
-After extracting `ask-then-do-it-1.1.0.zip`, the outermost folder should be `ask-then-do-it/`. Keep the complete folder together; do not copy only `skills/`.
+After extracting `ask-then-do-it-1.2.0.zip`, the outermost folder should be `ask-then-do-it/`. Keep the complete folder together; do not copy only `skills/`.
+
+## Install or update with AI
+
+The primary interface is a natural-language request to AI in a Codex task:
+
+```text
+Install or update Ask Then Do It from the official marketplace.
+```
+
+AI must inspect state before any write:
+
+```powershell
+codex plugin marketplace list
+codex plugin list
+```
+
+For a missing official marketplace, AI may add it and then add the Plugin:
+
+```powershell
+codex plugin marketplace add Mysterio1001/Ask-Then-Do-It
+codex plugin add ask-then-do-it@ask-then-do-it
+```
+
+If the official marketplace is present and a newer formal release exists, AI must upgrade the marketplace before running the same Plugin command:
+
+```powershell
+codex plugin marketplace upgrade ask-then-do-it
+codex plugin add ask-then-do-it@ask-then-do-it
+```
+
+If the installed Plugin is already current, AI reports that state and performs no write. If the source, version, CLI support, or result cannot be determined, AI stops and reports the uncertainty. A failed write stops all later writes; AI must not remove the current Plugin first, choose an alternate source, or automatically downgrade. Use only the documented `add` installation subcommand; an install alias is not supported here.
+
+After a successful install or update, start a new Codex task so the new Plugin contents load. If marketplace installation cannot proceed, use the matching `1.2.0` ZIP as the manual fallback.
 
 ## Manual installation
 
@@ -48,10 +81,12 @@ Start with `$ask-then-do-it` in most cases. To select a specific stage, use one 
 
 ## Manual update
 
-1. Download and extract the new ZIP.
+1. Download and extract the matching ZIP.
 2. Back up the existing `ask-then-do-it/` folder in the marketplace.
 3. Replace it with the complete new folder.
 4. Reinstall or enable the Plugin, then open a new Codex task and confirm that `$ask-then-do-it` is available.
+
+Do not downgrade automatically; use an older version only after explicitly choosing that version.
 
 ## Manual removal
 

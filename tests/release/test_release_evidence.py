@@ -49,9 +49,10 @@ class ReleaseEvidenceGateTests(unittest.TestCase):
                 check["approval"] = "optional-ticket-testing-plan"
             checks.append(check)
         ledger = root / "ledger.json"
+        version = config["release_version"]
         ledger.write_text(
             json.dumps(
-                {"release_version": "1.1.0", "checks": checks},
+                {"release_version": version, "checks": checks},
                 indent=2,
             ),
             encoding="utf-8",
@@ -59,8 +60,8 @@ class ReleaseEvidenceGateTests(unittest.TestCase):
         evidence = root / "evidence.md"
         skipped = any(check["status"] == "skipped-by-user" for check in checks)
         evidence.write_text(
-            "# Ask Then Do It Release 1.1.0 Evidence\n\n"
-            "Release version: `1.1.0`\n\n"
+            f"# Ask Then Do It Release {version} Evidence\n\n"
+            f"Release version: `{version}`\n\n"
             "Status: Completed\n"
             + ("\nTests: `skipped-by-user`\n" if skipped else ""),
             encoding="utf-8",

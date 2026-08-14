@@ -24,7 +24,7 @@ Follow the repository's existing planning convention. If none exists, use `docs/
 
 ## Use the portable artifact envelope
 
-Include or unambiguously convey `artifact_type` as Ticket Plan, a stable `artifact_id`, the Specification's `workflow_id`, `core_version` `1.1.0`, `status`, upstream `inputs`, `assumptions`, `deferred` decisions, the next-stage `handoff`, and `approval` evidence. Preserve these values when revising an existing artifact.
+Include or unambiguously convey `artifact_type` as Ticket Plan, a stable `artifact_id`, the Specification's `workflow_id`, `core_version` `1.2.0`, `status`, upstream `inputs`, `assumptions`, `deferred` decisions, the next-stage `handoff`, and `approval` evidence. Preserve these values when revising an existing artifact.
 
 ## Slice vertically
 

@@ -1,4 +1,4 @@
-core_version: 1.1.0
+core_version: 1.2.0
 rules:
   CAP-DECLARE-001:
     - file: conformance.yaml
@@ -65,7 +65,7 @@ rules:
   ADAPTER-COVERAGE-001:
     - file: conformance.yaml
       section: implemented_rules
-      implementation: Enumerates every mandatory rule in core version 1.1.0 for deterministic shared validation.
+      implementation: Enumerates every mandatory rule in core version 1.2.0 for deterministic shared validation.
     - file: rule-mapping.yaml
       section: rules
       implementation: Resolves each mandatory rule to its concrete Codex adapter implementation.

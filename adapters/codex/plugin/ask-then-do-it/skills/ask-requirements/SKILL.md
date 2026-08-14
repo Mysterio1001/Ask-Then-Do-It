@@ -65,6 +65,6 @@ Continue until every high-impact item is confirmed, intentionally deferred with 
 
 ## Emit the decision artifact
 
-At consolidation, emit a Requirement Decision Record with `status` set to `Draft`. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.1.0`, upstream `inputs`, `assumptions`, `deferred` decisions, the next-stage `handoff`, and empty or pending `approval` evidence.
+At consolidation, emit a Requirement Decision Record with `status` set to `Draft`. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.2.0`, upstream `inputs`, `assumptions`, `deferred` decisions, the next-stage `handoff`, and empty or pending `approval` evidence.
 
 After explicit confirmation on a later turn, record the approval evidence, change `status` to `Approved`, and hand the approved record to `$write-spec`. Do not infer approval from silence or an unrelated response. Do not implement code from this skill.
