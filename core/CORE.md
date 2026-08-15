@@ -1,6 +1,6 @@
 # Portable AI Development Workflow Core
 
-Core version: `1.2.0`
+Core version: `1.3.0`
 
 This directory is the normative, host-neutral contract for an AI-assisted software development workflow. Adapter wording may vary, but mapped rule semantics must remain compatible with this core.
 
@@ -13,14 +13,15 @@ This directory is the normative, host-neutral contract for an AI-assisted softwa
 ## Modules
 
 1. [Workflow orchestration](modules/orchestration.md)
-2. [Requirement interrogation](modules/requirements.md)
-3. [Project knowledge](modules/project-knowledge.md)
-4. [Specification](modules/specification.md)
-5. [Ticket planning](modules/ticket-planning.md)
-6. [Test-driven implementation](modules/tdd-implementation.md)
-7. [Direct implementation](modules/direct-implementation.md)
-8. [Evidence-based review](modules/review.md)
-9. [Architecture improvement](modules/architecture-improvement.md)
+2. [Lite workflow](modules/lite-workflow.md)
+3. [Requirement interrogation](modules/requirements.md)
+4. [Project knowledge](modules/project-knowledge.md)
+5. [Specification](modules/specification.md)
+6. [Ticket planning](modules/ticket-planning.md)
+7. [Test-driven implementation](modules/tdd-implementation.md)
+8. [Direct implementation](modules/direct-implementation.md)
+9. [Evidence-based review](modules/review.md)
+10. [Architecture improvement](modules/architecture-improvement.md)
 
 ## Shared contracts
 
@@ -47,3 +48,10 @@ Adapters MUST declare cumulative capability profiles before selecting stages:
 - `multi_agent`: create isolated worker or reviewer contexts in addition to tool capabilities.
 
 Unknown capability is not evidence. Default to `conversation` until stronger capabilities are demonstrated.
+
+## Top-level workflow modes
+
+- `full`: the assurance-oriented workflow that preserves every existing requirement, Specification, Ticket Plan, implementation, Review, evidence, and architecture gate.
+- `lite`: the lower-traceability workflow defined by the Lite module. It uses one conversation-only Change Brief approval and does not create workflow artifacts for the operation.
+
+Top-level workflow mode is separate from the Full Ticket implementation modes `tdd` and `direct`.

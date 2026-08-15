@@ -1,93 +1,70 @@
 # Ask Then Do It: A Beginner's Workflow Guide
 
-Ask Then Do It teaches an AI to clarify the work before writing code. You do not need software engineering experience; answer the one question the AI asks in each round.
+Ask Then Do It offers two workflows: `Full` and `Lite`. Full is for work that needs a complete decision record and stronger verification confidence. Lite is for well-bounded, lower-risk work where reducing workflow text matters.
 
-## Remember one sentence
+Both modes clarify scope, obtain user authority, preserve existing changes, and report verification honestly before claiming completion. Lite is smaller than Full; it is not permission to skip risk checks or validation.
 
-```text
-Ask first, record the agreement, then build.
-```
+## Mode precedence
 
-It is like building a house: first decide who will live there and how many rooms are needed, then draw the plan, divide the work, build, and inspect it.
+At the start of each operation, Codex resolves the mode in this order:
 
-## Complete workflow
+1. An explicit instruction for the current operation, such as "use Full this time" or "use Lite this time."
+2. Project Config.
+3. User Config.
+4. Full fallback when no valid setting applies.
 
-```mermaid
-flowchart TD
-    A["Your idea"] --> B["AI asks one question at a time"]
-    B --> C{"Approve requirements consensus"}
-    C -->|Revise| B
-    C -->|Approve| D["Record project knowledge"]
-    D --> E["Write the specification"]
-    E --> F{"Approve the specification"}
-    F -->|Revise| E
-    F -->|Approve| G["Split work into Tickets"]
-    G --> H["Decide in one response whether to add tests"]
-    H --> I{"Approve the Ticket plan"}
-    I -->|Revise| G
-    I -->|Approve| J{"Internal route for each test choice"}
-    J -->|tdd| K["Implement with TDD"]
-    J -->|direct| L["Implement without behavioral tests"]
-    K --> M["Review"]
-    L --> M
-    M -->|Local issue| N["Fix or finish"]
-    M -->|System issue| O["Improve architecture"]
-    O --> E
-```
+An explicit instruction for the current operation affects only that operation and is not written to Config. Project Config affects only its project; other sessions continue to use Config. See the [Codex Plugin Guide](codex.en.md) for Config paths, format, and error handling.
 
-## 1. Ask one question at a time
+The Generic workflow cannot read Codex Config. It instead uses the default-mode declaration near the start of the pasted workflow; an explicit current-operation instruction still wins, and a missing or invalid declaration uses Full. See the [Generic Guide](generic.en.md) for details.
 
-The AI starts with the question that has the greatest effect on the result. It also provides a recommended answer and the main tradeoff.
+## Full and Lite compared
 
-If you say, "I want an appointment website," the AI might first ask, "Who can create an appointment?" It waits for your answer before asking the next question.
+| Comparison | Full | Lite |
+| --- | --- | --- |
+| Best fit | High risk, cross-module work, unresolved requirements, or a complete audit trail | Well-bounded, lower-risk changes |
+| Questions | One at a time until requirements consensus | Up to three blockers per round, about 500 tokens for the batch |
+| Workflow documents | Keeps requirements, project knowledge, specification, Ticket plan, and implementation evidence | Keeps the Change Brief in the conversation and creates no workflow documents |
+| Approval before implementation | Three gates: requirements, specification, and Ticket plan | One gate for the Change Brief |
+| Tests | The user decides whether each Ticket adds tests | Adds or modifies no tests and does not use TDD |
+| Validation | Complete, traceable verification proportional to Ticket mode and risk | Static checks plus one success and one failure or boundary path |
+| Review | Independent twelve-perspective Review with evidence | Compact Review by the same AI; user approval still precedes finding corrections |
+| Traceability | High and resumable across sessions | Lower; unpersisted workflow state does not continue into a new session |
 
-Formal implementation must not begin before you approve the requirements consensus.
+## Full mode
 
-## 2. Save project knowledge
+Full asks one requirements question at a time and keeps documents that another session can inspect. Full has three formal approval gates: requirements consensus, the specification, and the Ticket plan.
 
-The Project Knowledge Base is a shared notebook for confirmed terms, architecture, and important decisions. When you start a new conversation, the AI can use it to continue without relearning everything.
+1. **Understand the current state.** The AI reads repository instructions, related code, tests, configuration, and current changes without touching unrelated work.
+2. **Reach requirements consensus.** It asks one requirements question at a time with a recommendation and main tradeoff. Your approval permits the project knowledge record to be updated and is the first gate.
+3. **Write the specification.** The specification defines observable behavior, failures, and boundaries without inserting production code. Your approval of the complete specification is the second gate.
+4. **Split the work into vertical Tickets.** Each Ticket delivers an independently verifiable outcome. The AI recommends a test choice for each Ticket, warns that running tests may add time and declining tests lowers confidence, then asks in one response whether to add tests to every Ticket. Your approval of the complete Ticket plan is the third gate.
+5. **Implement according to the test choice.** Within Full, adding and declining tests map internally to `tdd` and `direct`; users do not need to answer with those internal names.
+6. **Keep implementation evidence.** `$implement-tdd` records actual `Red`, `Green`, and `Refactor` results. `$implement-direct` creates and runs no behavioral tests, but may run lint, type-check, or build checks and records `tests: skipped-by-user` with the untested behavior.
+7. **Review.** Review compares the approved material, diff, and verification through twelve perspectives. A systemic issue receives architecture improvement analysis and returns through specification and Ticket planning instead of silently expanding the change.
+8. **Complete.** The AI reports delivered behavior, observed verification, unavailable evidence, and residual risks. Saved workflow documents allow a later session to continue.
 
-Unapproved ideas remain temporary notes and must not be treated as final decisions.
+Silence, an unrelated response, or an AI-generated status change cannot replace any approval.
 
-## 3. Write the specification
+## Lite mode
 
-The specification describes how the result should behave. For example:
+Lite uses less workflow text for a bounded change. It asks up to three blocking questions per round and asks only about decisions that prevent implementation or materially redirect it.
 
-- A user can choose a date and time.
-- A reserved time cannot be selected again.
-- A confirmation message appears after booking.
+1. **Understand current state and risk.** The AI inspects only instructions, changes, code, tests, configuration, and documentation relevant to this operation, then evaluates material risk before proposing work.
+2. **Ask only blockers.** It asks up to three blocking questions per round, ranked by impact and uncertainty. Each question uses at most three short sentences, asks one decision, and includes a recommendation plus the main tradeoff. The whole batch targets about `500 tokens`; it does not invent filler, and it reassesses lower-priority blockers after the answers.
+3. **Present the Change Brief.** The Change Brief targets about `800 tokens` and states the objective, in-scope behavior, explicit non-goals, three to five observable acceptance scenarios, material risks, and intended validation. If material information cannot fit honestly, the AI recommends Full.
+4. **Obtain one approval.** Lite has exactly one formal approval gate: explicit approval of the complete Change Brief before any production modification. Lite does not create or update workflow artifact files; the brief, progress, and Review exist only in this conversation.
+5. **Implement the approved scope directly.** Lite does not add or modify tests, does not use `Red`, `Green`, or `Refactor`, and does not claim TDD-equivalent confidence. Materially new behavior or scope requires another user decision before work continues.
+6. **Run minimum validation.** The AI inspects final file scope and diff, runs applicable syntax, lint, type-check, build, configuration, schema, or equivalent static checks, then uses an existing focused test or manual smoke check for one principal success path and one most important failure or boundary path. An applicable failure is corrected and rerun; unavailable checks are disclosed, and a known unresolved failure prevents an unqualified completion claim.
+7. **Perform compact Review.** The same AI checks Change Brief coverage, diff scope, failure and security paths, unavailable validation, and residual risk. It presents every actionable finding in one batch and obtains approval before making corrections, then reruns relevant validation. Declined findings remain unchanged and are reported as unresolved. When there are zero actionable findings, the AI says so and does not create an empty correction approval gate.
+8. **Report completion.** A normal completion response normally targets about `500 tokens` and lists delivered behavior, changed areas, observed validation and outcomes, unavailable checks, unresolved findings, and residual risks. Failures, blockers, security concerns, missing or unavailable evidence, and unresolved findings may exceed the target and must never be hidden to save tokens.
 
-This stage describes behavior instead of inserting production code. Once the content is correct, you give the second approval.
+## High-risk operations
 
-## 4. Split the work into Tickets
+Authentication and authorization, payment, data migration, destructive data operations, public contracts, cross-module structure, concurrency or asynchronous work, and external side effects can need Full's stronger traceability.
 
-The AI divides the larger job into small tasks that can be completed independently. Each Ticket should deliver a visible result, not only "build the database" or "build the screen."
+When Lite finds such evidence before implementation, it explains the risk and asks whether to switch only the current operation to Full. You may instead accept the risk and continue in Lite. This choice is not written to Config, and other sessions continue to use Config.
 
-After listing every Ticket, the AI gives each one a test recommendation. For every Ticket, it warns that adding tests may increase work time while declining them lowers confidence. In one response, you decide whether to add tests to every Ticket: add them to all, add them to none, or name only the Tickets that should have tests. If the rest are not specified, the AI asks only about unresolved Tickets. After confirming the complete list, order, and test choices, you give the third approval.
-
-## 5. Implement using the selected mode
-
-For a `tdd` Ticket, `$implement-tdd` uses three steps:
-
-1. `Red`: Write a test and show that it fails because the feature is missing.
-2. `Green`: Add the smallest implementation needed to make the test pass.
-3. `Refactor`: Improve the code while keeping the tests passing.
-
-Test results are implementation evidence. The AI should provide actual results instead of saying the feature "should work."
-
-For a `direct` Ticket, `$implement-direct` implements the approved work without creating or running behavioral tests. It may still run lint, type-check, or build checks. Its evidence and Review must state `tests: skipped-by-user` and explain what remains untested.
-
-## 6. Review the result
-
-Review compares the requirements, specification, code changes, and test results. It looks for errors, duplicated logic, excessive complexity, and code that will be difficult to maintain.
-
-If information is missing, the AI should say what cannot be verified rather than assume everything is correct.
-
-## 7. Improve architecture
-
-When a system-wide issue affects several modules, the AI first analyzes the problem, impact, and possible direction. It does not immediately begin a large refactor.
-
-After you accept the analysis, the workflow returns to the specification and Ticket plan before any changes begin.
+If material risk appears during implementation, the AI stops further modification and asks again. Switching preserves observable current changes and returns to the earliest unmet Full gate before implementation continues. With no mode decision, work remains paused.
 
 ## Start in Codex
 
@@ -97,27 +74,23 @@ After installing the Plugin, enter this in a new Codex task:
 $ask-then-do-it I want to build...
 ```
 
-The AI identifies current progress and begins asking one question at a time. Approved `direct` Tickets route to `$implement-direct`.
+Without an explicit mode instruction, the AI uses Config to choose Full or Lite. An approved Full `direct` Ticket routes to `$implement-direct`; Lite follows the single Change Brief flow above.
 
 ## Start in Gemini or another AI
 
-Paste `generic-workflow.md` into every new conversation, then describe your request. This package guides the process through conversation. Whether it can edit files or run tests depends on the tools offered by the AI service.
+Paste `generic-workflow.md` into every new conversation before describing the request. The Generic workflow acts only within its real tool capabilities; a conversation-only host must not claim to have edited files or run validation.
 
-## When starting a new conversation
+## Starting a new session
 
-Save the important documents from each stage. In a new conversation, provide:
-
-1. The Ask Then Do It workflow or Plugin.
-2. Your saved requirements, Project Knowledge Base, specification, Tickets, and Review.
-3. What you want to continue or change.
-
-The AI should continue from the first unfinished stage.
+A new session resolves the mode again instead of reusing the prior operation's temporary choice. Full can resume from saved documents. Lite has no cross-session state for its Change Brief, approval, progress, or Review, so it reconstructs a new brief from current repository state when needed.
 
 ## Final check
 
-- [ ] The AI asks only one question at a time.
-- [ ] You approved the requirements, specification, and Ticket plan.
-- [ ] After the time-and-risk warnings, you decided in one response whether to add tests to every Ticket.
-- [ ] TDD includes actual Red, Green, and Refactor results; direct implementation states `tests: skipped-by-user`.
-- [ ] Review distinguishes verified facts from missing evidence.
-- [ ] Architecture problems are analyzed before returning to specification and Ticket planning.
+- [ ] Mode followed current-operation instruction, project Config, user Config, then Full fallback.
+- [ ] Full obtained approval for requirements, specification, and Ticket plan and asked in one response whether to add tests to every Ticket.
+- [ ] Lite has one approved Change Brief and created neither new tests nor workflow documents.
+- [ ] Observed validation, unavailable checks, unresolved findings, and residual risks are disclosed.
+- [ ] A high-risk switch affects only the current operation and does not change Config behavior for another session.
+
+
+[Back to README](../../README.md)

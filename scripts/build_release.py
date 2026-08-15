@@ -569,26 +569,35 @@ def validate_generic_source(config: dict[str, Any]) -> Path:
 
 def compose_generic_workflow(config: dict[str, Any], source: Path) -> bytes:
     generic = config["generic"]
-    header = f"""<!-- GENERATED FILE — DO NOT EDIT -->
+    header = f"""<!-- GENERATED FILE — YOU MAY EDIT ONLY THE "Default workflow mode" DECLARATION BELOW -->
 # {config['display_name']} — Generic Workflow
 
 Release version: `{config['release_version']}`  
 Core version: `{config['core_version']}`  
 Capability: `conversation`
 
+Default workflow mode: full
+
 ## Internal routing contract
+
+Resolve one top-level mode before stage routing. An explicit, unambiguous Full or Lite
+instruction for the current operation overrides the editable declaration above. A missing
+or unsupported declaration resolves to Full. If current-operation instructions conflict,
+ask for clarification before routing. Never persist an operation override or infer it from
+an earlier operation.
 
 Use the included sections internally; do not ask the user to paste another module prompt.
 Match the user's language in user-facing output. Begin with the bootstrap section for a
 fresh or resumed request, use the orchestration section to identify the first unmet gate,
-then apply exactly one matching stage section at a time. Preserve every explicit approval
-gate, stop condition, Artifact contract, and user-managed persistence reminder.
+then route resolved Lite to the Lite workflow section or apply exactly one matching Full
+stage section at a time. Preserve every explicit Full approval gate, stop condition,
+Artifact contract, and user-managed persistence reminder.
 
-For a fresh workflow whose first unmet stage is requirement consensus, apply the selected
-requirement section in the same effective response. After a concise capability and stage
-declaration, ask exactly one high-impact requirement question in the user's language and
-include a recommended answer and the principal tradeoff. Do not stop at routing status,
-promise to ask later, or require the user to say "start".
+For a fresh resolved Full workflow whose first unmet stage is requirement consensus, apply
+the selected requirement section in the same effective response. After a concise capability
+and stage declaration, ask exactly one high-impact requirement question in the user's
+language and include a recommended answer and the principal tradeoff. Do not stop at routing
+status, promise to ask later, or require the user to say "start".
 
 ## Conversation-only capability boundary
 

@@ -11,6 +11,14 @@ Review from evidence rather than the implementer's narrative. Optimize for defec
 
 Match user-facing communication and generated artifacts to the user's language when discoverable.
 
+## Resolve the top-level mode before this stage
+
+Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before any stage behavior, require `$ask-then-do-it` to have proven the current-operation mode; never persist or reuse mode.
+
+- No proof: stop and delegate to `$ask-then-do-it`. The canonical resolver handles an explicit `lite` instruction and Config `lite`; conflicting explicit modes pause for clarification; invalid Config fails closed to Full; an absent source reaches Full fallback.
+- Proven `lite`: stop this Full stage and route through `$ask-then-do-it` to the canonical Lite workflow.
+- Proven `full`: continue subject to every existing prerequisite and gate.
+
 ## Create an independent view
 
 When the runtime permits, delegate the review to a fresh subagent that did not implement the change. Provide only:
@@ -99,4 +107,4 @@ After findings, state:
 
 If no actionable findings exist, say so explicitly and still identify residual risks or verification gaps. Do not modify code unless the user separately asks for fixes.
 
-Emit a Review Report that includes or unambiguously conveys `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.2.0`, review `status`, reviewed `inputs`, `assumptions`, `deferred` checks, and the next `handoff`. Preserve the stated Review label, evidence unavailable, residual risks, untested areas, and completion assessment in the artifact.
+Emit a Review Report that includes or unambiguously conveys `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.3.0`, review `status`, reviewed `inputs`, `assumptions`, `deferred` checks, and the next `handoff`. Preserve the stated Review label, evidence unavailable, residual risks, untested areas, and completion assessment in the artifact.

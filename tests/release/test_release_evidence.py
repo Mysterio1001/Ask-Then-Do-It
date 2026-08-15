@@ -11,13 +11,15 @@ CONFIG = ROOT / "release" / "release.json"
 VALIDATOR = ROOT / "scripts" / "validate_release_evidence.py"
 
 
-def run_validator(ledger: Path, evidence: Path) -> subprocess.CompletedProcess[str]:
+def run_validator(
+    ledger: Path, evidence: Path, config: Path = CONFIG
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [
             sys.executable,
             str(VALIDATOR),
             "--config",
-            str(CONFIG),
+            str(config),
             "--ledger",
             str(ledger),
             "--evidence",
@@ -130,6 +132,55 @@ class ReleaseEvidenceGateTests(unittest.TestCase):
             result = run_validator(ledger, evidence)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("missing", result.stderr.lower())
+
+    def test_release_config_cannot_remove_workflow_token_proxy_gate(self) -> None:
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            root = Path(temporary)
+            ledger, evidence = self.make_artifacts(root)
+            config_data = json.loads(CONFIG.read_text(encoding="utf-8"))
+            config_data["required_validation_checks"].remove(
+                "workflow-token-proxy"
+            )
+            config = root / "release.json"
+            config.write_text(json.dumps(config_data), encoding="utf-8")
+
+            ledger_data = json.loads(ledger.read_text(encoding="utf-8"))
+            ledger_data["checks"] = [
+                check
+                for check in ledger_data["checks"]
+                if check["id"] != "workflow-token-proxy"
+            ]
+            ledger.write_text(json.dumps(ledger_data), encoding="utf-8")
+
+            result = run_validator(ledger, evidence, config)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("workflow-token-proxy", result.stderr)
+
+    def test_missing_workflow_token_proxy_result_rejects_evidence(self) -> None:
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            root = Path(temporary)
+            ledger, evidence = self.make_artifacts(root)
+            data = json.loads(ledger.read_text(encoding="utf-8"))
+            data["checks"] = [
+                check
+                for check in data["checks"]
+                if check["id"] != "workflow-token-proxy"
+            ]
+            ledger.write_text(json.dumps(data), encoding="utf-8")
+
+            result = run_validator(ledger, evidence)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("workflow-token-proxy", result.stderr)
+
+    def test_failed_workflow_token_proxy_result_rejects_evidence(self) -> None:
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            ledger, evidence = self.make_artifacts(
+                Path(temporary), ("workflow-token-proxy", "failed")
+            )
+            result = run_validator(ledger, evidence)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("workflow-token-proxy", result.stderr)
+            self.assertIn("failed", result.stderr.lower())
 
 
 if __name__ == "__main__":

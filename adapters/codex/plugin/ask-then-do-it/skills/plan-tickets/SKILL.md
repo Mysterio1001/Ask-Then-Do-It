@@ -11,6 +11,14 @@ Create independently understandable slices that produce verifiable behavior and 
 
 Match user-facing communication and generated artifacts to the user's language when discoverable.
 
+## Resolve the top-level mode before this stage
+
+Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before any stage behavior, require `$ask-then-do-it` to have proven the current-operation mode; never persist or reuse mode.
+
+- No proof: stop and delegate to `$ask-then-do-it`. The canonical resolver handles an explicit `lite` instruction and Config `lite`; conflicting explicit modes pause for clarification; invalid Config fails closed to Full; an absent source reaches Full fallback.
+- Proven `lite`: stop this Full stage and route through `$ask-then-do-it` to the canonical Lite workflow.
+- Proven `full`: continue subject to every existing prerequisite and gate.
+
 ## Check prerequisites
 
 - Require a relevant specification marked `Approved` and confirm it still matches the user's request.
@@ -24,7 +32,7 @@ Follow the repository's existing planning convention. If none exists, use `docs/
 
 ## Use the portable artifact envelope
 
-Include or unambiguously convey `artifact_type` as Ticket Plan, a stable `artifact_id`, the Specification's `workflow_id`, `core_version` `1.2.0`, `status`, upstream `inputs`, `assumptions`, `deferred` decisions, the next-stage `handoff`, and `approval` evidence. Preserve these values when revising an existing artifact.
+Include or unambiguously convey `artifact_type` as Ticket Plan, a stable `artifact_id`, the Specification's `workflow_id`, `core_version` `1.3.0`, `status`, upstream `inputs`, `assumptions`, `deferred` decisions, the next-stage `handoff`, and `approval` evidence. Preserve these values when revising an existing artifact.
 
 ## Slice vertically
 

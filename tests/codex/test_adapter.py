@@ -120,6 +120,17 @@ class CodexAdapterTests(unittest.TestCase):
                         f"{rule_id}: missing key {section!r} in {relative}",
                     )
 
+    def test_mode_resolution_mapping_covers_every_public_skill(self) -> None:
+        mapping = load_yaml(ADAPTER / "rule-mapping.yaml")
+        implementations = mapping["rules"]["MODE-RESOLVE-001"]
+        mapped_skills = {
+            Path(item["file"]).parent.name
+            for item in implementations
+            if item["file"].startswith("plugin/ask-then-do-it/skills/")
+        }
+
+        self.assertEqual(mapped_skills, EXPECTED_SKILLS)
+
     def test_modular_skills_match_user_language(self) -> None:
         for skill_id in EXPECTED_SKILLS:
             text = (SKILLS / skill_id / "SKILL.md").read_text(encoding="utf-8")
@@ -130,7 +141,7 @@ class CodexAdapterTests(unittest.TestCase):
         skill = SKILLS / "ask-with-docs"
         text = (skill / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("name: ask-with-docs", text)
-        self.assertIn("core_version` `1.2.0`", text)
+        self.assertIn("core_version` `1.3.0`", text)
         self.assertIn("exactly one question", text)
         self.assertIn("Draft Working Notes", text)
         for state in ("`proposed`", "`confirmed`", "`unresolved`"):
