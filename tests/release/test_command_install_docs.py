@@ -61,7 +61,7 @@ README_PRESERVED_DIGESTS = {
     "ja": {
         "automatic": "6b315514541c6385db5f63e025385a235c1baa604ad7d7f5859bb4ee25d450c9",
         "manual": "b541ccdfee4ac9407bedd843314592941c06d335506c40a7221d32745c4d1e2a",
-        "read-more": "a97a6027f60e29e217073dac0e349377c53c3c15037f9fda562d3e15c98b02b9",
+        "read-more": "bfd1dbadb1ba45908d64f6dc162263f2b441796e7118196a79b956de6d2779d1",
     },
 }
 
