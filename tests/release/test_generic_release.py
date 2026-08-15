@@ -14,9 +14,18 @@ START_GUIDES = {
     name: ROOT / "release" / "generic" / name
     for name in ("START-HERE.zh-TW.md", "START-HERE.en.md", "START-HERE.ja.md")
 }
+BUILT_PACKAGE = (
+    ROOT / "dist" / "generic" / "ask-then-do-it-generic-1.3.0"
+)
+MODE_EDIT_PERMISSION = (
+    '<!-- GENERATED FILE — YOU MAY EDIT ONLY THE "Default workflow mode" '
+    'DECLARATION BELOW -->'
+)
+UNQUALIFIED_EDIT_PROHIBITION = "<!-- GENERATED FILE — DO NOT EDIT -->"
 MODULES = [
     "bootstrap.md",
     "orchestration.md",
+    "lite-workflow.md",
     "requirements.md",
     "documented-requirements.md",
     "specification.md",
@@ -55,12 +64,20 @@ def read_generated_manifest(path: Path) -> dict[str, object]:
 
 
 class GenericReleaseTests(unittest.TestCase):
+    def test_built_workflow_allows_only_default_mode_declaration_edits(self) -> None:
+        combined = (BUILT_PACKAGE / "generic-workflow.md").read_text(encoding="utf-8")
+        declaration = "Default workflow mode: full"
+
+        self.assertIn(MODE_EDIT_PERMISSION, combined)
+        self.assertLess(combined.index(MODE_EDIT_PERMISSION), combined.index(declaration))
+        self.assertNotIn(UNQUALIFIED_EDIT_PROHIBITION, combined)
+
     def test_configuration_declares_generated_entry_and_fixed_module_order(self) -> None:
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
         generic = config["generic"]
         self.assertEqual(generic["source"], "adapters/generic-prompts")
-        self.assertEqual(generic["directory"], "generic/ask-then-do-it-generic-1.2.0")
-        self.assertEqual(generic["archive"], "generic/ask-then-do-it-generic-1.2.0.zip")
+        self.assertEqual(generic["directory"], "generic/ask-then-do-it-generic-1.3.0")
+        self.assertEqual(generic["archive"], "generic/ask-then-do-it-generic-1.3.0.zip")
         self.assertEqual(generic["entrypoint"], "generic-workflow.md")
         self.assertEqual(
             generic["start_guide"],
@@ -89,8 +106,8 @@ class GenericReleaseTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
 
-            package = output_root / "generic" / "ask-then-do-it-generic-1.2.0"
-            archive = output_root / "generic" / "ask-then-do-it-generic-1.2.0.zip"
+            package = output_root / "generic" / "ask-then-do-it-generic-1.3.0"
+            archive = output_root / "generic" / "ask-then-do-it-generic-1.3.0.zip"
             checksums = output_root / "checksums.sha256"
             actual_files = {
                 path.relative_to(package).as_posix()
@@ -143,7 +160,12 @@ class GenericReleaseTests(unittest.TestCase):
                 )
 
             combined = (package / "generic-workflow.md").read_text(encoding="utf-8")
-            self.assertIn("GENERATED FILE — DO NOT EDIT", combined)
+            self.assertIn(MODE_EDIT_PERMISSION, combined)
+            self.assertLess(
+                combined.index(MODE_EDIT_PERMISSION),
+                combined.index("Default workflow mode: full"),
+            )
+            self.assertNotIn(UNQUALIFIED_EDIT_PROHIBITION, combined)
             self.assertIn("Use the included sections internally", combined)
             self.assertIn("do not ask the user to paste another module", combined.lower())
             self.assertIn("Conversation-only capability boundary", combined)
@@ -157,8 +179,8 @@ class GenericReleaseTests(unittest.TestCase):
 
             manifest = read_generated_manifest(package / "manifest.yaml")
             self.assertEqual(manifest["package_id"], "ask-then-do-it")
-            self.assertEqual(manifest["release_version"], "1.2.0")
-            self.assertEqual(manifest["core_version"], "1.2.0")
+            self.assertEqual(manifest["release_version"], "1.3.0")
+            self.assertEqual(manifest["core_version"], "1.3.0")
             self.assertEqual(manifest["adapter_id"], "generic-prompts")
             self.assertEqual(manifest["capabilities"], ["conversation"])
             self.assertEqual(manifest["source_modules"], MODULES)
@@ -166,12 +188,12 @@ class GenericReleaseTests(unittest.TestCase):
             with zipfile.ZipFile(archive) as bundle:
                 for relative in expected_files:
                     self.assertEqual(
-                        bundle.read(f"ask-then-do-it-generic-1.2.0/{relative}"),
+                        bundle.read(f"ask-then-do-it-generic-1.3.0/{relative}"),
                         (package / relative).read_bytes(),
                     )
             self.assertEqual(
                 checksums.read_text(encoding="ascii"),
-                f"{sha256(archive)}  generic/ask-then-do-it-generic-1.2.0.zip\n",
+                f"{sha256(archive)}  generic/ask-then-do-it-generic-1.3.0.zip\n",
             )
 
 

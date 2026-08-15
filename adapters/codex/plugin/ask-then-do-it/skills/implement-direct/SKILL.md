@@ -11,6 +11,14 @@ Implement one Approved `direct` Ticket without pretending that skipped tests pas
 
 Match user-facing communication and generated artifacts to the user's language when discoverable.
 
+## Resolve the top-level mode before this stage
+
+Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before any stage behavior, require `$ask-then-do-it` to have proven the current-operation mode; never persist or reuse mode.
+
+- No proof: stop and delegate to `$ask-then-do-it`. The canonical resolver handles an explicit `lite` instruction and Config `lite`; conflicting explicit modes pause for clarification; invalid Config fails closed to Full; an absent source reaches Full fallback.
+- Proven `lite`: stop this Full stage and route through `$ask-then-do-it` to the canonical Lite workflow.
+- Proven `full`: continue subject to every existing prerequisite and gate.
+
 ## Verify readiness
 
 1. Read repository instructions, the Approved Specification, the Approved Ticket Plan, and the selected Ticket.
@@ -38,7 +46,7 @@ If an artifact is missing, Draft, contradictory, no longer feasible, or does not
 
 ## Report direct evidence
 
-Emit Direct Implementation Evidence only for work actually performed with the `tools` profile. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.2.0`, evidence `status`, upstream `inputs`, `assumptions`, `deferred` work, and reviewer `handoff`.
+Emit Direct Implementation Evidence only for work actually performed with the `tools` profile. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.3.0`, evidence `status`, upstream `inputs`, `assumptions`, `deferred` work, and reviewer `handoff`.
 
 Record the Ticket outcome, changed files or ownership areas, raw non-test commands and results, final-diff inspection, the exact disclosure `tests: skipped-by-user`, unavailable behavioral evidence, external test constraints or delivery blocks, incomplete checks, and residual risks. Do not use Red, Green, passing-test, test-verified, or TDD-complete claims.
 

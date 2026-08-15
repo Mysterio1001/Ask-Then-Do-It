@@ -4,15 +4,15 @@ This project is an independent extension inspired by Matt Pocock’s skills repo
 
 Upstream: [Matt Pocock skills repository](https://github.com/mattpocock/skills) · [upstream MIT License](https://github.com/mattpocock/skills/blob/main/LICENSE). See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-## Quick Start
+## Introduction
 
-**Ask first, then build.** Ask Then Do It clarifies requirements, records agreement, creates a specification and Tickets, then implements and reviews each Ticket according to the user's test choice.
+**Ask first, then build.** Ask Then Do It offers two workflow modes. Full keeps the complete, traceable path from requirements and specification through Tickets, implementation, test decisions, and Review. Lite uses a shorter Change Brief, one approval, direct implementation, minimum validation, and compact Review to reduce workflow overhead.
 
-After the Tickets are drafted, the AI gives each one a test recommendation with time and risk warnings. In one response, you decide whether to add tests to every Ticket: add them to all, add them to none, or name only the Tickets that should have tests.
+The default mode comes from Config. An explicit request can switch modes for the current operation without changing later sessions.
 
 Please read the [User Guide](/START-HERE.en.md) first, then choose how you want to use it.
 
-## Installation and updates
+## Quick Start
 
 ### Automatic installation (CLI)
 
@@ -28,8 +28,8 @@ codex plugin marketplace upgrade ask-then-do-it
 
 ### Manual installation
 
-- Codex Plugin: [Download ask-then-do-it-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-1.2.0.zip), install it, and start with `$ask-then-do-it`.
-- Gemini or another AI: [Download ask-then-do-it-generic-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-generic-1.2.0.zip), extract it, and paste `generic-workflow.md` into each new conversation.
+- Codex Plugin: [Download ask-then-do-it-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-1.3.0.zip), install it, and start with `$ask-then-do-it`.
+- Gemini or another AI: [Download ask-then-do-it-generic-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-generic-1.3.0.zip), extract it, and paste `generic-workflow.md` into each new conversation.
 
 Read more:
 - [Beginner workflow](docs/guides/getting-started-simple.en.md)
@@ -37,15 +37,15 @@ Read more:
 - [Generic guide](docs/guides/generic.en.md)
 - [Design guide](docs/design/ai-development-skills.en.md)
 
-## 快速開始
+## 介紹
 
-**先問清楚，再開始做。** Ask Then Do It 是一套模型中立的 AI 開發流程，協助 AI 釐清需求、取得共識、建立規格與 Tickets，再依使用者決定是否加上測試的結果進行實作與 Review。
+**先問清楚，再開始做。** Ask Then Do It 提供兩種流程模式。Full 保留從需求、規格、Tickets 到實作、測試選擇與 Review 的完整可追溯流程；Lite 使用精簡 Change Brief、一次核准、直接實作、最低驗證與精簡 Review，降低流程負擔。
 
-Tickets 建立後，AI 會逐張提供測試建議與工時、風險提醒。你可以在一次回覆中決定每張 Ticket 是否加上測試：全部加上、全部不加，或只指定部分 Tickets。
+預設模式由 Config 決定；你可以只針對目前操作明確切換模式，不影響之後的工作階段。
 
 請先閱讀 [使用說明](/START-HERE.zh-TW.md)，再選擇使用方式
 
-## 安裝與更新
+## 快速開始
 
 ### 自動安裝 ( CLI )
 
@@ -61,8 +61,8 @@ codex plugin marketplace upgrade ask-then-do-it
 
 ### 手動安裝
 
-- Codex Plugin：[下載 ask-then-do-it-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-1.2.0.zip)，安裝後從 `$ask-then-do-it` 開始。
-- Gemini 或其他 AI：[下載 ask-then-do-it-generic-1.2.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-generic-1.2.0.zip)，解壓縮後，在每個新對話貼上 `generic-workflow.md`。
+- Codex Plugin：[下載 ask-then-do-it-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-1.3.0.zip)，安裝後從 `$ask-then-do-it` 開始。
+- Gemini 或其他 AI：[下載 ask-then-do-it-generic-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-generic-1.3.0.zip)，解壓縮後，在每個新對話貼上 `generic-workflow.md`。
 
 
 更多說明：
@@ -71,15 +71,15 @@ codex plugin marketplace upgrade ask-then-do-it
 - [Generic 使用說明](docs/guides/generic.zh-TW.md)
 - [設計說明](docs/design/ai-development-skills.zh-TW.md)
 
-## クイックスタート
+## はじめに
 
-**最初に確認し、合意を残してから作り始めます。** Ask Then Do It は要件を明確にし、仕様と Tickets を作成した後、各 Ticket にテストを追加するかという利用者の決定に従って実装と Review を進めます。
+**最初に確認してから作り始めます。** Ask Then Do It には二つのワークフローモードがあります。Full は要件、仕様、Tickets、実装、テスト選択、Review までの完全で追跡可能な流れを保ちます。Lite は短い Change Brief、一度の承認、直接実装、最低限の検証、簡潔な Review によってフローの負担を減らします。
 
-Tickets の作成後、AI は各 Ticket のテスト方針と、時間およびリスクへの影響を説明します。すべての Ticket についてテストを追加するかどうかを一度に回答でき、全部に追加、全部に追加しない、または一部だけを指定できます。
+デフォルトモードは Config で決まります。明示的な依頼による切り替えは現在の操作だけに適用され、後のセッションには影響しません。
 
 まず [利用ガイド](/START-HERE.ja.md) を読み、その後で利用方法を選んでください。
 
-## インストールと更新
+## クイックスタート
 
 ### 自動インストール（CLI）
 
@@ -95,8 +95,8 @@ codex plugin marketplace upgrade ask-then-do-it
 
 ### 手動インストール
 
-- Codex Plugin：[ask-then-do-it-1.2.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-1.2.0.zip)し、インストール後に `$ask-then-do-it` から始めます。
-- Gemini またはその他の AI：[ask-then-do-it-generic-1.2.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.2.0/ask-then-do-it-generic-1.2.0.zip)して展開し、新しい会話ごとに `generic-workflow.md` を貼り付けます。
+- Codex Plugin：[ask-then-do-it-1.3.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-1.3.0.zip)し、インストール後に `$ask-then-do-it` から始めます。
+- Gemini またはその他の AI：[ask-then-do-it-generic-1.3.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-generic-1.3.0.zip)して展開し、新しい会話ごとに `generic-workflow.md` を貼り付けます。
 
 詳しい説明：
 - [初心者向けフロー](docs/guides/getting-started-simple.ja.md)

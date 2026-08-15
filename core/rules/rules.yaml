@@ -1,4 +1,4 @@
-core_version: 1.2.0
+core_version: 1.3.0
 capability_profiles:
   conversation:
     includes: []
@@ -21,6 +21,38 @@ rules:
     mandatory: true
     module: orchestration
     statement: Never claim an action or evidence that declared capabilities cannot produce.
+  - id: MODE-RESOLVE-001
+    mandatory: true
+    module: orchestration
+    statement: Resolve exactly one top-level full or lite mode for every public workflow entry through the canonical resolver or an equivalent bounded host-specific entry guard; stage selection does not imply Full and the operation override is never persisted.
+  - id: FULL-PRESERVE-001
+    mandatory: true
+    module: orchestration
+    statement: Preserve every existing Full gate, artifact, Ticket test choice, implementation route, Review requirement, and architecture contract.
+  - id: LITE-QUESTIONS-001
+    mandatory: true
+    module: lite-workflow
+    statement: Limit each Lite clarification round to the highest-impact blocking questions within the approved count, sentence, recommendation, and token budgets.
+  - id: LITE-BRIEF-001
+    mandatory: true
+    module: lite-workflow
+    statement: Require one complete conversation-only Lite Change Brief and exactly one explicit approval before implementation without creating workflow artifacts.
+  - id: LITE-RISK-001
+    mandatory: true
+    module: lite-workflow
+    statement: Pause on material high-risk evidence before or during Lite implementation and let the user choose Full or Lite for only the current operation.
+  - id: LITE-VALIDATE-001
+    mandatory: true
+    module: lite-workflow
+    statement: Prohibit new tests and TDD claims in Lite while requiring applicable diff, static, success-path, failure-path, and unresolved-failure validation behavior.
+  - id: LITE-REVIEW-001
+    mandatory: true
+    module: lite-workflow
+    statement: Perform one compact Lite Review and require explicit user approval before correcting the complete in-scope findings batch.
+  - id: LITE-SESSION-001
+    mandatory: true
+    module: lite-workflow
+    statement: Report Lite outcomes within the approved completion budget without treating conversation-only state as durable across sessions.
   - id: GATE-REQ-001
     mandatory: true
     module: requirements
@@ -36,7 +68,7 @@ rules:
   - id: GRILL-ONE-001
     mandatory: true
     module: requirements
-    statement: Ask exactly one requirement question per turn and include a recommendation.
+    statement: In Full requirement interrogation, ask exactly one requirement question per turn and include a recommendation.
   - id: SPEC-NOCODE-001
     mandatory: true
     module: specification

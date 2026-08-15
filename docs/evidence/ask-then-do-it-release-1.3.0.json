@@ -1,0 +1,83 @@
+{
+  "release_version": "1.3.0",
+  "checks": [
+    {
+      "id": "automated-tests",
+      "status": "passed",
+      "command": "bundled Pillow site-packages on PYTHONPATH; .\\.venv\\Scripts\\python.exe -m unittest discover -s tests -p test_*.py; .\\.venv\\Scripts\\python.exe -m unittest discover -s tests\\release -p test_*.py",
+      "outcome": "Final serial discovery ran 193 tests in 19.174s; OK. The complete release suite ran 108 tests in 15.746s; OK. Earlier Windows WinError 5 events were transient: the affected test and all serial suites passed, and a post-correction build retry succeeded after rollback preserved the prior output."
+    },
+    {
+      "id": "workflow-token-proxy",
+      "status": "passed",
+      "command": ".\\.venv\\Scripts\\python.exe scripts\\measure_workflow_token_proxy.py --fixture tests\\release\\fixtures\\workflow-token-proxy\\benchmark.json --json",
+      "outcome": "Codex Full 14,771; Lite 5,480; difference 9,291; reduction 62.90%, above the unchanged 60.00% gate. Fixture SHA-256 90384287b87d8f58be4c3ce458c3b215199667c3301f3a668399bbbcda884fe3. Generic fixed cost 15,376 with no Generic 60% or API billing claim."
+    },
+    {
+      "id": "codex-skill-validation",
+      "status": "passed",
+      "command": "skill-creator quick_validate.py for nine canonical and nine packaged Skill roots",
+      "outcome": "All 18 Skill instances returned Skill is valid!"
+    },
+    {
+      "id": "codex-plugin-validation",
+      "status": "passed",
+      "command": "plugin-creator validate_plugin.py for canonical and packaged Plugin roots",
+      "outcome": "Both Plugin validations passed"
+    },
+    {
+      "id": "codex-conformance",
+      "status": "passed",
+      "command": ".\\.venv\\Scripts\\python.exe scripts\\validate_conformance.py --catalog core\\rules\\rules.yaml --manifest adapters\\codex\\conformance.yaml",
+      "outcome": "Conformance passed: codex against core 1.3.0"
+    },
+    {
+      "id": "generic-conformance",
+      "status": "passed",
+      "command": ".\\.venv\\Scripts\\python.exe scripts\\validate_conformance.py --catalog core\\rules\\rules.yaml --manifest adapters\\generic-prompts\\manifest.yaml",
+      "outcome": "Conformance passed: generic-prompts against core 1.3.0"
+    },
+    {
+      "id": "codex-package-inventory",
+      "status": "passed",
+      "command": "1.3.0 contract, Codex release, documentation, correction Review, and canonical-to-package checks",
+      "outcome": "The 27-file Codex package matches canonical source, contains nine Skills and two assets, excludes marketplace metadata, and has exact v1.3.0 host/locale guide links"
+    },
+    {
+      "id": "generic-package-inventory",
+      "status": "passed",
+      "command": "1.3.0 contract, Generic release, documentation, correction Review, and canonical-to-package checks",
+      "outcome": "The 18-file Generic package contains eleven prompt modules plus the composed workflow, excludes Plugin assets and marketplace metadata, and has exact v1.3.0 host/locale guide links"
+    },
+    {
+      "id": "reproducible-build",
+      "status": "passed",
+      "command": "ReleaseOneThreeContractTests.test_two_clean_builds_are_byte_reproducible_and_checksums_match and ReleaseSafetyTests",
+      "outcome": "Two isolated complete builds produced byte-identical file sets, archives, and checksum manifests; atomic replacement and prior-release upgrade paths passed"
+    },
+    {
+      "id": "zip-equivalence",
+      "status": "passed",
+      "command": "Release safety plus independent correction source-expanded-ZIP byte audit",
+      "outcome": "Codex 27/27 and Generic 18/18 ZIP entries exactly match their expanded package directories with zero duplicate, missing, extra, or mismatched entries"
+    },
+    {
+      "id": "sha256-verification",
+      "status": "passed",
+      "command": "Release contract and independent checksum recalculation",
+      "outcome": "Codex 7f80461578791c25d07f81bbddebf6ec5ca30ae7f1f816335c77330d7045d19d; Generic 511ecccadb39ced89182ce55c4dd96f2571a59928fdb374829b0c5d6e4f0bebd; both match dist/checksums.sha256"
+    },
+    {
+      "id": "removed-artifact-scan",
+      "status": "passed",
+      "command": "clean-slate, active-version, documentation-link, package-boundary, historical-hash, stale-package-link, and git diff checks",
+      "outcome": "No active 1.2.0 declaration or packaged /docs/guides link remains outside deliberate historical/mutation assertions; all 16 pinned historical 1.2.0 artifact hashes passed; git diff --check exited 0"
+    },
+    {
+      "id": "release-architecture-diagnosis",
+      "status": "passed",
+      "command": "Read-only multi-agent simulated-deletion and twelve-lens 1.3.0 release diagnosis through the post-P2 direct-entry closure",
+      "outcome": "The package-link blocker F1 and all approved P1/P2 Review corrections were independently verified. The latest Draft closure found them structurally resolved and no remaining release correctness blocker. F2-F4 remain unaccepted non-blocking proposals and authorize no refactor."
+    }
+  ]
+}

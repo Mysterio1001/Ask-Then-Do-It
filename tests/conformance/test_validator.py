@@ -55,6 +55,14 @@ class ConformanceValidatorTests(unittest.TestCase):
         expected = {
             "CAP-DECLARE-001",
             "CAP-CLAIM-001",
+            "MODE-RESOLVE-001",
+            "FULL-PRESERVE-001",
+            "LITE-QUESTIONS-001",
+            "LITE-BRIEF-001",
+            "LITE-RISK-001",
+            "LITE-VALIDATE-001",
+            "LITE-REVIEW-001",
+            "LITE-SESSION-001",
             "GATE-REQ-001",
             "GATE-SPEC-001",
             "GATE-PLAN-001",
@@ -88,7 +96,7 @@ class ConformanceValidatorTests(unittest.TestCase):
     def test_core_defines_documented_requirements_artifacts(self) -> None:
         with CATALOG.open(encoding="utf-8") as handle:
             catalog = yaml.safe_load(handle)
-        self.assertEqual(catalog["core_version"], "1.2.0")
+        self.assertEqual(catalog["core_version"], "1.3.0")
 
         knowledge = (
             ROOT / "core" / "artifacts" / "project-knowledge-base.md"

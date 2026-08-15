@@ -1,5 +1,7 @@
 # Requirement Interrogation
 
+This module defines Full-mode requirement interrogation. Lite requirement questions are governed separately by the Lite workflow module.
+
 ## Purpose
 
 Turn ambiguous intent into explicit, human-owned decisions before specification or implementation.

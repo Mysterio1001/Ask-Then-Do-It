@@ -100,9 +100,9 @@ class ReleaseSafetyTests(unittest.TestCase):
             self.assertFalse(
                 (output / "generic" / "ask-then-do-it-generic-1.1.0.zip").exists()
             )
-            self.assertTrue((output / "codex" / "ask-then-do-it-1.2.0.zip").is_file())
+            self.assertTrue((output / "codex" / "ask-then-do-it-1.3.0.zip").is_file())
             self.assertTrue(
-                (output / "generic" / "ask-then-do-it-generic-1.2.0.zip").is_file()
+                (output / "generic" / "ask-then-do-it-generic-1.3.0.zip").is_file()
             )
 
     def test_unmanaged_collision_stops_without_partial_outputs(self) -> None:
@@ -148,8 +148,8 @@ class ReleaseSafetyTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
 
             for name in (
-                "codex/ask-then-do-it-1.2.0.zip",
-                "generic/ask-then-do-it-generic-1.2.0.zip",
+                "codex/ask-then-do-it-1.3.0.zip",
+                "generic/ask-then-do-it-generic-1.3.0.zip",
                 "checksums.sha256",
             ):
                 self.assertEqual(
@@ -159,11 +159,11 @@ class ReleaseSafetyTests(unittest.TestCase):
                 )
 
             pairs = (
-                ("codex/ask-then-do-it", "codex/ask-then-do-it-1.2.0.zip", "ask-then-do-it"),
+                ("codex/ask-then-do-it", "codex/ask-then-do-it-1.3.0.zip", "ask-then-do-it"),
                 (
-                    "generic/ask-then-do-it-generic-1.2.0",
-                    "generic/ask-then-do-it-generic-1.2.0.zip",
-                    "ask-then-do-it-generic-1.2.0",
+                    "generic/ask-then-do-it-generic-1.3.0",
+                    "generic/ask-then-do-it-generic-1.3.0.zip",
+                    "ask-then-do-it-generic-1.3.0",
                 ),
             )
             for directory_name, archive_name, archive_root in pairs:

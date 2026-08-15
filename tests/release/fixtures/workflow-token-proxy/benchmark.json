@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "scenario": {
+    "id": "codex-tools-template-filter",
+    "language": "en",
+    "host": "codex",
+    "capability": "tools",
+    "task": "Add an optional case-insensitive query filter to a repository-local, read-only command that lists bundled template metadata.",
+    "decisions": [
+      {
+        "id": "match-fields",
+        "value": "Match the query against both template name and description."
+      },
+      {
+        "id": "blank-query",
+        "value": "Treat an omitted, empty, or whitespace-only query as no filter."
+      }
+    ],
+    "risk": "Low risk: the command reads bundled metadata only and has no authentication, authorization, payment, migration, destructive data operation, public API, concurrency, asynchronous, network, or persistence behavior.",
+    "delivered_outcome": [
+      "Existing unfiltered output remains unchanged.",
+      "A non-blank query matches template names and descriptions without case sensitivity.",
+      "A query with no matches returns an empty successful result.",
+      "No persisted data, public contract, or external side effect is introduced."
+    ],
+    "ticket_count": 1,
+    "review_finding_count": 0,
+    "architecture_diagnosis": false
+  },
+  "shared_exclusions": [
+    {
+      "kind": "task-specific-source-code",
+      "reason": "The production patch is identical in outcome and is not workflow-controlled prose."
+    },
+    {
+      "kind": "necessary-tool-output",
+      "reason": "Repository reads and raw command output depend on the codebase and execution environment."
+    },
+    {
+      "kind": "hidden-model-reasoning",
+      "reason": "Private reasoning is unavailable to the repository and cannot be measured deterministically."
+    }
+  ],
+  "controlled_categories": [
+    "selected-instructions",
+    "questions",
+    "scope-and-planning",
+    "handoffs",
+    "implementation-validation",
+    "review-completion"
+  ],
+  "modes": {
+    "full": {
+      "events": [
+        {
+          "id": "full-orchestrator",
+          "category": "selected-instructions",
+          "source": "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md",
+          "budget": null
+        },
+        {
+          "id": "full-documented-requirements",
+          "category": "selected-instructions",
+          "source": "adapters/codex/plugin/ask-then-do-it/skills/ask-with-docs/SKILL.md",
+          "budget": null
+        },
+        {
+          "id": "full-write-spec",
+          "category": "selected-instructions",
+          "source": "adapters/codex/plugin/ask-then-do-it/skills/write-spec/SKILL.md",
+          "budget": null
+        },
+        {
+          "id": "full-plan-tickets",
+          "category": "selected-instructions",
+          "source": "adapters/codex/plugin/ask-then-do-it/skills/plan-tickets/SKILL.md",
+          "budget": null
+        },
+        {
+          "id": "full-implement-tdd",
+          "category": "selected-instructions",
+          "source": "adapters/codex/plugin/ask-then-do-it/skills/implement-tdd/SKILL.md",
+          "budget": null
+        },
+        {
+          "id": "full-review-code",
+          "category": "selected-instructions",
+          "source": "adapters/codex/plugin/ask-then-do-it/skills/review-code/SKILL.md",
+          "budget": null
+        },
+        {
+          "id": "full-questions",
+          "category": "questions",
+          "source": "tests/release/fixtures/workflow-token-proxy/full/questions.md",
+          "budget": null
+        },
+        {
+          "id": "full-scope-and-planning",
+          "category": "scope-and-planning",
+          "source": "tests/release/fixtures/workflow-token-proxy/full/scope-and-planning.md",
+          "budget": null
+        },
+        {
+          "id": "full-handoffs",
+          "category": "handoffs",
+          "source": "tests/release/fixtures/workflow-token-proxy/full/handoffs.md",
+          "budget": null
+        },
+        {
+          "id": "full-implementation-evidence",
+          "category": "implementation-validation",
+          "source": "tests/release/fixtures/workflow-token-proxy/full/implementation-evidence.md",
+          "budget": null
+        },
+        {
+          "id": "full-review",
+          "category": "review-completion",
+          "source": "tests/release/fixtures/workflow-token-proxy/full/review.md",
+          "budget": null
+        },
+        {
+          "id": "full-completion",
+          "category": "review-completion",
+          "source": "tests/release/fixtures/workflow-token-proxy/full/completion.md",
+          "budget": null
+        }
+      ]
+    },
+    "lite": {
+      "events": [
+        {
+          "id": "lite-orchestrator",
+          "category": "selected-instructions",
+          "source": "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md",
+          "budget": null
+        },
+        {
+          "id": "lite-workflow-reference",
+          "category": "selected-instructions",
+          "source": "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/lite-workflow.md",
+          "budget": null
+        },
+        {
+          "id": "lite-questions",
+          "category": "questions",
+          "source": "tests/release/fixtures/workflow-token-proxy/lite/questions.md",
+          "budget": "questions"
+        },
+        {
+          "id": "lite-change-brief",
+          "category": "scope-and-planning",
+          "source": "tests/release/fixtures/workflow-token-proxy/lite/change-brief.md",
+          "budget": "change-brief"
+        },
+        {
+          "id": "lite-handoffs",
+          "category": "handoffs",
+          "source": "tests/release/fixtures/workflow-token-proxy/lite/handoffs.md",
+          "budget": null
+        },
+        {
+          "id": "lite-implementation-validation",
+          "category": "implementation-validation",
+          "source": "tests/release/fixtures/workflow-token-proxy/lite/implementation-validation.md",
+          "budget": null
+        },
+        {
+          "id": "lite-review",
+          "category": "review-completion",
+          "source": "tests/release/fixtures/workflow-token-proxy/lite/review.md",
+          "budget": null
+        },
+        {
+          "id": "lite-completion",
+          "category": "review-completion",
+          "source": "tests/release/fixtures/workflow-token-proxy/lite/completion.md",
+          "budget": "completion"
+        }
+      ]
+    }
+  },
+  "generic_composed_prompt": {
+    "source": "adapters/generic-prompts",
+    "module_order": [
+      "bootstrap.md",
+      "orchestration.md",
+      "lite-workflow.md",
+      "requirements.md",
+      "documented-requirements.md",
+      "specification.md",
+      "ticket-planning.md",
+      "direct-implementation.md",
+      "tdd-implementation.md",
+      "review.md",
+      "architecture-improvement.md"
+    ]
+  }
+}

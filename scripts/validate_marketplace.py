@@ -36,7 +36,7 @@ def require_object(value: Any, label: str) -> dict[str, Any]:
     return value
 
 
-def validate_catalog(value: dict[str, Any], *, expected_ref: str = "v1.2.0") -> None:
+def validate_catalog(value: dict[str, Any], *, expected_ref: str = "v1.3.0") -> None:
     require_exact_keys(value, {"name", "interface", "plugins"}, "catalog")
     if value["name"] != "ask-then-do-it":
         raise CatalogError("catalog.name must be 'ask-then-do-it'")
@@ -83,7 +83,7 @@ def validate_catalog(value: dict[str, Any], *, expected_ref: str = "v1.2.0") -> 
         raise CatalogError("Plugin policy must be AVAILABLE with ON_INSTALL authentication")
 
 
-def load_and_validate(path: Path, *, expected_ref: str = "v1.2.0") -> None:
+def load_and_validate(path: Path, *, expected_ref: str = "v1.3.0") -> None:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:

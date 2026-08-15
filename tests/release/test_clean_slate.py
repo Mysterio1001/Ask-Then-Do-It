@@ -26,6 +26,7 @@ EXPECTED_PROMPTS = {
     "bootstrap.md",
     "documented-requirements.md",
     "direct-implementation.md",
+    "lite-workflow.md",
     "orchestration.md",
     "requirements.md",
     "review.md",
@@ -43,6 +44,7 @@ EXPECTED_RULES = {
     "ART-STATE-001",
     "CAP-CLAIM-001",
     "CAP-DECLARE-001",
+    "FULL-PRESERVE-001",
     "GATE-PLAN-001",
     "GATE-REQ-001",
     "GATE-SPEC-001",
@@ -50,6 +52,13 @@ EXPECTED_RULES = {
     "KB-DRAFT-001",
     "KB-EVIDENCE-001",
     "KB-SYNC-001",
+    "LITE-BRIEF-001",
+    "LITE-QUESTIONS-001",
+    "LITE-REVIEW-001",
+    "LITE-RISK-001",
+    "LITE-SESSION-001",
+    "LITE-VALIDATE-001",
+    "MODE-RESOLVE-001",
     "PLAN-VERTICAL-001",
     "REVIEW-EVIDENCE-001",
     "REVIEW-LENSES-001",
@@ -65,12 +74,12 @@ def text(path: Path) -> str:
 
 
 class CleanSlateContractTests(unittest.TestCase):
-    def test_all_active_component_versions_are_1_2_0(self) -> None:
+    def test_all_active_component_versions_are_1_3_0(self) -> None:
         config = json.loads(text(RELEASE))
-        self.assertEqual(config["release_version"], "1.2.0")
-        self.assertEqual(config["core_version"], "1.2.0")
-        self.assertIn("Core version: `1.2.0`", text(ROOT / "core" / "CORE.md"))
-        self.assertIn("core_version: 1.2.0", text(ROOT / "core" / "rules" / "rules.yaml"))
+        self.assertEqual(config["release_version"], "1.3.0")
+        self.assertEqual(config["core_version"], "1.3.0")
+        self.assertIn("Core version: `1.3.0`", text(ROOT / "core" / "CORE.md"))
+        self.assertIn("core_version: 1.3.0", text(ROOT / "core" / "rules" / "rules.yaml"))
 
         for manifest in (
             CODEX / "conformance.yaml",
@@ -79,16 +88,16 @@ class CleanSlateContractTests(unittest.TestCase):
         ):
             with self.subTest(manifest=manifest.relative_to(ROOT)):
                 self.assertNotIn("3.0.0", text(manifest))
-                self.assertIn("1.2.0", text(manifest))
+                self.assertIn("1.3.0", text(manifest))
 
         plugin = json.loads(
             text(CODEX / "plugin" / "ask-then-do-it" / ".codex-plugin" / "plugin.json")
         )
-        self.assertEqual(plugin["version"], "1.2.0")
+        self.assertEqual(plugin["version"], "1.3.0")
 
         for prompt in EXPECTED_PROMPTS:
             with self.subTest(prompt=prompt):
-                self.assertIn("Core version: `1.2.0`", text(GENERIC / prompt))
+                self.assertIn("Core version: `1.3.0`", text(GENERIC / prompt))
 
         for skill in EXPECTED_SKILLS:
             with self.subTest(skill=skill):
@@ -129,15 +138,15 @@ class CleanSlateContractTests(unittest.TestCase):
         config = json.loads(text(RELEASE))
         self.assertEqual(config["codex"]["directory"], "codex/ask-then-do-it")
         self.assertEqual(
-            config["codex"]["archive"], "codex/ask-then-do-it-1.2.0.zip"
+            config["codex"]["archive"], "codex/ask-then-do-it-1.3.0.zip"
         )
         self.assertEqual(
             config["generic"]["directory"],
-            "generic/ask-then-do-it-generic-1.2.0",
+            "generic/ask-then-do-it-generic-1.3.0",
         )
         self.assertEqual(
             config["generic"]["archive"],
-            "generic/ask-then-do-it-generic-1.2.0.zip",
+            "generic/ask-then-do-it-generic-1.3.0.zip",
         )
         self.assertEqual(
             config["managed_outputs"],

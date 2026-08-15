@@ -39,7 +39,7 @@ class AskThenDoItCodexIdentityTests(unittest.TestCase):
 
         self.assertEqual(PLUGIN.name, "ask-then-do-it")
         self.assertEqual(manifest["name"], "ask-then-do-it")
-        self.assertEqual(manifest["version"], "1.2.0")
+        self.assertEqual(manifest["version"], "1.3.0")
         self.assertEqual(manifest["author"]["name"], "Ian Wu, Handle by me Tech Studio")
         self.assertIn("independent", manifest["description"].lower())
         self.assertIn("not affiliated with or endorsed by Matt Pocock", manifest["description"])
@@ -90,7 +90,7 @@ class AskThenDoItCodexIdentityTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             package = output / "codex" / "ask-then-do-it"
-            archive = output / "codex" / "ask-then-do-it-1.2.0.zip"
+            archive = output / "codex" / "ask-then-do-it-1.3.0.zip"
 
             for legal_file in ("LICENSE", "THIRD_PARTY_NOTICES.md"):
                 with self.subTest(legal_file=legal_file):
