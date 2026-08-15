@@ -30,6 +30,11 @@ USER_ZH_DOCUMENTS = (
     GENERIC_START_GUIDE,
 )
 
+# README is the navigation root, so it does not need a self-referential footer.
+USER_FOOTER_DOCUMENTS = tuple(
+    document for document in USER_ZH_DOCUMENTS if document != README
+)
+
 
 def localized_sibling(document: Path, locale: str) -> Path:
     return document.with_name(document.name.replace(".zh-TW.md", f".{locale}.md"))
@@ -123,7 +128,7 @@ def document_section(body: str, start: str, end: str | None) -> str:
 
 class ReleaseDocumentationTests(unittest.TestCase):
     def test_user_documents_end_with_readme_footer(self) -> None:
-        documents = (*USER_ZH_DOCUMENTS, *USER_LOCALIZED_DOCUMENTS)
+        documents = (*USER_FOOTER_DOCUMENTS, *USER_LOCALIZED_DOCUMENTS)
         for document in documents:
             body = document.read_text(encoding="utf-8")
             expected = user_document_footer(document)
