@@ -1,6 +1,6 @@
-# Ask Then Do It Generic 1.2.0 使用說明
+# Ask Then Do It Generic 1.3.0 使用說明
 
-這個套件適合 Gemini 或其他能接收長文字的 AI。你只要將工作流貼進對話，就能從需求釐清開始。
+這個套件適合 Gemini 或其他能接收長文字的 AI。它會在對話中引導流程，而且只能使用目前服務實際提供的檔案、指令或其他工具能力。
 
 這是受到 Matt Pocock 的 skills repository 啟發的獨立專案，與 Matt Pocock 沒有從屬關係，也沒有獲得其背書。授權與來源請見套件內的 `LICENSE` 及 `THIRD_PARTY_NOTICES.md`。
 
@@ -8,31 +8,15 @@
 
 1. 開啟 `generic-workflow.md`。
 2. 複製全文，貼到一個新的 AI 對話。
-3. 在同一則訊息後面或下一則訊息說明你的需求與偏好語言。
-4. 如果要繼續先前工作，也一起貼上之前保存的重要文件。
+3. 在同一則訊息或下一則訊息說明你的需求與偏好語言。
 
-AI 的第一個有效回應會簡短說明目前階段，接著提出第一個需求問題，並附上建議答案與主要取捨。
+AI 的第一個有效回應會先判定流程模式，再依該模式的問題與核准規則進行。請保存重要進度。Generic 不能直接修改你的檔案或執行測試；其他操作仍取決於主機實際提供的工具。
 
-## 你會看到什麼
+每個新對話都要重新貼上 `generic-workflow.md`。設定方式、模式選擇、session 行為與能力限制請見 [Generic 詳細說明](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.0/docs/guides/generic.zh-TW.md)。
 
-- 每輪只問一個重要問題。
-- 需求、規格與 Ticket 規劃都需要你明確核准。
-- 所有 Tickets 列出後，AI 會逐張提供測試建議；每張都會提醒執行測試可能增加工時，而不加測試會降低驗證信心。
-- 你會用一次回覆決定每張 Ticket 是否加上測試：全部加上、全部不加，或指定部分 Tickets，再核准完整規劃。不加測試的 Ticket 會進入 `direct-implementation.md`，不建立也不執行行為測試。
-- 系統內部將「加上測試」記錄為 `tdd`，將「不加測試」記錄為 `direct`；你不需要用這些名稱回答。
-- 核准完整 Ticket 規劃後，AI 才會進入實作階段。
-- Review 會根據你提供的內容指出可確認與無法確認的部分。
+## 選擇 Full 或 Lite
 
-## 能力限制
+Full 一次只問一個需求問題；第一個需求問題會附上建議答案，且流程有三個核准點。Lite 可以不提出問題；若有阻塞，每輪最多三個阻塞問題，之後顯示一份 Change Brief，並在實作前等待一次核准。選擇前請閱讀 [完整 Full 與 Lite 流程](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.0/docs/guides/getting-started-simple.zh-TW.md)。
 
-Generic 版本只會在對話中引導流程，不能直接修改你的檔案或執行測試。若你使用的 AI 另外具備檔案或工具功能，請依該服務實際提供的能力操作。
 
-## 保存進度
-
-請保存 AI 產生的需求紀錄、規格、Ticket 規劃、Review 與其他重要文件。
-
-每個新對話都要重新貼上 `generic-workflow.md`。要延續先前工作時，再一起貼上保存的文件和新的要求；AI 會從第一個尚未完成的階段繼續。
-
-## 進階用法
-
-`prompts/` 內有十個分階段模組，包含 `direct-implementation.md`。熟悉流程後，可以直接選擇需要的模組；一般情況使用 `generic-workflow.md` 即可。
+[回到 README](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.0/README.md)

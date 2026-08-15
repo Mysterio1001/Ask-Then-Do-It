@@ -46,7 +46,7 @@ class MarketplaceContractTests(unittest.TestCase):
             "https://github.com/Mysterio1001/Ask-Then-Do-It.git",
         )
         self.assertEqual(source["path"], "adapters/codex/plugin/ask-then-do-it")
-        self.assertEqual(source["ref"], "v1.2.0")
+        self.assertEqual(source["ref"], "v1.3.0")
 
     def test_catalog_is_repository_metadata_only(self) -> None:
         self.assertTrue(CATALOG.is_relative_to(ROOT))

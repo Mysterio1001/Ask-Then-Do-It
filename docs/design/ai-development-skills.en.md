@@ -1,121 +1,98 @@
 # Ask Then Do It: A Model-Neutral AI Development Workflow
 
-Ask Then Do It is based on one idea: before acting, an AI should ask questions to understand what the user actually needs and record important decisions in documents that can be reviewed.
+Ask Then Do It divides "ask before acting" into two top-level modes: `Full` and `Lite`. Full preserves complete decision, implementation, and Review evidence. Lite uses less workflow material for well-bounded, lower-risk work while retaining user authority, minimum validation, and honest reporting.
 
-## The problem it addresses
+Top-level Full/Lite is separate from the test choice inside a Full Ticket. Lite is not an alias for `direct`, and it must not fabricate Full documents to authorize implementation.
 
-An AI can easily start writing code without enough information. This often leads to three problems:
+## The problem
 
-- The result does not solve the user's real need.
-- Different conversations develop different understandings of the project.
-- An architecture problem triggers a large change before its impact is agreed upon.
+A single heavyweight workflow is traceable, but it repeatedly generates and reloads requirements, specifications, Tickets, and handoff material for small changes. Removing TDD alone leaves the rest of that workflow cost in place.
 
-Ask Then Do It separates these risks into clear stages: requirements consensus, specification, Tickets, a user-selected implementation mode for every Ticket, Review, and architecture improvement.
+The design therefore protects two outcomes:
 
-## Core, Codex Plugin, and Generic workflow
+- Existing Full approvals, documents, test choices, Review, and architecture improvement behavior remain unchanged.
+- Lite reduces workflow-controlled material while disclosing its lower verification confidence and traceability.
 
-The method has three conceptual layers:
+## Core and host ownership
 
-| Part | Role |
-| --- | --- |
-| Core | Defines the workflow, approval points, and safety boundaries shared by all models |
-| Codex Plugin | Presents the workflow as nine Skills that Codex can select |
-| Generic workflow | Presents the same workflow as long-form instructions for Gemini and other AI services |
+Core owns the provider-neutral Full/Lite contract: mode identities, Full fallback, Full compatibility, the Lite lifecycle, risk pauses, approval authority, minimum validation, Review correction authority, and session behavior.
 
-Codex and other AI services use different interfaces, but none may skip approval of the requirements, specification, or Ticket plan.
+| Layer | Responsibility | Capability it must not claim |
+| --- | --- | --- |
+| Core | Defines model-neutral semantics and safety boundaries shared by both modes | Does not select host-specific Config paths or tool capabilities |
+| Codex Plugin | The Codex adapter maps user and project Config, Skills, file access, and command tools to Core | Must not redefine Core semantics or persist a temporary operation choice |
+| Generic workflow | The Generic adapter maps a default-mode declaration and conversation modules to Core | Without tool evidence, must not claim file edits, command execution, or observed test results |
 
-## Complete workflow
+The Codex adapter reads Plugin-owned Config, resolves precedence, and performs file and command work within real permissions. The Generic adapter composes a long-form workflow with a default-mode declaration and preserves capability honesty for a conversation-only host.
 
-```mermaid
-flowchart TD
-    A["User presents an idea"] --> B["Ask one requirements question"]
-    B --> C{"Requirements consensus"}
-    C -->|Revise| B
-    C -->|Approve| D["Update the Project Knowledge Base"]
-    D --> E["Write the specification"]
-    E --> F{"Approve the specification"}
-    F -->|Revise| E
-    F -->|Approve| G["Split work into vertical Tickets"]
-    G --> H["Recommend tests and decide in one response whether to add tests"]
-    H --> I{"Approve the Ticket plan"}
-    I -->|Revise| G
-    I -->|Approve| J{"Internal route for each test choice"}
-    J -->|tdd| K["Red, Green, Refactor"]
-    J -->|direct| L["Implement without behavioral tests"]
-    K --> M["Review"]
-    L --> M
-    M -->|Local issue| N["Fix or finish"]
-    M -->|System issue| O["Analyze architecture improvement"]
-    O --> E
-```
+Documentation also has explicit ownership. The three localized beginner guides are canonical for the complete Full/Lite user flow; the Codex and Generic guides own host configuration; short entry pages only route readers; this design guide owns maintainer contracts and the token-proxy target.
 
-## Why ask only one question at a time
+## Adapter equivalence
 
-A long list of questions is easy to answer incompletely, and decisions can interfere with one another. The workflow chooses the highest-impact unresolved question and includes a recommended answer and the main tradeoff.
+Hosts do not need identical tools, but the same user decisions must produce equivalent observable outcomes. Equivalence includes at least:
 
-This gives the user one clear decision at a time.
+- An explicit current-operation instruction outranks a persistent default, and no valid default means Full.
+- Full retains its three approvals; Lite has one Change Brief approval.
+- A high-risk switch affects only the current operation, and material risk discovered during implementation pauses work for another decision.
+- Lite creates no workflow documents, adds no tests, and discloses both observed and unavailable validation.
+- Lite Review presents findings as a batch and requires user approval before corrections.
+- A new session resolves mode again and never claims to resume unpersisted Lite state.
 
-## Three human approval points
+Codex can edit and verify directly. A conversation-only Generic host can offer a plan or analyze user-supplied evidence but cannot claim tool outcomes. That is a capability difference, not a difference in workflow outcome or approval authority.
 
-The AI must wait for explicit approval at three points:
+## Full contract
 
-1. Requirements consensus: confirm the problem, users, and scope.
-2. Specification: confirm expected behavior and failure cases.
-3. Ticket plan: confirm how the work will be divided and verified.
+Full is for high-risk, cross-module, still-uncertain, or audit-sensitive work. Its existing lifecycle remains unchanged:
 
-Silence, an unrelated reply, or an AI-generated state change cannot replace the user's approval.
+1. Perform repository reconnaissance, then ask one requirements question at a time until requirements consensus.
+2. Synchronize approved information to the Project Knowledge Base only after requirements approval.
+3. Create and approve a specification that defines behavior and failure handling.
+4. Split work into vertical Tickets, recommend a test choice for each, and ask in one response whether to add tests to every Ticket before approving the complete plan.
+5. Full maps the test choices internally to `tdd` or `direct`. TDD requires Red, Green, and Refactor; direct runs no behavioral tests and records the untested behavior.
+6. Preserve implementation evidence for independent Review through twelve perspectives. A systemic issue enters architecture improvement analysis and returns through specification and Tickets for new implementation authority.
 
-## Project Knowledge Base
+Requirements consensus, specification, and Ticket plan are Full's three formal approval gates. A mode resolver may precede Full, but it cannot remove or shorten these contracts.
 
-The Project Knowledge Base preserves approved terms, architecture, important decisions, external dependencies, and open questions over the life of the project.
+## Lite contract and lower traceability
 
-New information from requirements discussions first remains a temporary note. It becomes part of the formal knowledge base only after the related decision is approved. This prevents assumptions from being mistaken for facts in later conversations.
+Lite has lower traceability than Full because its Change Brief, approval, progress, and Review remain in the current conversation instead of becoming workflow documents that another session can resume. Documentation and completion reporting must keep this tradeoff visible.
 
-## Vertical Tickets
+The shared Lite lifecycle is focused reconnaissance and risk evaluation; up to three blocking questions per round; an approximately 800-token Change Brief; one approval; direct implementation; static plus success/failure-path validation; compact Review; approval for finding corrections; and a completion response normally around 500 tokens.
 
-Each Ticket should deliver a user-visible result that can be verified independently. If work is split into separate database, backend, and frontend Tickets, completing any one Ticket may still produce nothing usable.
+Lite adds or modifies no behavioral tests, does not use TDD, and does not require Full's twelve Review perspectives or an independent reviewer. It still stops scope expansion, preserves user changes, performs available minimum validation, and lets a known failure prevent an unqualified completion claim.
 
-A vertical Ticket includes the data, logic, and interface needed to deliver its result. After every Ticket is listed, the workflow gives each one a test recommendation with time and risk warnings. In one response, the user decides whether to add tests to every Ticket: all, none, or an explicit subset. The plan is approved only after every choice is resolved.
+## Risk and authority boundaries
 
-## TDD, direct implementation, and evidence
+Authentication, authorization, payment, data migration, destructive data operations, public contracts, cross-module structure, concurrency, asynchronous behavior, and external side effects are evaluated before Lite approval. When material risk exists, the host presents evidence and asks whether to switch only the current operation to Full; the user may accept the risk and continue Lite.
 
-TDD follows Red, Green, and Refactor:
+New risk during implementation pauses further modification. A switch to Full preserves observable changes and returns to the earliest unmet Full gate. The choice must not rewrite Config or affect another session.
 
-- Red demonstrates that the test detects behavior that has not yet been implemented.
-- Green demonstrates that the minimum implementation now passes the test.
-- Refactor improves the design while tests continue to pass.
+## Reproducible token proxy
 
-The workflow keeps the actual commands and test results so that completion is supported by evidence, not only a written claim.
+The release gate compares Full and Lite through an equivalent representative scenario. The fixture holds the task, decisions, risk, and delivered outcome constant. Both modes use the same normalization and counting method so a failure can be reproduced inside the repository.
 
-When the user declines tests, the workflow uses the internal `direct` path; declining tests for every Ticket is also valid. The direct path does not create or run behavioral tests, although it may run lint, type-check, or build checks. Its evidence and Review retain `tests: skipped-by-user`, identify untested behavior, and do not claim TDD-equivalent confidence.
+The count includes workflow-controlled material: questions, the Change Brief or Full documents, stage instructions, composed prompt content, repeated handoffs, and completion reporting. The same rule applies to both modes, and material that disadvantages Lite is not specially excluded.
 
-## Review from twelve perspectives
+The count excludes task-specific source code, necessary tool output, and hidden model reasoning because those are not common costs that the workflow can deterministically control. The fixture, counting rule, raw Full and Lite counts, and formula must be disclosed in tests or release evidence.
 
-Review checks the approved material, code changes, and verification results. It uses twelve consistent perspectives to examine duplication, long functions, overloaded responsibilities, data that repeatedly travels together, changes scattered across the system, and interfaces that expose unnecessary details.
+Reduction uses one formula: `(Full proxy - Lite proxy) / Full proxy * 100`. Lite must reduce the controlled proxy by at least 60% for the representative scenario or the release gate fails.
 
-Every conclusion should point to evidence. Missing information must be marked as unverified rather than treated as proof that no problem exists.
+This proxy validates only repository-controlled workflow material. It does not guarantee an API bill reduction, total context size, hidden reasoning cost, or cache discount. Maintainers must not describe a passing gate as a billing guarantee.
 
-## Why architecture improvement begins with analysis
+## Maintenance rules
 
-Architecture problems often affect multiple features. Immediate restructuring may go beyond the approved scope, so architecture improvement first:
-
-- Describes the problem and its impact.
-- Traces related modules and dependencies.
-- Examines what would happen if a module were removed.
-- Prioritizes improvement options.
-
-Accepting the analysis does not authorize implementation. Changes still return through specification, Ticket planning, the user's per-Ticket mode selection, and the matching implementation path.
-
-## Working with different AI capabilities
-
-An AI with conversation access can ask questions, prepare documents, and analyze material supplied by the user, but it must not claim to have edited files or run tests.
-
-An AI with file and command tools can make and verify changes, but it must still provide evidence. If the host supports an independent reviewer, Review can add a perspective that is not influenced by the implementer's conclusion.
-
-The workflow adapts to real capabilities and never pretends to perform actions that the host cannot support.
+- A Core mode change requires matching Codex and Generic mappings plus evidence of equivalence.
+- Lite must not weaken Full's one-question sequence, three approvals, per-Ticket test choice, TDD/direct evidence, or Review.
+- Lite question, Change Brief, and completion budgets are approximate user-visible output targets; they never justify hiding failure, risk, or missing evidence.
+- The beginner guides keep the complete user flow; host guides keep configuration; short entry pages do not duplicate the flow, and no separate Lite guide is added.
+- The Generic workflow claims only real host capabilities and provides a clear handoff or unverified disclosure when tools are unavailable.
+- The 60% proxy uses an equivalent scenario and fixed rules; a fixture or algorithm change must be evaluated for both modes together.
 
 ## Read next
 
-- [Beginner's Workflow Guide](../guides/getting-started-simple.en.md)
+- [Beginner's Full/Lite Workflow Guide](../guides/getting-started-simple.en.md)
 - [Codex Plugin Guide](../guides/codex.en.md)
 - [Generic Guide](../guides/generic.en.md)
+
+
+[Back to README](../../README.md)

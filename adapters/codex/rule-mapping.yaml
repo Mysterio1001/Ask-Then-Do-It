@@ -1,4 +1,4 @@
-core_version: 1.2.0
+core_version: 1.3.0
 rules:
   CAP-DECLARE-001:
     - file: conformance.yaml
@@ -17,6 +17,62 @@ rules:
     - file: plugin/ask-then-do-it/skills/review-code/SKILL.md
       section: Validate each finding
       implementation: Requires uncertainty and unavailable evidence to be disclosed instead of invented.
+  MODE-RESOLVE-001:
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md
+      section: Resolve the top-level mode
+      implementation: Resolves only full or lite from an explicit current-operation instruction, the in-project Config, the user Config, and Full fallback while failing closed on present invalid Config and never persisting an override.
+    - file: plugin/ask-then-do-it/skills/ask-requirements/SKILL.md
+      section: Resolve the top-level mode before this stage
+      implementation: Treats direct requirement-stage selection as a stage choice, delegates unresolved mode to the canonical resolver, routes Lite away from the Full stage, and continues only with proven Full mode.
+    - file: plugin/ask-then-do-it/skills/ask-with-docs/SKILL.md
+      section: Resolve the top-level mode before this stage
+      implementation: Treats direct documented-requirement selection as a stage choice, delegates unresolved mode to the canonical resolver, routes Lite away from the Full stage, and continues only with proven Full mode.
+    - file: plugin/ask-then-do-it/skills/implement-direct/SKILL.md
+      section: Resolve the top-level mode before this stage
+      implementation: Treats direct implementation-stage selection as a stage choice, delegates unresolved mode to the canonical resolver, routes Lite away from the Full stage, and continues only with proven Full mode.
+    - file: plugin/ask-then-do-it/skills/implement-tdd/SKILL.md
+      section: Resolve the top-level mode before this stage
+      implementation: Treats direct TDD-stage selection as a stage choice, delegates unresolved mode to the canonical resolver, routes Lite away from the Full stage, and continues only with proven Full mode.
+    - file: plugin/ask-then-do-it/skills/improve-architecture/SKILL.md
+      section: Resolve the top-level mode before this stage
+      implementation: Treats direct architecture-stage selection as a stage choice, delegates unresolved mode to the canonical resolver, routes Lite away from the Full stage, and continues only with proven Full mode.
+    - file: plugin/ask-then-do-it/skills/plan-tickets/SKILL.md
+      section: Resolve the top-level mode before this stage
+      implementation: Treats direct planning-stage selection as a stage choice, delegates unresolved mode to the canonical resolver, routes Lite away from the Full stage, and continues only with proven Full mode.
+    - file: plugin/ask-then-do-it/skills/review-code/SKILL.md
+      section: Resolve the top-level mode before this stage
+      implementation: Treats direct Review-stage selection as a stage choice, delegates unresolved mode to the canonical resolver, routes Lite away from the Full stage, and continues only with proven Full mode.
+    - file: plugin/ask-then-do-it/skills/write-spec/SKILL.md
+      section: Resolve the top-level mode before this stage
+      implementation: Treats direct specification-stage selection as a stage choice, delegates unresolved mode to the canonical resolver, routes Lite away from the Full stage, and continues only with proven Full mode.
+  FULL-PRESERVE-001:
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md
+      section: Route the selected mode
+      implementation: Keeps Lite separate from Ticket implementation modes and sends Full through every existing workflow stage and gate unchanged.
+  LITE-QUESTIONS-001:
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/references/lite-workflow.md
+      section: Ask blocking questions
+      implementation: Limits each Lite round to three ranked blocking questions, an approximately 500-token batch, three short sentences per question, and one recommendation with its tradeoff.
+  LITE-BRIEF-001:
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/references/lite-workflow.md
+      section: Approve the Change Brief
+      implementation: Defines the complete conversation-only Change Brief, approximately 800-token target, exactly one approval, and prohibition on Lite workflow artifacts.
+  LITE-RISK-001:
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/references/lite-workflow.md
+      section: Reconsider material risk
+      implementation: Evaluates material risk before approval and during implementation, pauses modification, and limits any Full or Lite choice to the current operation.
+  LITE-VALIDATE-001:
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/references/lite-workflow.md
+      section: Validate proportionately
+      implementation: Requires applicable diff, static, focused success-path, focused failure-path, unavailable-check, and unresolved-failure handling without defaulting to a complete behavioral suite.
+  LITE-REVIEW-001:
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/references/lite-workflow.md
+      section: Run compact Review
+      implementation: Performs the same-agent compact Review, presents findings in one batch, and requires correction approval while avoiding an empty gate when no findings exist.
+  LITE-SESSION-001:
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/references/lite-workflow.md
+      section: Complete and start new sessions
+      implementation: Defines the approximately 500-token evidence-honest completion and resolves every new session again without claiming durable Lite state.
   GATE-REQ-001:
     - file: plugin/ask-then-do-it/skills/ask-requirements/SKILL.md
       section: Reach consensus
@@ -65,7 +121,7 @@ rules:
   ADAPTER-COVERAGE-001:
     - file: conformance.yaml
       section: implemented_rules
-      implementation: Enumerates every mandatory rule in core version 1.2.0 for deterministic shared validation.
+      implementation: Enumerates every mandatory rule in core version 1.3.0 for deterministic shared validation.
     - file: rule-mapping.yaml
       section: rules
       implementation: Resolves each mandatory rule to its concrete Codex adapter implementation.

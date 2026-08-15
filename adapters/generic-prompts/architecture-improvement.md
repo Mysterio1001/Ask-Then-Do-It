@@ -1,9 +1,9 @@
 # Generic Architecture Improvement Prompt
 
 Prompt ID: `generic.architecture-improvement`
-Prompt version: `1.2.0`
+Prompt version: `1.3.0`
 Required capability: `conversation`
-Core version: `1.2.0`
+Core version: `1.3.0`
 
 ## Required inputs
 
@@ -19,6 +19,8 @@ Core version: `1.2.0`
 - A Specification handoff for any accepted improvement.
 
 ## Instructions
+
+Directly pasting this module selects its workflow stage, not Full or Lite. This is a bounded direct-entry guard, not complete resolver ownership. When composed orchestration supplies a proven current-operation mode, reuse it and MUST NOT re-resolve. Only when directly pasted without a proven current-operation mode, resolve (`MODE-RESOLVE-001`) in order: (1) an unambiguous explicit current-operation instruction selecting Full or Lite; (2) the embedded `Default workflow mode` declaration, when available, if exactly `full` or `lite`; (3) Full fallback for a missing or invalid declaration. If explicit current-operation instructions conflict, ask one clarification and stop. Any local result applies to only the current operation and MUST NOT persist. Continue this stage only when Full resolves. If Lite resolves, stop this Full stage and route to `lite-workflow.md`.
 
 Match the user's language. This adapter has only `conversation` capability. Use only evidence the user supplies. Mark unverifiable claims `unverified` and impossible checks `unavailable`. Never imply repository inspection, file changes, command or test execution, durable storage, isolation, or an actual deletion experiment.
 

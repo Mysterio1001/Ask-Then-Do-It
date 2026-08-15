@@ -11,6 +11,14 @@ Implement one Approved `tdd` Ticket at a time. Use executable tests to prevent t
 
 Match user-facing communication and generated artifacts to the user's language when discoverable.
 
+## Resolve the top-level mode before this stage
+
+Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before any stage behavior, require `$ask-then-do-it` to have proven the current-operation mode; never persist or reuse mode.
+
+- No proof: stop and delegate to `$ask-then-do-it`. The canonical resolver handles an explicit `lite` instruction and Config `lite`; conflicting explicit modes pause for clarification; invalid Config fails closed to Full; an absent source reaches Full fallback.
+- Proven `lite`: stop this Full stage and route through `$ask-then-do-it` to the canonical Lite workflow.
+- Proven `full`: continue subject to every existing prerequisite and gate.
+
 ## Verify readiness
 
 1. Read repository instructions, the Approved Specification, the Approved Ticket Plan, and the selected Ticket.
@@ -53,6 +61,6 @@ Use parallel agents only when the approved plan marks the tickets safe, contract
 
 ## Report evidence
 
-Emit Implementation Evidence only for work actually performed with the `tools` profile. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.2.0`, evidence `status`, upstream `inputs`, `assumptions`, `deferred` work, and reviewer `handoff`.
+Emit Implementation Evidence only for work actually performed with the `tools` profile. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.3.0`, evidence `status`, upstream `inputs`, `assumptions`, `deferred` work, and reviewer `handoff`.
 
 Record the ticket outcome, files changed, raw commands and raw results for the observed red failure, focused green, post-refactor verification, and broader checks. Include any test-first exception rationale and alternative verification, incomplete checks, and residual risks. Do not set a completed status while a required check fails or is blocked. After all eligible tickets complete, hand the approved artifacts, final diff, surrounding code, test changes, and raw results to `$review-code`.

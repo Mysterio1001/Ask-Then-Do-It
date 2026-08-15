@@ -9,6 +9,14 @@ Turn ambiguous intent into approved requirements while building a reusable proje
 
 <!-- Maintainer note: Formal knowledge stays approval-bound so later agents can trust it without treating brainstorming as fact. -->
 
+## Resolve the top-level mode before this stage
+
+Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before any stage behavior, require `$ask-then-do-it` to have proven the current-operation mode; never persist or reuse mode.
+
+- No proof: stop and delegate to `$ask-then-do-it`. The canonical resolver handles an explicit `lite` instruction and Config `lite`; conflicting explicit modes pause for clarification; invalid Config fails closed to Full; an absent source reaches Full fallback.
+- Proven `lite`: stop this Full stage and route through `$ask-then-do-it` to the canonical Lite workflow.
+- Proven `full`: continue subject to every existing prerequisite and gate.
+
 ## Use approved evidence
 
 Perform focused read-only discovery before asking a question:
@@ -22,7 +30,7 @@ Do not ask for facts that available evidence already answers. Do not edit produc
 
 ## Keep provisional notes
 
-Maintain Draft Working Notes with `status` fixed to `Draft`. Include `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.2.0`, `status`, `inputs`, `assumptions`, `deferred`, `handoff`, and pending `approval`.
+Maintain Draft Working Notes with `status` fixed to `Draft`. Include `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.3.0`, `status`, `inputs`, `assumptions`, `deferred`, `handoff`, and pending `approval`.
 
 Label each entry:
 

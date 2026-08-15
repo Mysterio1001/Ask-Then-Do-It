@@ -11,6 +11,14 @@ Turn a vague request into explicit human-owned decisions. Make the AI find blind
 
 Match user-facing questions and generated artifacts to the user's language when discoverable.
 
+## Resolve the top-level mode before this stage
+
+Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before any stage behavior, require `$ask-then-do-it` to have proven the current-operation mode; never persist or reuse mode.
+
+- No proof: stop and delegate to `$ask-then-do-it`. The canonical resolver handles an explicit `lite` instruction and Config `lite`; conflicting explicit modes pause for clarification; invalid Config fails closed to Full; an absent source reaches Full fallback.
+- Proven `lite`: stop this Full stage and route through `$ask-then-do-it` to the canonical Lite workflow.
+- Proven `full`: continue subject to every existing prerequisite and gate.
+
 ## Reconnoiter first
 
 Before asking a question, perform focused, read-only discovery of:
@@ -65,6 +73,6 @@ Continue until every high-impact item is confirmed, intentionally deferred with 
 
 ## Emit the decision artifact
 
-At consolidation, emit a Requirement Decision Record with `status` set to `Draft`. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.2.0`, upstream `inputs`, `assumptions`, `deferred` decisions, the next-stage `handoff`, and empty or pending `approval` evidence.
+At consolidation, emit a Requirement Decision Record with `status` set to `Draft`. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.3.0`, upstream `inputs`, `assumptions`, `deferred` decisions, the next-stage `handoff`, and empty or pending `approval` evidence.
 
 After explicit confirmation on a later turn, record the approval evidence, change `status` to `Approved`, and hand the approved record to `$write-spec`. Do not infer approval from silence or an unrelated response. Do not implement code from this skill.

@@ -15,6 +15,9 @@ class EvidenceError(RuntimeError):
     """A release evidence gate was not satisfied."""
 
 
+MANDATORY_VALIDATION_CHECKS = {"workflow-token-proxy"}
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, required=True)
@@ -42,6 +45,12 @@ def validate(
     required = config.get("required_validation_checks")
     if not isinstance(version, str) or not isinstance(required, list) or not required:
         raise EvidenceError("Release configuration lacks the evidence gate contract")
+    missing_mandatory = sorted(MANDATORY_VALIDATION_CHECKS.difference(required))
+    if missing_mandatory:
+        raise EvidenceError(
+            f"Release configuration lacks mandatory validation checks: "
+            f"{missing_mandatory}"
+        )
     if ledger.get("release_version") != version:
         raise EvidenceError("Validation ledger release_version does not match release")
     checks = ledger.get("checks")

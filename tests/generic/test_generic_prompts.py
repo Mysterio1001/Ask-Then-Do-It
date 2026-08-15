@@ -13,6 +13,7 @@ MANIFEST = ADAPTER / "manifest.yaml"
 PROMPTS = {
     "bootstrap.md",
     "orchestration.md",
+    "lite-workflow.md",
     "requirements.md",
     "documented-requirements.md",
     "direct-implementation.md",
@@ -29,7 +30,7 @@ def prompt(name: str) -> str:
 
 
 class GenericPromptContractTests(unittest.TestCase):
-    def test_adapter_has_exactly_one_bootstrap_and_nine_module_prompts(self) -> None:
+    def test_adapter_has_exactly_one_bootstrap_and_ten_stage_prompts(self) -> None:
         actual = {path.name for path in ADAPTER.glob("*.md")}
         self.assertEqual(actual, PROMPTS)
 
@@ -38,9 +39,9 @@ class GenericPromptContractTests(unittest.TestCase):
             text = prompt(name)
             with self.subTest(prompt=name):
                 self.assertRegex(text, r"(?m)^Prompt ID: `[^`]+`$")
-                self.assertRegex(text, r"(?m)^Prompt version: `1\.2\.0`$")
+                self.assertRegex(text, r"(?m)^Prompt version: `1\.3\.0`$")
                 self.assertRegex(text, r"(?m)^Required capability: `[^`]+`$")
-                self.assertRegex(text, r"(?m)^Core version: `1\.2\.0`$")
+                self.assertRegex(text, r"(?m)^Core version: `1\.3\.0`$")
                 for heading in (
                     "## Required inputs",
                     "## Expected outputs",
