@@ -34,6 +34,46 @@ Generic workflow は Codex Config を読めません。代わりに貼り付け�
 
 Full は要件の質問を一度に一つだけ行い、別のセッションでも確認できる文書を残します。Full には要件の合意、仕様、Ticket 計画という 3 つの正式な承認点があります。
 
+```mermaid
+flowchart TD
+    F_STATE["1. 現状を理解する"]
+    F_REQUIREMENTS["2. 要件の合意を得る<br/>一度に一つ質問"]
+    F_REQUIREMENTS_GATE{"承認点 1：要件の合意を承認？"}
+    F_KNOWLEDGE["プロジェクト知識を更新"]
+    F_SPECIFICATION["3. 仕様を書く<br/>動作、失敗時の動作、境界"]
+    F_SPECIFICATION_GATE{"承認点 2：完全な仕様を承認？"}
+    F_TICKETS["4. 縦割り Tickets を計画<br/>各 Ticket のテストを決定"]
+    F_TICKET_PLAN_GATE{"承認点 3：完全な Ticket 計画を承認？"}
+    F_TEST_CHOICE{"5. 承認済みテスト選択で分岐"}
+    F_TDD["テストを追加<br/>TDD：Red、Green、Refactor"]
+    F_DIRECT["テストを追加しない<br/>Direct：tests: skipped-by-user"]
+    F_EVIDENCE["6. 実装根拠を記録"]
+    F_REVIEW["7. 12 の視点で Review"]
+    F_COMPLETE["8. 完了を報告<br/>不足した根拠と残存リスク"]
+    F_ARCHITECTURE["アーキテクチャ改善分析"]
+
+    F_STATE --> F_REQUIREMENTS
+    F_REQUIREMENTS --> F_REQUIREMENTS_GATE
+    F_REQUIREMENTS_GATE -->|修正| F_REQUIREMENTS
+    F_REQUIREMENTS_GATE -->|承認| F_KNOWLEDGE
+    F_KNOWLEDGE --> F_SPECIFICATION
+    F_SPECIFICATION --> F_SPECIFICATION_GATE
+    F_SPECIFICATION_GATE -->|修正| F_SPECIFICATION
+    F_SPECIFICATION_GATE -->|承認| F_TICKETS
+    F_TICKETS --> F_TICKET_PLAN_GATE
+    F_TICKET_PLAN_GATE -->|修正| F_TICKETS
+    F_TICKET_PLAN_GATE -->|承認| F_TEST_CHOICE
+    F_TEST_CHOICE -->|テストを追加| F_TDD
+    F_TEST_CHOICE -->|テストを追加しない| F_DIRECT
+    F_TDD --> F_EVIDENCE
+    F_DIRECT --> F_EVIDENCE
+    F_EVIDENCE --> F_REVIEW
+    F_REVIEW -->|完了可能または修正を承認しない| F_COMPLETE
+    F_REVIEW -->|承認済みの局所修正| F_TEST_CHOICE
+    F_REVIEW -->|システム全体の問題| F_ARCHITECTURE
+    F_ARCHITECTURE --> F_SPECIFICATION
+```
+
 1. **現状を理解する。** AI はプロジェクトの指示、関連するコード、テスト、設定、現在の変更を読み、無関係な作業には触れません。
 2. **要件の合意を得る。** 推奨回答と主なトレードオフを添えて、要件の質問を一度に一つ行います。利用者の承認後にプロジェクト知識を更新でき、これが最初の承認点です。
 3. **仕様を書く。** 仕様は本番コードを書かずに、観測可能な動作、失敗時の動作、境界を定義します。完全な仕様への承認が 2 番目の承認点です。
@@ -48,6 +88,44 @@ Full は要件の質問を一度に一つだけ行い、別のセッションで
 ## Lite モード
 
 Lite は範囲の定まった変更を少ないフロー文章で進めます。1 回につき最大 3 個の阻害質問だけを行い、実装を妨げるか方向を大きく変える決定だけを確認します。
+
+```mermaid
+flowchart TD
+    L_STATE["1. 現状とリスクを理解する"]
+    L_BLOCKERS["2. 阻害要因だけを質問<br/>1 回につき最大 3 個"]
+    L_CHANGE_BRIEF["3. 会話内だけの Change Brief を提示<br/>範囲、シナリオ、リスク、検証"]
+    L_CHANGE_BRIEF_GATE{"4. 完全な Change Brief を承認？<br/>唯一の正式な実装前承認点"}
+    L_IMPLEMENT["5. 承認済み範囲を直接実装<br/>テスト変更も TDD も行わない"]
+    L_VALIDATE["6. 最低限の検証を行う<br/>差分、静的、成功、失敗または境界"]
+    L_VALIDATION_STATUS{"検証状態は？"}
+    L_FIX_VALIDATION["適用できる確認の失敗を修正"]
+    L_REVIEW["7. 簡潔な Review<br/>対応可能な findings を一括提示"]
+    L_FINDINGS{"対応可能な findings はある？"}
+    L_CORRECTION_GATE{"修正を承認？"}
+    L_UNRESOLVED["承認されなかった findings を未解決で保持"]
+    L_FIX_REVIEW["承認済み findings を修正"]
+    L_COMPLETE["8. 結果を報告<br/>検証不足、未解決 findings、残存リスク"]
+
+    L_STATE --> L_BLOCKERS
+    L_BLOCKERS --> L_CHANGE_BRIEF
+    L_CHANGE_BRIEF --> L_CHANGE_BRIEF_GATE
+    L_CHANGE_BRIEF_GATE -->|修正| L_CHANGE_BRIEF
+    L_CHANGE_BRIEF_GATE -->|承認| L_IMPLEMENT
+    L_IMPLEMENT -->|新しい動作または範囲拡大| L_CHANGE_BRIEF
+    L_IMPLEMENT -->|承認済み範囲内| L_VALIDATE
+    L_VALIDATE --> L_VALIDATION_STATUS
+    L_VALIDATION_STATUS -->|成功または実行不能を開示| L_REVIEW
+    L_VALIDATION_STATUS -->|修正可能な失敗| L_FIX_VALIDATION
+    L_FIX_VALIDATION --> L_VALIDATE
+    L_VALIDATION_STATUS -->|未解決エラー| L_COMPLETE
+    L_REVIEW --> L_FINDINGS
+    L_FINDINGS -->|なし| L_COMPLETE
+    L_FINDINGS -->|あり| L_CORRECTION_GATE
+    L_CORRECTION_GATE -->|承認しない| L_UNRESOLVED
+    L_UNRESOLVED --> L_COMPLETE
+    L_CORRECTION_GATE -->|一部または全部を承認| L_FIX_REVIEW
+    L_FIX_REVIEW --> L_VALIDATE
+```
 
 1. **現状とリスクを理解する。** AI は現在の操作に関係する指示、変更、コード、テスト、設定、文書だけを確認し、作業案を出す前に重大なリスクを評価します。
 2. **阻害要因だけを質問する。** 1 回につき最大 3 個の阻害質問を影響と不確実性の順に並べます。各質問は 3 つ以内の短い文で一つの決定だけを尋ね、推奨案と主なトレードオフを含めます。全体は約 `500 tokens` とし、不要な質問は追加しません。4 個以上ある場合は重要な 3 個を先に尋ね、回答後に残りを再評価します。

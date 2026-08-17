@@ -34,6 +34,46 @@ Generic workflow 沒有讀取 Codex Config 的能力，會改用貼入工作流�
 
 Full 每次一次只問一個需求問題，也就是「一次問一題」，並保留可以跨工作階段閱讀的文件。Full 有三個正式核准點：需求共識、規格與 Ticket 計畫。
 
+```mermaid
+flowchart TD
+    F_STATE["1. 理解現況"]
+    F_REQUIREMENTS["2. 取得需求共識<br/>一次問一題"]
+    F_REQUIREMENTS_GATE{"核准點 1：核准需求共識？"}
+    F_KNOWLEDGE["更新專案知識庫"]
+    F_SPECIFICATION["3. 寫規格<br/>行為、失敗方式、範圍"]
+    F_SPECIFICATION_GATE{"核准點 2：核准完整規格？"}
+    F_TICKETS["4. 規劃垂直 Tickets<br/>決定每張 Ticket 是否加上測試"]
+    F_TICKET_PLAN_GATE{"核准點 3：核准完整 Ticket 計畫？"}
+    F_TEST_CHOICE{"5. 依已核准的測試選擇分流"}
+    F_TDD["加上測試<br/>TDD：Red、Green、Refactor"]
+    F_DIRECT["不加測試<br/>Direct：tests: skipped-by-user"]
+    F_EVIDENCE["6. 留下實作證據"]
+    F_REVIEW["7. 十二項視角 Review"]
+    F_COMPLETE["8. 回報完成<br/>證據缺口與殘餘風險"]
+    F_ARCHITECTURE["架構改善分析"]
+
+    F_STATE --> F_REQUIREMENTS
+    F_REQUIREMENTS --> F_REQUIREMENTS_GATE
+    F_REQUIREMENTS_GATE -->|修訂| F_REQUIREMENTS
+    F_REQUIREMENTS_GATE -->|核准| F_KNOWLEDGE
+    F_KNOWLEDGE --> F_SPECIFICATION
+    F_SPECIFICATION --> F_SPECIFICATION_GATE
+    F_SPECIFICATION_GATE -->|修訂| F_SPECIFICATION
+    F_SPECIFICATION_GATE -->|核准| F_TICKETS
+    F_TICKETS --> F_TICKET_PLAN_GATE
+    F_TICKET_PLAN_GATE -->|修訂| F_TICKETS
+    F_TICKET_PLAN_GATE -->|核准| F_TEST_CHOICE
+    F_TEST_CHOICE -->|加上測試| F_TDD
+    F_TEST_CHOICE -->|不加測試| F_DIRECT
+    F_TDD --> F_EVIDENCE
+    F_DIRECT --> F_EVIDENCE
+    F_EVIDENCE --> F_REVIEW
+    F_REVIEW -->|可完成或不核准修正| F_COMPLETE
+    F_REVIEW -->|已核准局部修正| F_TEST_CHOICE
+    F_REVIEW -->|系統性問題| F_ARCHITECTURE
+    F_ARCHITECTURE --> F_SPECIFICATION
+```
+
 1. **理解現況。** AI 先讀取專案指示、相關程式、測試、設定與目前變更，不碰無關內容。
 2. **取得需求共識。** AI 一次只問一個需求問題，附上建議與主要取捨；你核准後才更新專案知識庫，這是第一個核准點。
 3. **寫規格。** 規格描述可觀察行為、失敗方式與範圍，不先塞入正式程式碼；完整內容經你核准，這是第二個核准點。
@@ -48,6 +88,44 @@ Full 每次一次只問一個需求問題，也就是「一次問一題」，並
 ## Lite 模式
 
 Lite 用較少流程文字完成已界定的小型工作。它每輪最多三個阻塞問題，只問答案會阻止實作或大幅改變方向的事項。
+
+```mermaid
+flowchart TD
+    L_STATE["1. 理解現況與風險"]
+    L_BLOCKERS["2. 只問阻塞問題<br/>每輪最多三題"]
+    L_CHANGE_BRIEF["3. 顯示只存在對話中的 Change Brief<br/>範圍、情境、風險、驗證"]
+    L_CHANGE_BRIEF_GATE{"4. 核准完整 Change Brief？<br/>唯一的正式實作前核准點"}
+    L_IMPLEMENT["5. 直接實作核准範圍<br/>不改測試、不做 TDD"]
+    L_VALIDATE["6. 執行最低驗證<br/>差異、靜態、成功、失敗或邊界"]
+    L_VALIDATION_STATUS{"驗證狀態？"}
+    L_FIX_VALIDATION["修正適用檢查失敗"]
+    L_REVIEW["7. 進行精簡 Review<br/>一次列出所有可處理 findings"]
+    L_FINDINGS{"有可處理 findings？"}
+    L_CORRECTION_GATE{"核准修正？"}
+    L_UNRESOLVED["保留未核准的 findings"]
+    L_FIX_REVIEW["修正已核准的 findings"]
+    L_COMPLETE["8. 回報結果<br/>驗證缺口、未解決 findings、殘餘風險"]
+
+    L_STATE --> L_BLOCKERS
+    L_BLOCKERS --> L_CHANGE_BRIEF
+    L_CHANGE_BRIEF --> L_CHANGE_BRIEF_GATE
+    L_CHANGE_BRIEF_GATE -->|修訂| L_CHANGE_BRIEF
+    L_CHANGE_BRIEF_GATE -->|核准| L_IMPLEMENT
+    L_IMPLEMENT -->|出現新行為或擴大範圍| L_CHANGE_BRIEF
+    L_IMPLEMENT -->|在核准範圍內| L_VALIDATE
+    L_VALIDATE --> L_VALIDATION_STATUS
+    L_VALIDATION_STATUS -->|通過或已揭露無法執行| L_REVIEW
+    L_VALIDATION_STATUS -->|可修正的失敗| L_FIX_VALIDATION
+    L_FIX_VALIDATION --> L_VALIDATE
+    L_VALIDATION_STATUS -->|未解決失敗| L_COMPLETE
+    L_REVIEW --> L_FINDINGS
+    L_FINDINGS -->|否| L_COMPLETE
+    L_FINDINGS -->|是| L_CORRECTION_GATE
+    L_CORRECTION_GATE -->|不核准| L_UNRESOLVED
+    L_UNRESOLVED --> L_COMPLETE
+    L_CORRECTION_GATE -->|核准部分或全部| L_FIX_REVIEW
+    L_FIX_REVIEW --> L_VALIDATE
+```
 
 1. **理解現況與風險。** AI 只檢查和本次工作直接相關的指示、變更、程式、測試、設定與文件，並先判斷是否存在高風險。
 2. **只問阻塞問題。** 每輪最多三個阻塞問題，依影響與不確定性排序；每題最多三個短句、只包含一個決定，並提供建議與主要取捨。整批約 `500 tokens`，少於三題就不補問題；超過三題時先問最重要的三題，再依回答重新判斷。
