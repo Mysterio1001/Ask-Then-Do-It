@@ -34,6 +34,46 @@ The Generic workflow cannot read Codex Config. It instead uses the default-mode 
 
 Full asks one requirements question at a time and keeps documents that another session can inspect. Full has three formal approval gates: requirements consensus, the specification, and the Ticket plan.
 
+```mermaid
+flowchart TD
+    F_STATE["1. Understand current state"]
+    F_REQUIREMENTS["2. Reach requirements consensus<br/>One question at a time"]
+    F_REQUIREMENTS_GATE{"Gate 1: Approve requirements consensus?"}
+    F_KNOWLEDGE["Update project knowledge"]
+    F_SPECIFICATION["3. Write the specification<br/>Behavior, failures, boundaries"]
+    F_SPECIFICATION_GATE{"Gate 2: Approve complete specification?"}
+    F_TICKETS["4. Plan vertical Tickets<br/>Choose tests for every Ticket"]
+    F_TICKET_PLAN_GATE{"Gate 3: Approve complete Ticket plan?"}
+    F_TEST_CHOICE{"5. Route by approved test choice"}
+    F_TDD["Add tests<br/>TDD: Red, Green, Refactor"]
+    F_DIRECT["Do not add tests<br/>Direct: tests: skipped-by-user"]
+    F_EVIDENCE["6. Record implementation evidence"]
+    F_REVIEW["7. Review with twelve perspectives"]
+    F_COMPLETE["8. Report completion<br/>Evidence gaps and residual risks"]
+    F_ARCHITECTURE["Architecture improvement analysis"]
+
+    F_STATE --> F_REQUIREMENTS
+    F_REQUIREMENTS --> F_REQUIREMENTS_GATE
+    F_REQUIREMENTS_GATE -->|Revise| F_REQUIREMENTS
+    F_REQUIREMENTS_GATE -->|Approve| F_KNOWLEDGE
+    F_KNOWLEDGE --> F_SPECIFICATION
+    F_SPECIFICATION --> F_SPECIFICATION_GATE
+    F_SPECIFICATION_GATE -->|Revise| F_SPECIFICATION
+    F_SPECIFICATION_GATE -->|Approve| F_TICKETS
+    F_TICKETS --> F_TICKET_PLAN_GATE
+    F_TICKET_PLAN_GATE -->|Revise| F_TICKETS
+    F_TICKET_PLAN_GATE -->|Approve| F_TEST_CHOICE
+    F_TEST_CHOICE -->|Add tests| F_TDD
+    F_TEST_CHOICE -->|Do not add tests| F_DIRECT
+    F_TDD --> F_EVIDENCE
+    F_DIRECT --> F_EVIDENCE
+    F_EVIDENCE --> F_REVIEW
+    F_REVIEW -->|Ready or correction declined| F_COMPLETE
+    F_REVIEW -->|Approved local correction| F_TEST_CHOICE
+    F_REVIEW -->|Systemic issue| F_ARCHITECTURE
+    F_ARCHITECTURE --> F_SPECIFICATION
+```
+
 1. **Understand the current state.** The AI reads repository instructions, related code, tests, configuration, and current changes without touching unrelated work.
 2. **Reach requirements consensus.** It asks one requirements question at a time with a recommendation and main tradeoff. Your approval permits the project knowledge record to be updated and is the first gate.
 3. **Write the specification.** The specification defines observable behavior, failures, and boundaries without inserting production code. Your approval of the complete specification is the second gate.
@@ -48,6 +88,44 @@ Silence, an unrelated response, or an AI-generated status change cannot replace 
 ## Lite mode
 
 Lite uses less workflow text for a bounded change. It asks up to three blocking questions per round and asks only about decisions that prevent implementation or materially redirect it.
+
+```mermaid
+flowchart TD
+    L_STATE["1. Understand current state and risk"]
+    L_BLOCKERS["2. Ask blockers only<br/>Up to three per round"]
+    L_CHANGE_BRIEF["3. Present conversation-only Change Brief<br/>Scope, scenarios, risks, validation"]
+    L_CHANGE_BRIEF_GATE{"4. Approve complete Change Brief?<br/>Only formal pre-implementation gate"}
+    L_IMPLEMENT["5. Implement approved scope directly<br/>No test changes or TDD"]
+    L_VALIDATE["6. Run minimum validation<br/>Diff, static, success, failure or boundary"]
+    L_VALIDATION_STATUS{"Validation status?"}
+    L_FIX_VALIDATION["Fix applicable failure"]
+    L_REVIEW["7. Compact Review<br/>Present all actionable findings together"]
+    L_FINDINGS{"Actionable findings?"}
+    L_CORRECTION_GATE{"Approve corrections?"}
+    L_UNRESOLVED["Keep declined findings unresolved"]
+    L_FIX_REVIEW["Fix approved findings"]
+    L_COMPLETE["8. Report outcome<br/>Validation gaps, unresolved findings, residual risks"]
+
+    L_STATE --> L_BLOCKERS
+    L_BLOCKERS --> L_CHANGE_BRIEF
+    L_CHANGE_BRIEF --> L_CHANGE_BRIEF_GATE
+    L_CHANGE_BRIEF_GATE -->|Revise| L_CHANGE_BRIEF
+    L_CHANGE_BRIEF_GATE -->|Approve| L_IMPLEMENT
+    L_IMPLEMENT -->|New behavior or scope| L_CHANGE_BRIEF
+    L_IMPLEMENT -->|Within approved scope| L_VALIDATE
+    L_VALIDATE --> L_VALIDATION_STATUS
+    L_VALIDATION_STATUS -->|Pass or unavailable disclosed| L_REVIEW
+    L_VALIDATION_STATUS -->|Fixable failure| L_FIX_VALIDATION
+    L_FIX_VALIDATION --> L_VALIDATE
+    L_VALIDATION_STATUS -->|Unresolved failure| L_COMPLETE
+    L_REVIEW --> L_FINDINGS
+    L_FINDINGS -->|No| L_COMPLETE
+    L_FINDINGS -->|Yes| L_CORRECTION_GATE
+    L_CORRECTION_GATE -->|Decline| L_UNRESOLVED
+    L_UNRESOLVED --> L_COMPLETE
+    L_CORRECTION_GATE -->|Approve some or all| L_FIX_REVIEW
+    L_FIX_REVIEW --> L_VALIDATE
+```
 
 1. **Understand current state and risk.** The AI inspects only instructions, changes, code, tests, configuration, and documentation relevant to this operation, then evaluates material risk before proposing work.
 2. **Ask only blockers.** It asks up to three blocking questions per round, ranked by impact and uncertainty. Each question uses at most three short sentences, asks one decision, and includes a recommendation plus the main tradeoff. The whole batch targets about `500 tokens`; it does not invent filler, and it reassesses lower-priority blockers after the answers.

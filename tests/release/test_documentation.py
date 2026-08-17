@@ -1293,6 +1293,94 @@ class ReleaseDocumentationTests(unittest.TestCase):
                 with self.subTest(locale=locale, risk_marker=marker):
                     self.assertIn(marker, risk_section)
 
+    def test_localized_simple_guides_include_separate_full_and_lite_mermaid_flows(
+        self,
+    ) -> None:
+        headings = {
+            "zh-TW": ("## Full 模式", "## Lite 模式", "## 高風險操作"),
+            "en": ("## Full mode", "## Lite mode", "## High-risk operations"),
+            "ja": ("## Full モード", "## Lite モード", "## 高リスクの操作"),
+        }
+        expected_edges = {
+            "full": (
+                ("F_STATE", "F_REQUIREMENTS"),
+                ("F_REQUIREMENTS", "F_REQUIREMENTS_GATE"),
+                ("F_REQUIREMENTS_GATE", "F_REQUIREMENTS"),
+                ("F_REQUIREMENTS_GATE", "F_KNOWLEDGE"),
+                ("F_KNOWLEDGE", "F_SPECIFICATION"),
+                ("F_SPECIFICATION", "F_SPECIFICATION_GATE"),
+                ("F_SPECIFICATION_GATE", "F_SPECIFICATION"),
+                ("F_SPECIFICATION_GATE", "F_TICKETS"),
+                ("F_TICKETS", "F_TICKET_PLAN_GATE"),
+                ("F_TICKET_PLAN_GATE", "F_TICKETS"),
+                ("F_TICKET_PLAN_GATE", "F_TEST_CHOICE"),
+                ("F_TEST_CHOICE", "F_TDD"),
+                ("F_TEST_CHOICE", "F_DIRECT"),
+                ("F_TDD", "F_EVIDENCE"),
+                ("F_DIRECT", "F_EVIDENCE"),
+                ("F_EVIDENCE", "F_REVIEW"),
+                ("F_REVIEW", "F_COMPLETE"),
+                ("F_REVIEW", "F_TEST_CHOICE"),
+                ("F_REVIEW", "F_ARCHITECTURE"),
+                ("F_ARCHITECTURE", "F_SPECIFICATION"),
+            ),
+            "lite": (
+                ("L_STATE", "L_BLOCKERS"),
+                ("L_BLOCKERS", "L_CHANGE_BRIEF"),
+                ("L_CHANGE_BRIEF", "L_CHANGE_BRIEF_GATE"),
+                ("L_CHANGE_BRIEF_GATE", "L_CHANGE_BRIEF"),
+                ("L_CHANGE_BRIEF_GATE", "L_IMPLEMENT"),
+                ("L_IMPLEMENT", "L_CHANGE_BRIEF"),
+                ("L_IMPLEMENT", "L_VALIDATE"),
+                ("L_VALIDATE", "L_VALIDATION_STATUS"),
+                ("L_VALIDATION_STATUS", "L_REVIEW"),
+                ("L_VALIDATION_STATUS", "L_FIX_VALIDATION"),
+                ("L_FIX_VALIDATION", "L_VALIDATE"),
+                ("L_VALIDATION_STATUS", "L_COMPLETE"),
+                ("L_REVIEW", "L_FINDINGS"),
+                ("L_FINDINGS", "L_COMPLETE"),
+                ("L_FINDINGS", "L_CORRECTION_GATE"),
+                ("L_CORRECTION_GATE", "L_UNRESOLVED"),
+                ("L_UNRESOLVED", "L_COMPLETE"),
+                ("L_CORRECTION_GATE", "L_FIX_REVIEW"),
+                ("L_FIX_REVIEW", "L_VALIDATE"),
+            ),
+        }
+        mermaid_block = re.compile(r"```mermaid\r?\n(.*?)\r?\n```", re.DOTALL)
+        mermaid_edge = re.compile(
+            r"(?m)^\s*([FL]_[A-Z_]+)\s*-->\s*(?:\|[^|\r\n]+\|\s*)?"
+            r"([FL]_[A-Z_]+)\s*$"
+        )
+        mermaid_node = re.compile(r"(?m)^\s*([FL]_[A-Z_]+)(?:\[|\{)")
+
+        for locale, document in SIMPLE_GUIDES_BY_LOCALE.items():
+            body = document.read_text(encoding="utf-8")
+            full_heading, lite_heading, risk_heading = headings[locale]
+            full_section = body[body.index(full_heading) : body.index(lite_heading)]
+            lite_section = body[body.index(lite_heading) : body.index(risk_heading)]
+            full_blocks = mermaid_block.findall(full_section)
+            lite_blocks = mermaid_block.findall(lite_section)
+
+            with self.subTest(locale=locale, contract="diagram count and scope"):
+                self.assertEqual(body.count("```mermaid"), 2)
+                self.assertEqual(len(full_blocks), 1)
+                self.assertEqual(len(lite_blocks), 1)
+
+            if len(full_blocks) != 1 or len(lite_blocks) != 1:
+                continue
+
+            for mode, block in (("full", full_blocks[0]), ("lite", lite_blocks[0])):
+                with self.subTest(locale=locale, mode=mode, contract="direction"):
+                    self.assertEqual(block.splitlines()[0], "flowchart TD")
+                expected_nodes = {
+                    node for edge in expected_edges[mode] for node in edge
+                }
+                with self.subTest(locale=locale, mode=mode, contract="topology"):
+                    self.assertCountEqual(
+                        mermaid_edge.findall(block), expected_edges[mode]
+                    )
+                    self.assertEqual(set(mermaid_node.findall(block)), expected_nodes)
+
     def test_localized_simple_guides_skip_empty_correction_gate_when_review_is_clean(
         self,
     ) -> None:
