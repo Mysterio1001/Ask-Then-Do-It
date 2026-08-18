@@ -6,7 +6,7 @@ Ask Then Do It には 2 つの進め方があります。Full は重要な作業
 
 ## 1. Codex で使う
 
-[ask-then-do-it-1.3.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-1.3.0.zip)して展開します。`ask-then-do-it/` Plugin フォルダー全体をインストールしたら、新しい Codex タスクで次のように入力します。
+[ask-then-do-it-1.3.1.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip)して展開します。`ask-then-do-it/` Plugin フォルダー全体をインストールしたら、新しい Codex タスクで次のように入力します。
 
 ```text
 $ask-then-do-it 作りたいものは……
@@ -16,7 +16,7 @@ $ask-then-do-it 作りたいものは……
 
 ## 2. Gemini またはその他の AI で使う
 
-[ask-then-do-it-generic-1.3.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-generic-1.3.0.zip)して展開します。`generic-workflow.md` を開き、全文を新しい AI の会話に貼り付けてから、実現したいことを伝えます。
+[ask-then-do-it-generic-1.3.1.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip)して展開します。`generic-workflow.md` を開き、全文を新しい AI の会話に貼り付けてから、実現したいことを伝えます。
 
 設定方法、モード選択、機能上の制限は [Generic 使用ガイド](docs/guides/generic.ja.md)を参照してください。
 

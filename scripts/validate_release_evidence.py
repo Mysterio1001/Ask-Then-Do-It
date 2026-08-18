@@ -15,7 +15,14 @@ class EvidenceError(RuntimeError):
     """A release evidence gate was not satisfied."""
 
 
+class DuplicateJsonKeyError(ValueError):
+    """A JSON object contains an ambiguous duplicate member."""
+
+
 MANDATORY_VALIDATION_CHECKS = {"workflow-token-proxy"}
+ARTIFACT_TITLE = re.compile(r"^#[ \t]+\S.*$")
+ENVELOPE_FIELD = re.compile(r"^[A-Za-z][A-Za-z0-9 _-]*:[^\r\n]*$")
+SETEXT_UNDERLINE = re.compile(r"^ {0,3}(?:=+|-+)[ \t]*$")
 
 
 def parse_args() -> argparse.Namespace:
@@ -26,19 +33,52 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def unique_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise DuplicateJsonKeyError(f"Duplicate JSON key: {key}")
+        value[key] = item
+    return value
+
+
 def read_object(path: Path, label: str) -> dict[str, Any]:
     try:
-        value = json.loads(path.read_text(encoding="utf-8"))
-    except (FileNotFoundError, json.JSONDecodeError) as exc:
+        value = json.loads(
+            path.read_text(encoding="utf-8"),
+            object_pairs_hook=unique_json_object,
+        )
+    except (FileNotFoundError, json.JSONDecodeError, DuplicateJsonKeyError) as exc:
         raise EvidenceError(f"Invalid or missing {label}: {path}: {exc}") from exc
     if not isinstance(value, dict):
         raise EvidenceError(f"{label} must be a JSON object: {path}")
     return value
 
 
+def artifact_envelope(markdown: str) -> str:
+    lines = markdown.splitlines()
+    if not lines or ARTIFACT_TITLE.fullmatch(lines[0]) is None:
+        return ""
+
+    fields: list[str] = []
+    index = 1
+    while index < len(lines):
+        line = lines[index]
+        if not line.strip():
+            index += 1
+            continue
+        if ENVELOPE_FIELD.fullmatch(line) is None:
+            break
+        if index + 1 < len(lines) and SETEXT_UNDERLINE.fullmatch(lines[index + 1]):
+            break
+        fields.append(line)
+        index += 1
+    return "\n".join(fields)
+
+
 def validate(
     config_path: Path, ledger_path: Path, evidence_path: Path
-) -> tuple[str, bool]:
+) -> str:
     config = read_object(config_path, "release configuration")
     ledger = read_object(ledger_path, "validation ledger")
     version = config.get("release_version")
@@ -72,18 +112,10 @@ def validate(
     if extra:
         raise EvidenceError(f"Unknown validation checks: {extra}")
 
-    tests_skipped = False
     for check_id in required:
         item = indexed[check_id]
         status = item.get("status")
-        if check_id == "automated-tests" and status == "skipped-by-user":
-            tests_skipped = True
-            for field in ("reason", "approval"):
-                if not isinstance(item.get(field), str) or not item[field].strip():
-                    raise EvidenceError(
-                        f"Skipped automated-tests lacks {field} metadata"
-                    )
-        elif status != "passed":
+        if status != "passed":
             raise EvidenceError(f"Required check {check_id} is {status!r}, not passed")
         for field in ("command", "outcome"):
             if not isinstance(item.get(field), str) or not item[field].strip():
@@ -93,33 +125,30 @@ def validate(
         evidence = evidence_path.read_text(encoding="utf-8")
     except FileNotFoundError as exc:
         raise EvidenceError(f"Missing release evidence: {evidence_path}") from exc
-    if re.search(r"^Status:\s*Completed\s*$", evidence, re.MULTILINE) is None:
-        raise EvidenceError("Release evidence is not marked Status: Completed")
-    if f"Release version: `{version}`" not in evidence:
-        raise EvidenceError("Release evidence version does not match release")
-    if tests_skipped and "Tests: `skipped-by-user`" not in evidence:
+    envelope = artifact_envelope(evidence)
+    statuses = re.findall(r"^Status:\s*(.*?)\s*$", envelope, re.MULTILINE)
+    if statuses != ["Completed"]:
         raise EvidenceError(
-            "Release evidence lacks Tests: `skipped-by-user` disclosure"
+            "Release evidence must contain exactly one Status: Completed"
         )
-    return version, tests_skipped
+    versions = re.findall(
+        r"^Release version:\s*`([^`\r\n]+)`\s*$", envelope, re.MULTILINE
+    )
+    if versions != [version]:
+        raise EvidenceError(
+            "Release evidence must contain exactly one matching Release version"
+        )
+    return version
 
 
 def main() -> int:
     args = parse_args()
     try:
-        version, tests_skipped = validate(
-            args.config, args.ledger, args.evidence
-        )
+        version = validate(args.config, args.ledger, args.evidence)
     except EvidenceError as exc:
         print(f"Release evidence validation failed: {exc}", file=sys.stderr)
         return 1
-    if tests_skipped:
-        print(
-            f"Release evidence {version} validated: automated tests "
-            "skipped-by-user; all other required checks passed"
-        )
-    else:
-        print(f"Release evidence {version} validated: all required checks passed")
+    print(f"Release evidence {version} validated: all required checks passed")
     return 0
 
 

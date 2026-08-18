@@ -39,9 +39,9 @@ class GenericPromptContractTests(unittest.TestCase):
             text = prompt(name)
             with self.subTest(prompt=name):
                 self.assertRegex(text, r"(?m)^Prompt ID: `[^`]+`$")
-                self.assertRegex(text, r"(?m)^Prompt version: `1\.3\.0`$")
+                self.assertRegex(text, r"(?m)^Prompt version: `1\.3\.1`$")
                 self.assertRegex(text, r"(?m)^Required capability: `[^`]+`$")
-                self.assertRegex(text, r"(?m)^Core version: `1\.3\.0`$")
+                self.assertRegex(text, r"(?m)^Core version: `1\.3\.1`$")
                 for heading in (
                     "## Required inputs",
                     "## Expected outputs",

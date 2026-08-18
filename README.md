@@ -28,8 +28,8 @@ codex plugin marketplace upgrade ask-then-do-it
 
 ### Manual installation
 
-- Codex Plugin: [Download ask-then-do-it-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-1.3.0.zip), install it, and start with `$ask-then-do-it`.
-- Gemini or another AI: [Download ask-then-do-it-generic-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-generic-1.3.0.zip), extract it, and paste `generic-workflow.md` into each new conversation.
+- Codex Plugin: [Download ask-then-do-it-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip), install it, and start with `$ask-then-do-it`.
+- Gemini or another AI: [Download ask-then-do-it-generic-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip), extract it, and paste `generic-workflow.md` into each new conversation.
 
 Read more:
 - [Beginner workflow](docs/guides/getting-started-simple.en.md)
@@ -61,8 +61,8 @@ codex plugin marketplace upgrade ask-then-do-it
 
 ### 手動安裝
 
-- Codex Plugin：[下載 ask-then-do-it-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-1.3.0.zip)，安裝後從 `$ask-then-do-it` 開始。
-- Gemini 或其他 AI：[下載 ask-then-do-it-generic-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-generic-1.3.0.zip)，解壓縮後，在每個新對話貼上 `generic-workflow.md`。
+- Codex Plugin：[下載 ask-then-do-it-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip)，安裝後從 `$ask-then-do-it` 開始。
+- Gemini 或其他 AI：[下載 ask-then-do-it-generic-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip)，解壓縮後，在每個新對話貼上 `generic-workflow.md`。
 
 
 更多說明：
@@ -95,8 +95,8 @@ codex plugin marketplace upgrade ask-then-do-it
 
 ### 手動インストール
 
-- Codex Plugin：[ask-then-do-it-1.3.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-1.3.0.zip)し、インストール後に `$ask-then-do-it` から始めます。
-- Gemini またはその他の AI：[ask-then-do-it-generic-1.3.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-generic-1.3.0.zip)して展開し、新しい会話ごとに `generic-workflow.md` を貼り付けます。
+- Codex Plugin：[ask-then-do-it-1.3.1.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip)し、インストール後に `$ask-then-do-it` から始めます。
+- Gemini またはその他の AI：[ask-then-do-it-generic-1.3.1.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip)して展開し、新しい会話ごとに `generic-workflow.md` を貼り付けます。
 
 詳しい説明：
 - [初心者向けフロー](docs/guides/getting-started-simple.ja.md)

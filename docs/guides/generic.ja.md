@@ -4,7 +4,7 @@
 
 ## ダウンロードと展開
 
-[ask-then-do-it-generic-1.3.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-generic-1.3.0.zip)して展開します。
+[ask-then-do-it-generic-1.3.1.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip)して展開します。
 
 パッケージの主なファイルは次のとおりです。
 

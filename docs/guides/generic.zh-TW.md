@@ -4,7 +4,7 @@
 
 ## 下載與解壓縮
 
-[下載 ask-then-do-it-generic-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-generic-1.3.0.zip) 並解壓縮。
+[下載 ask-then-do-it-generic-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip) 並解壓縮。
 
 套件內的主要檔案是：
 

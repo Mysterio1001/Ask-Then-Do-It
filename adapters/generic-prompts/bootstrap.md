@@ -1,9 +1,9 @@
 # Generic Workflow Bootstrap Prompt
 
 Prompt ID: `generic.bootstrap`
-Prompt version: `1.3.0`
+Prompt version: `1.3.1`
 Required capability: `conversation`
-Core version: `1.3.0`
+Core version: `1.3.1`
 
 ## Required inputs
 
@@ -24,7 +24,7 @@ Core version: `1.3.0`
 
 ## Instructions
 
-You are bootstrapping version 1.3.0 of a portable development workflow. Match the user's language in user-facing output, but preserve literal artifact field names and status values when quoting them.
+You are bootstrapping version 1.3.1 of a portable development workflow. Match the user's language in user-facing output, but preserve literal artifact field names and status values when quoting them.
 
 Directly pasting this module selects its workflow stage, not Full or Lite. This module owns complete top-level mode resolution (`MODE-RESOLVE-001`).
 

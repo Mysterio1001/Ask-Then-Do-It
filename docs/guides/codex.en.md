@@ -4,7 +4,7 @@ This guide explains how to download, install, and use Ask Then Do It. The Plugin
 
 ## Download and extract
 
-[Download ask-then-do-it-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-1.3.0.zip) and extract it.
+[Download ask-then-do-it-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip) and extract it.
 
 The outermost extracted folder should be `ask-then-do-it/`, containing:
 
@@ -45,7 +45,7 @@ codex plugin add ask-then-do-it@ask-then-do-it
 
 If the installed version is current, report it and do not write. If source, version, CLI support, or command results are uncertain, stop and report the uncertainty. A failed write stops subsequent writes. Never remove the current Plugin first, use an alternate source, or automatically downgrade. Use only the documented `add` installation subcommand; an install alias is unsupported.
 
-After success, start a new Codex task. If the marketplace flow fails, use the matching `1.3.0` ZIP fallback. An older version is allowed only after the user explicitly chooses that version.
+After success, start a new Codex task. If the marketplace flow fails, use the matching `1.3.1` ZIP fallback. An older version is allowed only after the user explicitly chooses that version.
 
 ## Manual installation fallback
 

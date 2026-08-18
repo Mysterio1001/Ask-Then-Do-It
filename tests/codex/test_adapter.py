@@ -141,7 +141,7 @@ class CodexAdapterTests(unittest.TestCase):
         skill = SKILLS / "ask-with-docs"
         text = (skill / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("name: ask-with-docs", text)
-        self.assertIn("core_version` `1.3.0`", text)
+        self.assertIn("core_version` `1.3.1`", text)
         self.assertIn("exactly one question", text)
         self.assertIn("Draft Working Notes", text)
         for state in ("`proposed`", "`confirmed`", "`unresolved`"):
