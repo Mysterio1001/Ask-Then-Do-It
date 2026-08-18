@@ -1,6 +1,6 @@
 # Portable AI Development Workflow Core
 
-Core version: `1.3.0`
+Core version: `1.3.1`
 
 This directory is the normative, host-neutral contract for an AI-assisted software development workflow. Adapter wording may vary, but mapped rule semantics must remain compatible with this core.
 

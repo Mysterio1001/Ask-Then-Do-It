@@ -30,7 +30,7 @@ Do not ask for facts that available evidence already answers. Do not edit produc
 
 ## Keep provisional notes
 
-Maintain Draft Working Notes with `status` fixed to `Draft`. Include `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.3.0`, `status`, `inputs`, `assumptions`, `deferred`, `handoff`, and pending `approval`.
+Maintain Draft Working Notes with `status` fixed to `Draft`. Include `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.3.1`, `status`, `inputs`, `assumptions`, `deferred`, `handoff`, and pending `approval`.
 
 Label each entry:
 

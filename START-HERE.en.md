@@ -6,7 +6,7 @@ This independent project was inspired by the [Matt Pocock skills repository](htt
 
 ## 1. Use with Codex
 
-[Download ask-then-do-it-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-1.3.0.zip) and extract it. Install the complete `ask-then-do-it/` Plugin folder, open a new Codex task, and enter:
+[Download ask-then-do-it-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip) and extract it. Install the complete `ask-then-do-it/` Plugin folder, open a new Codex task, and enter:
 
 ```text
 $ask-then-do-it I want to build...
@@ -16,7 +16,7 @@ For installation, updates, and Codex mode setup, see the [Codex Plugin Guide](do
 
 ## 2. Use with Gemini or another AI
 
-[Download ask-then-do-it-generic-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-generic-1.3.0.zip) and extract it. Open `generic-workflow.md`, paste the entire file into a new AI conversation, and then describe what you want to do.
+[Download ask-then-do-it-generic-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip) and extract it. Open `generic-workflow.md`, paste the entire file into a new AI conversation, and then describe what you want to do.
 
 For setup, mode selection, and capability limits, see the [Generic Guide](docs/guides/generic.en.md).
 

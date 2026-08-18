@@ -1,4 +1,4 @@
-# Ask Then Do It Codex Plugin 1.3.0 Guide
+# Ask Then Do It Codex Plugin 1.3.1 Guide
 
 This Plugin guides a project from requirements through implementation and review. For the ZIP fallback, download and extract the archive, then keep the complete `ask-then-do-it/` folder together.
 
@@ -37,7 +37,7 @@ Then install or refresh the Plugin:
 codex plugin add ask-then-do-it@ask-then-do-it
 ```
 
-After a successful install or update, open a new Codex task. For the decision rules, manual fallback, updates, and removal, see the [detailed Codex Plugin guide](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.0/docs/guides/codex.en.md).
+After a successful install or update, open a new Codex task. For the decision rules, manual fallback, updates, and removal, see the [detailed Codex Plugin guide](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/docs/guides/codex.en.md).
 
 ## Start
 
@@ -51,7 +51,7 @@ Stage-specific entries are `$ask-requirements`, `$ask-with-docs`, `$write-spec`,
 
 ## Choose Full or Lite
 
-Use Full when the work needs the complete documented workflow and stronger assurance. Use Lite for a bounded change when a shorter workflow and proportionate validation are appropriate. See the [complete Full and Lite workflow guide](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.0/docs/guides/getting-started-simple.en.md) before choosing.
+Use Full when the work needs the complete documented workflow and stronger assurance. Use Lite for a bounded change when a shorter workflow and proportionate validation are appropriate. See the [complete Full and Lite workflow guide](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/docs/guides/getting-started-simple.en.md) before choosing.
 
 
-[Back to README](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.0/README.md)
+[Back to README](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/README.md)

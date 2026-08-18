@@ -63,8 +63,8 @@ def prompt(name: str) -> str:
 def composed_workflow() -> str:
     config = {
         "display_name": "Ask Then Do It",
-        "release_version": "1.3.0",
-        "core_version": "1.3.0",
+        "release_version": "1.3.1",
+        "core_version": "1.3.1",
         "generic": {"modules": GENERIC_MODULES},
     }
     return compose_generic_workflow(config, ADAPTER).decode("utf-8")
@@ -82,8 +82,8 @@ class GenericLiteCompositionTests(unittest.TestCase):
     def test_generated_workflow_has_one_early_full_default_declaration(self) -> None:
         config = {
             "display_name": "Ask Then Do It",
-            "release_version": "1.3.0",
-            "core_version": "1.3.0",
+            "release_version": "1.3.1",
+            "core_version": "1.3.1",
             "generic": {
                 "modules": [
                     "bootstrap.md",

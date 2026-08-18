@@ -1,4 +1,4 @@
-# Ask Then Do It Codex Plugin 1.3.0 使用ガイド
+# Ask Then Do It Codex Plugin 1.3.1 使用ガイド
 
 この Plugin は、要件確認から実装と Review までプロジェクトを案内します。ZIP を代替手段として使う場合は、アーカイブをダウンロードして展開し、`ask-then-do-it/` フォルダー全体をそのまま使用してください。
 
@@ -37,7 +37,7 @@ codex plugin marketplace upgrade ask-then-do-it
 codex plugin add ask-then-do-it@ask-then-do-it
 ```
 
-インストールまたは更新の成功後は、新しい Codex タスクを開始してください。判断規則、手動の代替手段、更新、削除については [Codex Plugin 詳細ガイド](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.0/docs/guides/codex.ja.md)を参照してください。
+インストールまたは更新の成功後は、新しい Codex タスクを開始してください。判断規則、手動の代替手段、更新、削除については [Codex Plugin 詳細ガイド](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/docs/guides/codex.ja.md)を参照してください。
 
 ## 使い始める
 
@@ -51,7 +51,7 @@ $ask-then-do-it を使って、この機能の開発を手伝ってください�
 
 ## Full または Lite を選ぶ
 
-完全な文書化ワークフローと高い検証水準が必要な作業には Full を使用します。範囲が明確で、短いワークフローと必要に応じた検証が適する変更には Lite を使用します。選択前に [Full と Lite の完全なワークフローガイド](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.0/docs/guides/getting-started-simple.ja.md)を参照してください。
+完全な文書化ワークフローと高い検証水準が必要な作業には Full を使用します。範囲が明確で、短いワークフローと必要に応じた検証が適する変更には Lite を使用します。選択前に [Full と Lite の完全なワークフローガイド](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/docs/guides/getting-started-simple.ja.md)を参照してください。
 
 
-[README に戻る](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.0/README.md)
+[README に戻る](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/README.md)

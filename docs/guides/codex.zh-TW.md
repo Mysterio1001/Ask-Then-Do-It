@@ -4,7 +4,7 @@
 
 ## 下載與解壓縮
 
-[下載 ask-then-do-it-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-1.3.0.zip) 並解壓縮。
+[下載 ask-then-do-it-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip) 並解壓縮。
 
 解壓後最外層應是 `ask-then-do-it/`，裡面包含：
 
@@ -45,7 +45,7 @@ codex plugin add ask-then-do-it@ask-then-do-it
 
 目前版本已是最新時，只回報狀態、不寫入。來源、版本、CLI 支援或結果無法可靠判斷時，停止並回報不確定性。任何寫入失敗都停止後續寫入；不得先移除目前 Plugin、改用其他來源或自動降級。只使用文件所列的 `add` 安裝子命令，其他安裝別名不支援。
 
-成功後開啟新的 Codex 任務。如果 marketplace 流程失敗，使用相符的 `1.3.0` ZIP 備援；降級必須由使用者明確選擇舊版本。
+成功後開啟新的 Codex 任務。如果 marketplace 流程失敗，使用相符的 `1.3.1` ZIP 備援；降級必須由使用者明確選擇舊版本。
 
 ## 手動安裝備援
 

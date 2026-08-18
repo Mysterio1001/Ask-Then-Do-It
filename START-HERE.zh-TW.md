@@ -6,7 +6,7 @@ Ask Then Do It 提供兩種流程。Full 適合需要完整文件與嚴謹檢查
 
 ## 1. 我要在 Codex 使用
 
-[下載 ask-then-do-it-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-1.3.0.zip) 並解壓縮。安裝完整的 `ask-then-do-it/` Plugin 資料夾後，在新的 Codex 任務輸入：
+[下載 ask-then-do-it-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip) 並解壓縮。安裝完整的 `ask-then-do-it/` Plugin 資料夾後，在新的 Codex 任務輸入：
 
 ```text
 $ask-then-do-it 我想做一個……
@@ -16,7 +16,7 @@ $ask-then-do-it 我想做一個……
 
 ## 2. 我要在 Gemini 或其他 AI 使用
 
-[下載 ask-then-do-it-generic-1.3.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-generic-1.3.0.zip) 並解壓縮。開啟 `generic-workflow.md`，將全文貼到新的 AI 對話，再說明你的需求。
+[下載 ask-then-do-it-generic-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip) 並解壓縮。開啟 `generic-workflow.md`，將全文貼到新的 AI 對話，再說明你的需求。
 
 設定方式、模式選擇與能力限制請見 [Generic 使用說明](docs/guides/generic.zh-TW.md)。
 

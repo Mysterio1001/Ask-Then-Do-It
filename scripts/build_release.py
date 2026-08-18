@@ -16,8 +16,10 @@ import re
 import shutil
 import struct
 import sys
+import time
 import uuid
 import zipfile
+from collections.abc import Callable
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -35,6 +37,9 @@ START_GUIDE_FILES = (
     "START-HERE.ja.md",
 )
 ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
+IS_WINDOWS = sys.platform == "win32"
+WINDOWS_MANAGED_OUTPUT_MAX_ATTEMPTS = 50
+WINDOWS_MANAGED_OUTPUT_RETRY_DELAY_SECONDS = 0.1
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 TOP_LEVEL_KEYS = {
     "schema_version",
@@ -60,6 +65,35 @@ GENERIC_KEYS = {
 
 class BuildError(RuntimeError):
     """A release contract or safe-build boundary was violated."""
+
+
+class IncompleteRecoveryError(BuildError):
+    """A failed replacement left transaction data for manual recovery."""
+
+    def __init__(
+        self,
+        *,
+        primary_error: str,
+        recovery_errors: list[str],
+        output_root: Path,
+        staging: Path,
+        backup: Path,
+    ) -> None:
+        self.primary_error = primary_error
+        self.recovery_errors = tuple(recovery_errors)
+        self.output_root = output_root.resolve()
+        self.staging = staging.resolve()
+        self.backup = backup.resolve()
+        super().__init__(
+            "Atomic release replacement failed; candidate was not committed; "
+            "recovery is incomplete; "
+            "active output is not a valid prior or candidate release and "
+            "requires manual recovery; "
+            f"primary error: {primary_error}; "
+            f"recovery errors: {' | '.join(recovery_errors)}; "
+            f"output root: {self.output_root}; "
+            f"staging: {self.staging}; backup: {self.backup}"
+        )
 
 
 def parse_args() -> argparse.Namespace:
@@ -677,6 +711,29 @@ def remove_path(path: Path) -> None:
         path.unlink()
 
 
+def retry_managed_output_operation(operation: Callable[[], None]) -> None:
+    for attempt in range(1, WINDOWS_MANAGED_OUTPUT_MAX_ATTEMPTS + 1):
+        try:
+            operation()
+            return
+        except OSError as exc:
+            if (
+                not IS_WINDOWS
+                or getattr(exc, "winerror", None) != 5
+                or attempt == WINDOWS_MANAGED_OUTPUT_MAX_ATTEMPTS
+            ):
+                raise
+            time.sleep(WINDOWS_MANAGED_OUTPUT_RETRY_DELAY_SECONDS)
+
+
+def replace_managed_path(source: Path, target: Path) -> None:
+    retry_managed_output_operation(lambda: os.replace(source, target))
+
+
+def remove_managed_path(path: Path) -> None:
+    retry_managed_output_operation(lambda: remove_path(path))
+
+
 def commit(
     staging: Path,
     output_root: Path,
@@ -691,27 +748,73 @@ def commit(
     backup = staging / ".previous-release"
     moved_old: list[str] = []
     placed_new: list[str] = []
+    operation = "prepare prior-release backup"
+    source = output_root
+    target = backup
     try:
         if existing_names:
             backup.mkdir()
             for name in existing_names:
-                os.replace(output_root / name, backup / name)
+                operation = "move prior managed output to backup"
+                source = output_root / name
+                target = backup / name
+                replace_managed_path(source, target)
                 moved_old.append(name)
         for name in names:
-            os.replace(staging / name, output_root / name)
+            operation = "install staged managed output"
+            source = staging / name
+            target = output_root / name
+            replace_managed_path(source, target)
             placed_new.append(name)
     except OSError as exc:
+        primary_error = (
+            f"{operation}: {source.resolve()} -> {target.resolve()}: {exc}"
+        )
+        candidate_removal_errors: dict[str, str] = {}
         for name in reversed(placed_new):
-            remove_path(output_root / name)
+            candidate = output_root / name
+            try:
+                remove_managed_path(candidate)
+            except OSError as recovery_exc:
+                candidate_removal_errors[name] = (
+                    f"remove staged output {candidate.resolve()}: {recovery_exc}"
+                )
+        restoration_errors: list[str] = []
         for name in reversed(moved_old):
-            if (backup / name).exists():
-                os.replace(backup / name, output_root / name)
-        raise BuildError(f"Atomic release replacement failed: {exc}") from exc
+            recovery_source = backup / name
+            recovery_target = output_root / name
+            try:
+                replace_managed_path(recovery_source, recovery_target)
+            except OSError as recovery_exc:
+                restoration_errors.append(
+                    "restore prior managed output "
+                    f"{recovery_source.resolve()} -> {recovery_target.resolve()}: "
+                    f"{recovery_exc}"
+                )
+            else:
+                candidate_removal_errors.pop(name, None)
+        recovery_errors = [
+            *candidate_removal_errors.values(),
+            *restoration_errors,
+        ]
+        if recovery_errors:
+            raise IncompleteRecoveryError(
+                primary_error=primary_error,
+                recovery_errors=recovery_errors,
+                output_root=output_root,
+                staging=staging,
+                backup=backup,
+            ) from exc
+        raise BuildError(
+            "Atomic release replacement failed; candidate was not committed; "
+            f"pre-build output state restored; {primary_error}"
+        ) from exc
 
 
 def main() -> int:
     args = parse_args()
     staging: Path | None = None
+    preserve_staging = False
     try:
         config = load_config(args.config)
         output_root = args.output_root.resolve()
@@ -767,10 +870,11 @@ def main() -> int:
         )
         return 0
     except (BuildError, OSError) as exc:
+        preserve_staging = isinstance(exc, IncompleteRecoveryError)
         print(f"Release build failed: {exc}", file=sys.stderr)
         return 1
     finally:
-        if staging is not None and staging.exists():
+        if staging is not None and staging.exists() and not preserve_staging:
             shutil.rmtree(staging)
 
 

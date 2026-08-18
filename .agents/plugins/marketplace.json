@@ -10,7 +10,7 @@
         "source": "git-subdir",
         "url": "https://github.com/Mysterio1001/Ask-Then-Do-It.git",
         "path": "adapters/codex/plugin/ask-then-do-it",
-        "ref": "v1.3.0"
+        "ref": "v1.3.1"
       },
       "policy": {
         "installation": "AVAILABLE",

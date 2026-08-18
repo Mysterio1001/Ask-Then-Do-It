@@ -90,10 +90,10 @@ DESIGN_GUIDES_BY_LOCALE = {
 }
 
 VERSIONED_GUIDE_ROOT = (
-    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.0/docs/guides"
+    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/docs/guides"
 )
 VERSIONED_README = (
-    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.0/README.md"
+    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/README.md"
 )
 
 
@@ -273,12 +273,12 @@ class ReleaseDocumentationTests(unittest.TestCase):
         self.assertLess(codex, generic)
         self.assertIn(
             "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/"
-            "v1.3.0/ask-then-do-it-1.3.0.zip",
+            "v1.3.1/ask-then-do-it-1.3.1.zip",
             body,
         )
         self.assertIn(
             "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/"
-            "v1.3.0/ask-then-do-it-generic-1.3.0.zip",
+            "v1.3.1/ask-then-do-it-generic-1.3.1.zip",
             body,
         )
         self.assertNotIn("## 維護者", body)
@@ -379,12 +379,12 @@ class ReleaseDocumentationTests(unittest.TestCase):
             "## 快速開始",
             "Codex Plugin",
             "generic-workflow.md",
-            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-1.3.0.zip",
-            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.0/ask-then-do-it-generic-1.3.0.zip",
+            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip",
+            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip",
         ):
             self.assertIn(required, body)
-        self.assertNotIn("dist/codex/ask-then-do-it-1.3.0.zip", body)
-        self.assertNotIn("dist/generic/ask-then-do-it-generic-1.3.0.zip", body)
+        self.assertNotIn("dist/codex/ask-then-do-it-1.3.1.zip", body)
+        self.assertNotIn("dist/generic/ask-then-do-it-generic-1.3.1.zip", body)
         for obsolete in ("2.1.0", "3.0.0", "checksums-2.1.0"):
             self.assertNotIn(obsolete, body)
 
@@ -414,7 +414,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
     def test_codex_guide_covers_current_manual_plugin_lifecycle(self) -> None:
         body = CODEX_GUIDE.read_text(encoding="utf-8")
         for required in (
-            "ask-then-do-it-1.3.0.zip",
+            "ask-then-do-it-1.3.1.zip",
             "## 下載與解壓縮",
             "## 手動安裝",
             "codex plugin add ask-then-do-it --marketplace <local-marketplace-name>",
@@ -454,7 +454,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
     def test_generic_guide_covers_current_conversation_only_package(self) -> None:
         body = GENERIC_GUIDE.read_text(encoding="utf-8")
         for required in (
-            "ask-then-do-it-generic-1.3.0.zip",
+            "ask-then-do-it-generic-1.3.1.zip",
             "## 快速開始",
             "每個新對話",
             "generic-workflow.md",
@@ -1810,7 +1810,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
             body = document.read_text(encoding="utf-8")
             self.assertIn("generic-workflow.md", body)
             self.assertIn("direct-implementation.md", body)
-            self.assertIn("1.3.0", body)
+            self.assertIn("1.3.1", body)
             self.assertIn("`tdd`", body)
             self.assertIn("`direct`", body)
 
@@ -1822,7 +1822,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
         for locale, document in GENERIC_START_BY_LOCALE.items():
             body = document.read_text(encoding="utf-8")
             self.assertIn("generic-workflow.md", body)
-            self.assertIn("1.3.0", body)
+            self.assertIn("1.3.1", body)
             self.assertIn(f"{VERSIONED_GUIDE_ROOT}/generic.{locale}.md", body)
 
         for locale in ("en", "ja"):

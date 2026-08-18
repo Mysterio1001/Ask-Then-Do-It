@@ -32,7 +32,7 @@ Follow the repository's existing documentation convention. If none exists, use `
 
 ## Use the portable artifact envelope
 
-Include or unambiguously convey `artifact_type` as Specification, a stable `artifact_id`, shared `workflow_id`, `core_version` `1.3.0`, `status`, upstream `inputs`, `assumptions`, `deferred` decisions, the next-stage `handoff`, and `approval` evidence. Preserve these values when revising an existing artifact.
+Include or unambiguously convey `artifact_type` as Specification, a stable `artifact_id`, shared `workflow_id`, `core_version` `1.3.1`, `status`, upstream `inputs`, `assumptions`, `deferred` decisions, the next-stage `handoff`, and `approval` evidence. Preserve these values when revising an existing artifact.
 
 ## Write the behavioral contract
 

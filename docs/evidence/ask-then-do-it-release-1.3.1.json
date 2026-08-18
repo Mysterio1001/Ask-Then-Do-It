@@ -1,0 +1,83 @@
+{
+  "release_version": "1.3.1",
+  "checks": [
+    {
+      "id": "automated-tests",
+      "status": "passed",
+      "command": "Isolated CPython 3.12.13: .ticket4-isolated-venv/Scripts/python.exe -E -B -m unittest discover -s tests -p test_*.py; repeat discovery for tests/release, tests/codex, tests/generic, and tests/conformance; focused transaction and release-safety modules",
+      "outcome": "Clean full discovery ran 216/216 tests; an independent reviewer obtained two additional clean 216/216 runs. Final serial suites passed release 131/131, Codex 27/27, Generic 39/39, and conformance 19/19. Transaction 11/11 and release safety 6/6 passed. One prior release-suite fault-injection run reported 0 != 50, then the exact test passed 1/1 and the clean 131/131 suite passed; that transient run is not counted as success."
+    },
+    {
+      "id": "workflow-token-proxy",
+      "status": "passed",
+      "command": ".ticket4-isolated-venv/Scripts/python.exe -E -B scripts/measure_workflow_token_proxy.py --fixture tests/release/fixtures/workflow-token-proxy/benchmark.json --json",
+      "outcome": "normalized-utf8-quarter-v1 reported Codex Full 14,771 and Lite 5,480, difference 9,291, reduction 62.90%, above the unchanged 60.00% gate; Generic fixed cost is 15,376 with no Generic reduction or billing claim. Current source-inclusive fingerprint is e91e7986ac191539bfe54e97cef4807f505a145b4ac8ecc694ebee76ab492610."
+    },
+    {
+      "id": "codex-skill-validation",
+      "status": "passed",
+      "command": "skill-creator quick_validate.py under isolated CPython for each of nine release.json Skill ids in canonical adapters/codex/plugin/ask-then-do-it/skills and packaged dist/codex/ask-then-do-it/skills",
+      "outcome": "All 18 canonical and packaged Skill roots returned Skill is valid; failures=0."
+    },
+    {
+      "id": "codex-plugin-validation",
+      "status": "passed",
+      "command": "plugin-creator validate_plugin.py under isolated CPython for adapters/codex/plugin/ask-then-do-it and dist/codex/ask-then-do-it",
+      "outcome": "Both canonical and packaged Plugin roots passed; 2/2, failures=0."
+    },
+    {
+      "id": "codex-conformance",
+      "status": "passed",
+      "command": ".ticket4-isolated-venv/Scripts/python.exe -E -B scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/codex/conformance.yaml",
+      "outcome": "Conformance passed: codex against core 1.3.1."
+    },
+    {
+      "id": "generic-conformance",
+      "status": "passed",
+      "command": ".ticket4-isolated-venv/Scripts/python.exe -E -B scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/generic-prompts/manifest.yaml",
+      "outcome": "Conformance passed: generic-prompts against core 1.3.1."
+    },
+    {
+      "id": "codex-package-inventory",
+      "status": "passed",
+      "command": "Isolated unittest tests.release.test_codex_release plus ReleaseOneThreeContractTests exact runtime inventory and no-Pillow methods",
+      "outcome": "The focused package command passed 9/9 combined Codex/Generic inventory tests. Codex expanded package has exactly 27 files, nine Skills and two assets; source, expanded package and 27 ZIP entries are equivalent, with no Marketplace metadata or Pillow runtime content."
+    },
+    {
+      "id": "generic-package-inventory",
+      "status": "passed",
+      "command": "Isolated unittest tests.release.test_generic_release plus ReleaseOneThreeContractTests exact runtime inventory and no-Pillow methods",
+      "outcome": "The focused package command passed 9/9 combined Codex/Generic inventory tests. Generic expanded package has exactly 18 files and eleven ordered prompt modules plus one composed workflow; source, package and 18 ZIP entries are equivalent, with no Plugin assets, Marketplace metadata or Pillow runtime content."
+    },
+    {
+      "id": "reproducible-build",
+      "status": "passed",
+      "command": "Isolated unittest ReleaseOneThreeContractTests.test_clean_builds_and_default_dist_are_byte_reproducible and ReleaseSafetyTests.test_clean_builds_are_byte_reproducible_and_zips_match_directories",
+      "outcome": "Both focused tests passed 2/2. Two isolated complete builds and the official default dist have identical 48-file inventories and bytes; deterministic archives and checksum manifest are unchanged."
+    },
+    {
+      "id": "zip-equivalence",
+      "status": "passed",
+      "command": "The same two focused reproducibility/ZIP tests plus exact inventory package tests",
+      "outcome": "Codex 27/27 and Generic 18/18 ZIP entries exactly match their expanded package directories, with no duplicate, missing, extra or byte-mismatched entry."
+    },
+    {
+      "id": "sha256-verification",
+      "status": "passed",
+      "command": "Get-FileHash -Algorithm SHA256 for both 1.3.1 archives and compare with dist/checksums.sha256",
+      "outcome": "Codex 557246c241a8e808c4dd554a92f7882c25134f63f19401204b37b4f6ea9e7209; Generic 6e095478bb299d95d3b3f294161b7011a338e29ae9b07b0a4245b3d3d14e241b. Both independently recalculated hashes match dist/checksums.sha256 and the pre-correction frozen values."
+    },
+    {
+      "id": "removed-artifact-scan",
+      "status": "passed",
+      "command": "Isolated unittest clean-slate, documentation, marketplace-contract, approved 1.2/1.3 historical hash guards and frozen Token fixture guard; scripts/validate_marketplace.py; git diff --check",
+      "outcome": "The focused scan passed 42/42. All active identities are 1.3.1, no old managed output or transaction root remains, 43 Approved 1.3.0 artifacts and 13 Token fixture files retain pinned hashes, Marketplace validation passed at v1.3.1, and git diff --check exited 0 with only LF/CRLF warnings."
+    },
+    {
+      "id": "release-architecture-diagnosis",
+      "status": "passed",
+      "command": "Read-only multi-agent improve-architecture diagnosis recorded in docs/evidence/ask-then-do-it-1.3.1-release-architecture-diagnosis.md",
+      "outcome": "The Draft milestone diagnosis found no unresolved 1.3.1 release-correctness blocker after dependency tracing, twelve lenses and simulated deletion. Draft A1-A5 are unaccepted, non-blocking maintainability proposals and authorize no refactor."
+    }
+  ]
+}
