@@ -24,7 +24,7 @@ codex plugin add ask-then-do-it@ask-then-do-it
 # Update
 codex plugin marketplace upgrade ask-then-do-it
 ```
-> **Tip: Tell AI, "Install or update Ask Then Do It from the official marketplace."**
+> **Tip: Enter the commands above into AI.**
 
 ### Manual installation
 
@@ -57,7 +57,7 @@ codex plugin add ask-then-do-it@ask-then-do-it
 # 更新
 codex plugin marketplace upgrade ask-then-do-it
 ```
-> **提示 對 AI 說：「請從官方 marketplace 安裝或更新 Ask Then Do It。」**
+> **提示 對 AI 輸入以上的指令**
 
 ### 手動安裝
 
@@ -91,7 +91,7 @@ codex plugin add ask-then-do-it@ask-then-do-it
 # 更新
 codex plugin marketplace upgrade ask-then-do-it
 ```
-> **ヒント：AI に「公式 marketplace から Ask Then Do It をインストールまたは更新してください」と伝えてください。**
+> **ヒント：上記のコマンドを AI に入力してください。**
 
 ### 手動インストール
 

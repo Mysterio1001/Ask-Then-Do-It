@@ -49,17 +49,17 @@ def readme_block(body: str, start: str, end: str | None) -> str:
 README_PRESERVED_DIGESTS = {
     "preamble": "417cb00c1890f8d8dc9896d702a5f8b21393b6ea5f149b4bcde6f84cfaeee33e",
     "en": {
-        "automatic": "6bc4b2b1b7f69a09e8938df7e8a06323f8aad404a91147140e86d1725a135d8e",
+        "automatic": "b37758b1bf4a2bcc9851c82601e2d32c8acd7c411472c225308dc8552393e469",
         "manual": "06cf80e46c2c73809607212288d26fa72940fba809254bd49377013ccf44c37f",
         "read-more": "27ce8bda49ab34829834fc762786151de9c9942b8bd1f826b84c244311292ab2",
     },
     "zh-TW": {
-        "automatic": "31f98372aa80e9e07417eeea8800d9199cd687c48ad7105259f7c1ac953371f1",
+        "automatic": "0f1d65607a3de5142b8fa6d671c70c12cd86650119853c85f341618e956e08a0",
         "manual": "648b6ec06aef7fd2d685401d52ddc7a940a2d9c27c349e796367ff3a04208ae0",
         "read-more": "6587249a484cabfa2d78caf37cf4ce449a80b93a51f7bf6299bb8e3bfbcc9514",
     },
     "ja": {
-        "automatic": "6b315514541c6385db5f63e025385a235c1baa604ad7d7f5859bb4ee25d450c9",
+        "automatic": "aab937e6ccad5a242acc2d9ee1eb02997d61ae198f4bd0b17785062b8a575372",
         "manual": "b541ccdfee4ac9407bedd843314592941c06d335506c40a7221d32745c4d1e2a",
         "read-more": "bfd1dbadb1ba45908d64f6dc162263f2b441796e7118196a79b956de6d2779d1",
     },
