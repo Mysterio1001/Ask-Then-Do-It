@@ -1,0 +1,17 @@
+{
+  "name": "ask-then-do-it",
+  "displayName": "Ask Then Do It Host Contract Fixture",
+  "version": "1.4.0",
+  "description": "TEST-ONLY Claude host-contract compatibility fixture. NOT PRODUCTION. NOT PACKAGEABLE.",
+  "author": {
+    "name": "Ian Wu, Handle by me Tech Studio"
+  },
+  "homepage": "https://github.com/Mysterio1001/Ask-Then-Do-It",
+  "repository": "https://github.com/Mysterio1001/Ask-Then-Do-It",
+  "license": "MIT",
+  "keywords": [
+    "host-contract",
+    "compatibility-fixture"
+  ],
+  "defaultEnabled": false
+}

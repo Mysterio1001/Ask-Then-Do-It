@@ -1,0 +1,9 @@
+source_url: https://code.claude.com/docs/en/model-config
+checked_on: 2026-09-07
+normalization: Manually transcribed the Claude Code canonical-name and alias boundary relevant to routing.
+
+Claude Code accepts aliases, full Anthropic API model names, and provider-specific deployment names.
+Aliases such as fable, opus, sonnet, haiku, default, and opusplan can resolve differently over time or by provider; they are not release-owned canonical IDs.
+Documented full names include claude-fable-5, claude-fable-5-1, claude-opus-5, claude-sonnet-5, claude-opus-4-6, claude-opus-4-7, claude-opus-4-8, and claude-sonnet-4-6.
+PreModelSwitch and PostModelSwitch match the canonical name derived from to_model; a custom gateway ID may not have a canonical name.
+The router therefore uses only exact full IDs from its release-owned mapping and classifies aliases, provider IDs, custom IDs, case changes, whitespace changes, and future IDs as unknown.

@@ -1,0 +1,1117 @@
+[
+  {
+    "id": "direct-before-artifacts",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "tools",
+          "safety": "safe",
+          "request": "direct",
+          "evidence": "none",
+          "delivery": "missing"
+        },
+        "expected": "architecture-improvement.md:diagnostic-only"
+      }
+    ]
+  },
+  {
+    "id": "direct-with-artifacts",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "tools",
+          "safety": "safe",
+          "request": "direct",
+          "evidence": "none",
+          "delivery": "approved"
+        },
+        "expected": "architecture-improvement.md:diagnostic-only"
+      }
+    ]
+  },
+  {
+    "id": "mode-not-proven",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "unresolved",
+          "capability": "tools",
+          "safety": "safe",
+          "request": "direct",
+          "evidence": "none",
+          "delivery": "missing"
+        },
+        "expected": "resolve-mode"
+      }
+    ]
+  },
+  {
+    "id": "lite-mode",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "lite",
+          "capability": "tools",
+          "safety": "safe",
+          "request": "direct",
+          "evidence": "none",
+          "delivery": "missing"
+        },
+        "expected": "lite-workflow.md"
+      }
+    ]
+  },
+  {
+    "id": "capability-unavailable",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "unavailable",
+          "safety": "safe",
+          "request": "direct",
+          "evidence": "none",
+          "delivery": "missing"
+        },
+        "expected": "safe-handoff"
+      }
+    ]
+  },
+  {
+    "id": "unsafe-diagnosis",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "tools",
+          "safety": "blocked",
+          "request": "direct",
+          "evidence": "none",
+          "delivery": "missing"
+        },
+        "expected": "stop-safety"
+      }
+    ]
+  },
+  {
+    "id": "conversation-diagnosis",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "conversation",
+          "safety": "safe",
+          "request": "direct",
+          "evidence": "none",
+          "delivery": "missing"
+        },
+        "expected": "architecture-improvement.md:limited-evidence"
+      }
+    ]
+  },
+  {
+    "id": "accepted-report-reflow",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "tools",
+          "safety": "safe",
+          "request": "accepted-report",
+          "evidence": "none",
+          "delivery": "missing"
+        },
+        "expected": "specification.md"
+      }
+    ]
+  },
+  {
+    "id": "automatic-systemic",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "tools",
+          "safety": "safe",
+          "request": "automatic",
+          "evidence": "systemic",
+          "delivery": "missing"
+        },
+        "expected": "announce:architecture-improvement.md:diagnostic-only"
+      }
+    ]
+  },
+  {
+    "id": "automatic-group-complete",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "tools",
+          "safety": "safe",
+          "request": "automatic",
+          "evidence": "group-complete",
+          "delivery": "missing"
+        },
+        "expected": "announce:architecture-improvement.md:diagnostic-only"
+      }
+    ]
+  },
+  {
+    "id": "automatic-milestone",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "tools",
+          "safety": "safe",
+          "request": "automatic",
+          "evidence": "milestone",
+          "delivery": "missing"
+        },
+        "expected": "announce:architecture-improvement.md:diagnostic-only"
+      }
+    ]
+  },
+  {
+    "id": "automatic-conversation",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "conversation",
+          "safety": "safe",
+          "request": "automatic",
+          "evidence": "systemic",
+          "delivery": "missing"
+        },
+        "expected": "announce:architecture-improvement.md:limited-evidence"
+      }
+    ]
+  },
+  {
+    "id": "focused-local-review",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "tools",
+          "safety": "safe",
+          "request": "automatic",
+          "evidence": "local-finding",
+          "delivery": "missing"
+        },
+        "expected": "review.md"
+      }
+    ]
+  },
+  {
+    "id": "delivery-no-artifacts",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "tools",
+          "safety": "safe",
+          "request": "delivery",
+          "evidence": "none",
+          "delivery": "missing"
+        },
+        "expected": "earliest-unmet-delivery-gate"
+      }
+    ]
+  },
+  {
+    "id": "delivery-approved",
+    "scenario": "FULL-ARCH",
+    "steps": [
+      {
+        "table": "architecture",
+        "input": {
+          "mode": "full",
+          "capability": "tools",
+          "safety": "safe",
+          "request": "delivery",
+          "evidence": "none",
+          "delivery": "approved"
+        },
+        "expected": "eligible-ticket-or-review"
+      }
+    ]
+  },
+  {
+    "id": "status-no-authority",
+    "scenario": "INSTALL-STATUS",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "status",
+          "authorized": "no",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "read-only-complete-status"
+      }
+    ]
+  },
+  {
+    "id": "remove-no-authority",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "no",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "stop-no-authorization"
+      }
+    ]
+  },
+  {
+    "id": "remove-stale",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "stale"
+        },
+        "expected": "recheck-complete-state"
+      }
+    ]
+  },
+  {
+    "id": "remove-wrong-source",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "wrong-source"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "status-then-changed-wrong-source",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "status",
+          "authorized": "no",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "read-only-complete-status"
+      },
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "wrong-source"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "remove-wrong-scope",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "wrong-scope"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "status-then-changed-wrong-scope",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "status",
+          "authorized": "no",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "read-only-complete-status"
+      },
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "wrong-scope"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "remove-ambiguous",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "ambiguous"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "status-then-changed-ambiguous",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "status",
+          "authorized": "no",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "read-only-complete-status"
+      },
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "ambiguous"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "remove-unreadable",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "unreadable"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "status-then-changed-unreadable",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "status",
+          "authorized": "no",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "read-only-complete-status"
+      },
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "unreadable"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "remove-unsupported",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "unsupported"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "status-then-changed-unsupported",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "status",
+          "authorized": "no",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "read-only-complete-status"
+      },
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "unsupported"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "remove-newer",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "newer"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "status-then-changed-newer",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "status",
+          "authorized": "no",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "read-only-complete-status"
+      },
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "newer"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "remove-current-enabled",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "uninstall-qualified-user-plugin"
+      }
+    ]
+  },
+  {
+    "id": "remove-current-disabled",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "current-disabled"
+        },
+        "expected": "uninstall-qualified-user-plugin"
+      }
+    ]
+  },
+  {
+    "id": "remove-older",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "older"
+        },
+        "expected": "uninstall-qualified-user-plugin"
+      }
+    ]
+  },
+  {
+    "id": "remove-conversation",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "remove",
+          "authorized": "yes",
+          "capability": "conversation",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "safe-handoff"
+      }
+    ]
+  },
+  {
+    "id": "zip-session-only",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "zip",
+          "authorized": "no",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "session-only-plugin-dir"
+      }
+    ]
+  },
+  {
+    "id": "remove-default-data",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "removal-data",
+        "input": {
+          "keep-data-request": "absent"
+        },
+        "expected": "disclose-default-routing-data-deletion"
+      }
+    ]
+  },
+  {
+    "id": "remove-explicit-keep-data",
+    "scenario": "REMOVE-ZIP",
+    "steps": [
+      {
+        "table": "removal-data",
+        "input": {
+          "keep-data-request": "explicit"
+        },
+        "expected": "disclose-preservation-use-keep-data"
+      }
+    ]
+  },
+  {
+    "id": "install-without-authority",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "no",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "stop-no-authorization"
+      }
+    ]
+  },
+  {
+    "id": "install-current-enabled",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "no-op-preserve-enabled-state"
+      }
+    ]
+  },
+  {
+    "id": "install-current-disabled",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "current-disabled"
+        },
+        "expected": "no-op-preserve-enabled-state"
+      }
+    ]
+  },
+  {
+    "id": "install-wrong-source",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "wrong-source"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "install-wrong-scope",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "wrong-scope"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "install-ambiguous",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "ambiguous"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "install-unreadable",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "unreadable"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "install-unsupported",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "unsupported"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "install-newer",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "newer"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "install-stale",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "stale"
+        },
+        "expected": "recheck-complete-state"
+      }
+    ]
+  },
+  {
+    "id": "install-partial",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "partial-failure"
+        },
+        "expected": "recheck-report-partial-failure"
+      }
+    ]
+  },
+  {
+    "id": "update-without-authority",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "update",
+          "authorized": "no",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "stop-no-authorization"
+      }
+    ]
+  },
+  {
+    "id": "update-current-enabled",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "update",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "current-enabled"
+        },
+        "expected": "no-op-preserve-enabled-state"
+      }
+    ]
+  },
+  {
+    "id": "update-current-disabled",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "update",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "current-disabled"
+        },
+        "expected": "no-op-preserve-enabled-state"
+      }
+    ]
+  },
+  {
+    "id": "update-wrong-source",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "update",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "wrong-source"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "update-wrong-scope",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "update",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "wrong-scope"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "update-ambiguous",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "update",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "ambiguous"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "update-unreadable",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "update",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "unreadable"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "update-unsupported",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "update",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "unsupported"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "update-newer",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "update",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "newer"
+        },
+        "expected": "stop-without-writes"
+      }
+    ]
+  },
+  {
+    "id": "update-stale",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "update",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "stale"
+        },
+        "expected": "recheck-complete-state"
+      }
+    ]
+  },
+  {
+    "id": "update-partial",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "update",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "partial-failure"
+        },
+        "expected": "recheck-report-partial-failure"
+      }
+    ]
+  },
+  {
+    "id": "install-all-absent",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "absent"
+        },
+        "expected": "add-marketplace-recheck-install"
+      }
+    ]
+  },
+  {
+    "id": "install-marketplace-present",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "install",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "plugin-absent"
+        },
+        "expected": "install-qualified-user-plugin"
+      }
+    ]
+  },
+  {
+    "id": "update-older",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle",
+        "input": {
+          "request": "update",
+          "authorized": "yes",
+          "capability": "tools",
+          "fresh-state": "older"
+        },
+        "expected": "refresh-recheck-update-preserve-enabled-state"
+      }
+    ]
+  },
+  {
+    "id": "node-missing",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle-node",
+        "input": {
+          "node": "missing"
+        },
+        "expected": "disclose-automatic-unavailable-no-full-support"
+      }
+    ]
+  },
+  {
+    "id": "node-old",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle-node",
+        "input": {
+          "node": "old"
+        },
+        "expected": "disclose-automatic-unavailable-no-full-support"
+      }
+    ]
+  },
+  {
+    "id": "node-supported",
+    "scenario": "INSTALL-WRITES",
+    "steps": [
+      {
+        "table": "lifecycle-node",
+        "input": {
+          "node": "supported"
+        },
+        "expected": "report-observed-entry-availability"
+      }
+    ]
+  }
+]

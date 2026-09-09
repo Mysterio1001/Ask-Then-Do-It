@@ -1,0 +1,10 @@
+source_url: https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions
+checked_on: 2026-09-07
+normalization: Manually transcribed canonical-ID rules and examples from the rendered official page.
+
+Claude 4.6 and later canonical IDs use claude-{name}-{major}[-{minor}] without a date.
+Examples: claude-sonnet-4-6, claude-sonnet-5, claude-opus-4-6, claude-opus-4-7, claude-opus-4-8, claude-opus-5.
+Before Claude 4.6, canonical model IDs include a snapshot date.
+Examples: claude-sonnet-4-5-20250929, claude-haiku-4-5-20251001.
+Short pre-4.6 names are convenience aliases and are not canonical IDs.
+Dateless 4.6-and-later IDs are pinned snapshots, not evergreen aliases.

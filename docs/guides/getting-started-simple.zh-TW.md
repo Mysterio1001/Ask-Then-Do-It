@@ -5,6 +5,13 @@ Ask Then Do It 提供 `Full` 與 `Lite` 兩種流程。Full 適合需要完整�
 兩種模式都必須先釐清範圍、取得使用者授權、保留現有變更，並誠實回報驗證結果。Lite 比 Full 精簡，但不是跳過風險或驗證。
 
 ## 模式優先順序
+<!-- claude:begin -->
+
+### 選擇使用的 host
+
+本指南是各 host 共用的 Full/Lite 流程。[Claude Code 使用說明](claude-code.zh-TW.md)涵蓋主動選用的公開預覽版 `1.4.0-preview.1`、兩個 namespaced entries 與 Claude 專用唯讀 Config；安裝指令於預覽發布後適用。驗證範圍是 native strict validation 與本機自動化測試；真實官方 Claude 工作階段延後驗證。Codex 與 Generic 維持穩定版 1.3.1 及下方既有設定方式。
+
+<!-- claude:end -->
 
 Codex 每次開始操作時，依下列順序判定模式：
 
