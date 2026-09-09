@@ -24,6 +24,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 from validate_marketplace import CatalogError, DEFAULT_CATALOG, load_and_validate
+import validate_claude_package as claude_package
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -61,6 +62,10 @@ GENERIC_KEYS = {
     "start_guide",
     "modules",
 }
+CLAUDE_KEYS = {"source", "directory", "archive", "inventory"}
+PREVIEW_VERSION = "1.4.0-preview.1"
+PREVIEW_MARKER = "preview.json"
+PREVIEW_CLAIM = "packaging-only-no-host-or-model-verification"
 
 
 class BuildError(RuntimeError):
@@ -106,7 +111,11 @@ def parse_args() -> argparse.Namespace:
         help="Permit an isolated repository-owned output root for automated tests.",
     )
     parser.add_argument(
-        "--package", choices=("all", "codex", "generic"), default="all"
+        "--package", choices=("all", "codex", "generic", "claude"), default="all"
+    )
+    parser.add_argument(
+        "--preview-claude", action="store_true",
+        help="Build an isolated Claude-only offline preview; NOT A RELEASE. Requires --allow-test-output-root.",
     )
     return parser.parse_args()
 
@@ -204,7 +213,8 @@ def read_top_level_yaml_scalar(path: Path, key: str) -> str:
 
 def load_config(path: Path) -> dict[str, Any]:
     config = read_json_object(path.resolve(), "release configuration")
-    require_exact_keys(config, TOP_LEVEL_KEYS, "release configuration")
+    expected_keys = TOP_LEVEL_KEYS | ({"claude"} if "claude" in config else set())
+    require_exact_keys(config, expected_keys, "release configuration")
     if config["schema_version"] != 2:
         raise BuildError("release configuration schema_version must be 2")
     for key in ("package_id", "display_name", "release_version", "core_version"):
@@ -312,9 +322,86 @@ def load_config(path: Path) -> dict[str, Any]:
     if len(normalized) != len(set(normalized)):
         raise BuildError("release configuration.managed_outputs contains duplicates")
     expected = {"codex", "generic", "checksums.sha256"}
+    if "claude" in config:
+        validate_claude_config(config)
+        expected.add("claude")
     if set(normalized) != expected:
         raise BuildError(f"managed_outputs must equal configured outputs: {sorted(expected)}")
     return config
+
+
+def validate_claude_config(config: dict[str, Any]) -> None:
+    """Validate a future lockstep Claude family without activating it today."""
+    family = config["claude"]
+    if not isinstance(family, dict):
+        raise BuildError("release configuration.claude must be an object")
+    require_exact_keys(family, CLAUDE_KEYS, "release configuration.claude")
+    expected = {
+        "source": claude_package.SOURCE,
+        "directory": "claude/ask-then-do-it",
+        "archive": f"claude/ask-then-do-it-claude-{config['release_version']}.zip",
+        "inventory": sorted(claude_package.RUNTIME_FILES | claude_package.LEGAL_FILES),
+    }
+    if family != expected or config["release_version"] != config["core_version"]:
+        raise BuildError("Claude configuration requires exact inventory, paths, and lockstep versions")
+    declaration = ROOT / "adapters/claude-code/conformance.yaml"
+    for key, value in (
+        ("adapter_id", "claude-code"), ("target", "claude-code-plugin"),
+        ("adapter_version", config["release_version"]), ("core_version", config["core_version"]),
+    ):
+        if read_top_level_yaml_scalar(declaration, key) != value:
+            raise BuildError(f"Claude current conformance identity mismatch: {key}")
+    required = {"claude-plugin-validation", "claude-conformance", "claude-package-inventory", "claude-behavior", "claude-context", "claude-live-smoke"}
+    if not required <= set(config["required_validation_checks"]):
+        raise BuildError("Claude activation requires its declared validation checks")
+    claude_package.validate_source(ROOT, config["release_version"])
+
+
+def claude_preview_config() -> dict[str, Any]:
+    """Fixed preview identity: no active release/conformance declarations change."""
+    claude_package.validate_source(ROOT, PREVIEW_VERSION)
+    return {
+        "package_id": claude_package.NAME, "display_name": "Ask Then Do It",
+        "release_version": PREVIEW_VERSION, "core_version": PREVIEW_VERSION,
+        "offline_preview": True,
+        "claude": {
+            "source": claude_package.SOURCE, "directory": "claude/ask-then-do-it",
+            "archive": f"claude/ask-then-do-it-claude-{PREVIEW_VERSION}.zip",
+        },
+    }
+
+
+def preview_metadata(config: dict[str, Any], payload: dict[str, bytes]) -> dict[str, Any]:
+    return {
+        "schema_version": 1, "artifact_type": "offline-package-preview",
+        "status": "not-a-release", "target_version": config["release_version"],
+        "evidence_claim": PREVIEW_CLAIM,
+        "source_sha256": {name: hashlib.sha256(data).hexdigest() for name, data in sorted(payload.items())},
+    }
+
+
+def validate_preview_marker(root: Path, config: dict[str, Any]) -> None:
+    package = root / config["claude"]["directory"]
+    claude_package.check_tree(package, claude_package.RUNTIME_FILES | claude_package.LEGAL_FILES)
+    payload = {name: (package / name).read_bytes() for name in claude_package.RUNTIME_FILES | claude_package.LEGAL_FILES}
+    marker = read_json_object(root / PREVIEW_MARKER, "offline preview marker")
+    if marker != preview_metadata(config, payload):
+        raise BuildError("Invalid offline preview marker or payload source hashes")
+
+
+def validate_preview_output(output: Path, args: argparse.Namespace) -> None:
+    if not args.allow_test_output_root:
+        raise BuildError("Offline preview requires --allow-test-output-root")
+    if args.package not in {"all", "claude"} or args.config.resolve() != DEFAULT_CONFIG.resolve():
+        raise BuildError("Offline preview uses the fixed Claude-only configuration")
+    protected = [DEFAULT_OUTPUT, *(ROOT / name for name in (".git", ".agents", ".codex", "adapters", "core", "release", "docs", "scripts", "tests"))]
+    if output == ROOT or any(output.is_relative_to(path.resolve()) or path.resolve().is_relative_to(output) for path in protected):
+        raise BuildError("Offline preview output must be isolated from current dist and repository sources")
+    for path in (args.output_root.absolute(), *args.output_root.absolute().parents):
+        if path == ROOT.parent:
+            break
+        if claude_package.is_link(path):
+            raise BuildError("Offline preview output ancestors must not be links")
 
 
 def source_path(relative: str, label: str) -> Path:
@@ -411,17 +498,42 @@ def relative_file_names(root: Path) -> set[str]:
     return {path.relative_to(root).as_posix() for path in list_files(root)}
 
 
-def verify_zip_equivalence(directory: Path, archive: Path, archive_root: str) -> None:
+def verify_zip_equivalence(
+    directory: Path, archive: Path, archive_root: str, *, canonical_metadata: bool = True,
+) -> None:
     expected = {
         f"{archive_root}/{relative}" for relative in relative_file_names(directory)
     }
     try:
         with zipfile.ZipFile(archive) as bundle:
-            actual = {name for name in bundle.namelist() if not name.endswith("/")}
-            if actual != expected:
+            member_names = bundle.namelist()
+            if len(member_names) != len(set(member_names)):
+                raise BuildError(f"ZIP inventory contains duplicate members: {archive.name}")
+            if member_names != sorted(expected):
                 raise BuildError(
                     f"ZIP inventory differs from directory for {archive.name}"
                 )
+            if canonical_metadata and bundle.comment:
+                raise BuildError(f"ZIP archive comment is not canonical: {archive.name}")
+            for info in bundle.infolist():
+                # Legacy managed releases may use different timestamps/modes,
+                # but never links or another special-file type.
+                file_type = (info.external_attr >> 16) & 0o170000
+                if file_type not in {0, 0o100000} or info.is_dir() or info.flag_bits & 1:
+                    raise BuildError(f"ZIP member is not a safe regular file: {archive.name}:{info.filename}")
+                if (
+                    canonical_metadata and (
+                    info.date_time != ZIP_TIMESTAMP
+                    or info.create_system != 3
+                    or info.external_attr != 0o100644 << 16
+                    or info.compress_type != zipfile.ZIP_DEFLATED
+                    or info.flag_bits & ~0x800
+                    or info.internal_attr != 0
+                    or info.extra
+                    or info.comment
+                    )
+                ):
+                    raise BuildError(f"ZIP member metadata is not canonical: {archive.name}:{info.filename}")
             for entry in sorted(expected):
                 relative = entry.removeprefix(f"{archive_root}/")
                 if bundle.read(entry) != (directory / relative).read_bytes():
@@ -454,6 +566,8 @@ def read_checksums(path: Path) -> dict[str, str]:
 def selected_output_names(config: dict[str, Any], selected: list[str]) -> list[str]:
     names = [PurePosixPath(config[package_id]["directory"]).parts[0] for package_id in selected]
     names.append("checksums.sha256")
+    if config.get("offline_preview"):
+        names.append(PREVIEW_MARKER)
     return names
 
 
@@ -463,6 +577,8 @@ def expected_package_files(
     if package_id == "codex":
         source = validate_codex_source(config)
         return relative_file_names(source) | set(LEGAL_FILES)
+    if package_id == "claude":
+        return set(claude_package.RUNTIME_FILES | claude_package.LEGAL_FILES)
     generic = config["generic"]
     return {
         *START_GUIDE_FILES,
@@ -506,6 +622,8 @@ def validate_output_set(
         package = config[package_id]
         directory = root / package["directory"]
         archive = root / package["archive"]
+        if set(directory.parent.iterdir()) != {directory, archive}:
+            raise BuildError(f"Runtime provider inventory mismatch: {directory.parent}")
         if require_source_equivalence and relative_file_names(
             directory
         ) != expected_package_files(config, package_id):
@@ -514,8 +632,8 @@ def validate_output_set(
             directory, archive, PurePosixPath(package["directory"]).name
         )
 
-    codex_manifest = root / config["codex"]["directory"] / ".codex-plugin" / "plugin.json"
     if "codex" in selected:
+        codex_manifest = root / config["codex"]["directory"] / ".codex-plugin" / "plugin.json"
         manifest = read_json_object(codex_manifest, "built Plugin manifest")
         if (
             manifest.get("name") != config["package_id"]
@@ -526,6 +644,13 @@ def validate_output_set(
         manifest_path = root / config["generic"]["directory"] / "manifest.yaml"
         if manifest_path.read_text(encoding="utf-8") != generic_manifest(config):
             raise BuildError(f"Built Generic manifest identity mismatch: {manifest_path}")
+    if "claude" in selected and require_source_equivalence:
+        try:
+            claude_package.validate_parity(root / config["claude"]["directory"], ROOT, config["release_version"])
+        except claude_package.ClaudePackageError as exc:
+            raise BuildError(str(exc)) from exc
+    if config.get("offline_preview"):
+        validate_preview_marker(root, config)
     return names
 
 
@@ -543,7 +668,7 @@ def validate_existing_output_set(
     if set(present) != set(names):
         collision = (root / (present[0] if present else names[0])).resolve()
         raise BuildError(f"Unmanaged or incomplete output collision: {collision}")
-    if any(path.is_symlink() for path in root.rglob("*")):
+    if any(claude_package.is_link(path) for path in root.rglob("*")):
         raise BuildError(f"Managed output must not contain symbolic links: {root}")
 
     checksums = read_checksums(root / "checksums.sha256")
@@ -566,13 +691,36 @@ def validate_existing_output_set(
         detected_archives.add(relative_archive)
         if checksums.get(relative_archive) != sha256(archive):
             raise BuildError(f"Checksum mismatch: {archive}")
-        verify_zip_equivalence(directory, archive, directory.name)
+        verify_zip_equivalence(
+            directory, archive, directory.name,
+            canonical_metadata=package_id == "claude",
+        )
 
     if set(checksums) != detected_archives:
         raise BuildError(
             f"Checksum inventory does not match prior release archives: {root}"
         )
+    if config.get("offline_preview"):
+        validate_preview_marker(root, config)
     return names
+
+
+def build_claude(config: dict[str, Any], staging: Path) -> list[str]:
+    payload = claude_package.source_payload(ROOT, config["release_version"])
+    family = config["claude"]
+    package = staging / family["directory"]
+    for name, data in sorted(payload.items()):
+        target = package / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(data)
+    archive = staging / family["archive"]
+    write_reproducible_zip(package, archive, claude_package.NAME)
+    if config.get("offline_preview"):
+        (staging / PREVIEW_MARKER).write_text(
+            json.dumps(preview_metadata(config, payload), ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8", newline="\n",
+        )
+    return [family["directory"], family["archive"]]
 
 
 def build_codex(config: dict[str, Any], staging: Path) -> list[str]:
@@ -606,8 +754,8 @@ def compose_generic_workflow(config: dict[str, Any], source: Path) -> bytes:
     header = f"""<!-- GENERATED FILE — YOU MAY EDIT ONLY THE "Default workflow mode" DECLARATION BELOW -->
 # {config['display_name']} — Generic Workflow
 
-Release version: `{config['release_version']}`  
-Core version: `{config['core_version']}`  
+Release version: `{config['release_version']}`\x20\x20
+Core version: `{config['core_version']}`\x20\x20
 Capability: `conversation`
 
 Default workflow mode: full
@@ -816,10 +964,13 @@ def main() -> int:
     staging: Path | None = None
     preserve_staging = False
     try:
-        config = load_config(args.config)
+        preview = getattr(args, "preview_claude", False)
         output_root = args.output_root.resolve()
         if not output_root.is_relative_to(ROOT):
             raise BuildError(f"Output root must stay inside the repository: {output_root}")
+        if preview:
+            validate_preview_output(output_root, args)
+        config = claude_preview_config() if preview else load_config(args.config)
         if output_root != DEFAULT_OUTPUT.resolve() and not args.allow_test_output_root:
             raise BuildError(
                 "Non-default output is test-only; pass --allow-test-output-root "
@@ -829,9 +980,14 @@ def main() -> int:
         staging = output_root.parent / f".{output_root.name}-release-staging-{uuid.uuid4().hex}"
         staging.mkdir()
 
-        selected = (
-            ["codex", "generic"] if args.package == "all" else [args.package]
-        )
+        if preview:
+            selected = ["claude"]
+        elif args.package == "all":
+            selected = [name for name in ("codex", "generic", "claude") if name in config]
+        else:
+            selected = [args.package]
+        if any(name not in config for name in selected):
+            raise BuildError("Requested package is not activated in the current release configuration")
         archives: list[str] = []
         if "codex" in selected:
             build_codex(config, staging)
@@ -839,6 +995,9 @@ def main() -> int:
         if "generic" in selected:
             build_generic(config, staging)
             archives.append(config["generic"]["archive"])
+        if "claude" in selected:
+            build_claude(config, staging)
+            archives.append(config["claude"]["archive"])
 
         checksum_name = "checksums.sha256"
         (staging / checksum_name).write_text(
@@ -865,11 +1024,12 @@ def main() -> int:
             existing_names=existing_names,
         )
         print(
-            f"Built {', '.join(selected)} release {config['release_version']} "
+            ("NOT A RELEASE — offline packaging preview. " if preview else "")
+            + f"Built {', '.join(selected)} {'preview' if preview else 'release'} {config['release_version']} "
             f"in {output_root}"
         )
         return 0
-    except (BuildError, OSError) as exc:
+    except (BuildError, claude_package.ClaudePackageError, OSError) as exc:
         preserve_staging = isinstance(exc, IncompleteRecoveryError)
         print(f"Release build failed: {exc}", file=sys.stderr)
         return 1

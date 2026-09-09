@@ -20,6 +20,15 @@ For installation, updates, and Codex mode setup, see the [Codex Plugin Guide](do
 
 For setup, mode selection, and capability limits, see the [Generic Guide](docs/guides/generic.en.md).
 
+<!-- claude:begin -->
+
+**3. Claude Code — 1.4.0-preview.1 public preview**
+
+These instructions apply after preview publication; if unavailable, wait.
+
+Opt in through the `claude-preview` Marketplace branch or use the [preview ZIP](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0-preview.1/ask-then-do-it-claude-1.4.0-preview.1.zip) for session-only recovery. The [Claude Code guide](docs/guides/claude-code.en.md) covers prerequisites, both entries, installation, updates, removal, and feedback. Codex and Generic remain on stable 1.3.1. Verification covers native strict validation and local automated tests; real official Claude session verification is deferred.
+
+<!-- claude:end -->
 ## Learn about the workflow
 
 - [Complete Full and Lite Workflow Guide](docs/guides/getting-started-simple.en.md)

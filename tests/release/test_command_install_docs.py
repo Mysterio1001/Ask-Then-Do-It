@@ -40,6 +40,33 @@ def digest(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+# Six localized additions for the approved Claude preview publication.
+# Keep every pre-existing digest below intact; arbitrary marked text is not an
+# exemption, and changing an addition requires reviewing its new exact content.
+CLAUDE_INSERTION_DIGESTS = (
+    "fb809000a40b3478a2c30b3b981b36a78322da85bfa8eea02f95a3861434d6aa",
+    "bbda561b604d4461703c637bd12fc6e3daf67145eff1345762202b93584203d9",
+    "26707c7eae8f28678de1787e5879214ca5a1bdb2aa18294c755c1558aa58a33b",
+    "236cd462cee2760fa0be4bae5cd42a15a110e2203a7b8a2a3b5ded65712e662f",
+    "6bc9358e76b818a976d81c0e1deabee85ae08924d5c4deed49595b467b8f8187",
+    "673924aa0a9174b8d4865cf874fe05bde2fb18c5c6bd461a89f3da797b07f8c3",
+)
+
+
+def preserved_readme_content(body: str) -> str:
+    pattern = r"<!-- claude:begin -->.*?<!-- claude:end -->\n"
+    blocks = re.findall(pattern, body, re.S)
+    if not blocks and "<!-- claude:" not in body:
+        return body
+    if (
+        tuple(digest(block) for block in blocks) != CLAUDE_INSERTION_DIGESTS
+        or body.count("<!-- claude:begin -->") != 6
+        or body.count("<!-- claude:end -->") != 6
+    ):
+        raise AssertionError("Unreviewed or malformed Claude README insertion")
+    return re.sub(pattern, "", body, flags=re.S)
+
+
 def readme_block(body: str, start: str, end: str | None) -> str:
     begin = body.index(start)
     finish = body.index(end, begin) if end else len(body)
@@ -130,7 +157,7 @@ class CommandInstallDocumentationTests(unittest.TestCase):
                 self.assertNotIn("codex plugin install", text)
 
     def test_readme_preserved_blocks_are_independent_of_git_head(self) -> None:
-        body = README.read_text(encoding="utf-8").replace("\r\n", "\n")
+        body = preserved_readme_content(README.read_text(encoding="utf-8").replace("\r\n", "\n"))
         self.assertIn("## Introduction", body)
         preamble = body[: body.index("## Introduction")]
         self.assertEqual(digest(preamble), README_PRESERVED_DIGESTS["preamble"])
@@ -163,6 +190,20 @@ class CommandInstallDocumentationTests(unittest.TestCase):
                 self.assertEqual(digest(manual), expected["manual"])
             with self.subTest(locale=locale, block="read-more"):
                 self.assertEqual(digest(read_more), expected["read-more"])
+
+    def test_claude_exemption_is_exact_and_cannot_hide_codex_drift(self) -> None:
+        body = README.read_text(encoding="utf-8")
+        for changed in (
+            body.replace("Claude Code — 1.4.0-preview.1 public preview", "Claude Code — stable release", 1),
+            body + "<!-- claude:begin -->hidden arbitrary text<!-- claude:end -->\n",
+            body.replace("<!-- claude:end -->", "", 1),
+        ):
+            with self.assertRaises(AssertionError):
+                preserved_readme_content(changed)
+        changed = body.replace("codex plugin marketplace upgrade ask-then-do-it", "codex plugin install ask-then-do-it", 1)
+        preserved = preserved_readme_content(changed)
+        block = readme_block(preserved, "### Automatic installation (CLI)", "### Manual installation")
+        self.assertNotEqual(digest(normalize_release_versions(block)), README_PRESERVED_DIGESTS["en"]["automatic"])
 
     def test_readme_keeps_install_heading_order_and_single_sections(self) -> None:
         body = README.read_text(encoding="utf-8")

@@ -1,0 +1,365 @@
+{
+  "schema_version": 1,
+  "fixture_id": "claude-context-1.4.0",
+  "version": "1.4.0",
+  "evidence_kind": "unobserved",
+  "capture_review": "",
+  "scenarios": [
+    {
+      "id": "documented-requirements",
+      "task": {
+        "path": "",
+        "sha256": ""
+      },
+      "stage_outcome": {
+        "path": "",
+        "sha256": ""
+      },
+      "capability": "unobserved",
+      "profiles": {
+        "general": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        },
+        "claude-5": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        }
+      }
+    },
+    {
+      "id": "specification",
+      "task": {
+        "path": "",
+        "sha256": ""
+      },
+      "stage_outcome": {
+        "path": "",
+        "sha256": ""
+      },
+      "capability": "unobserved",
+      "profiles": {
+        "general": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        },
+        "claude-5": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        }
+      }
+    },
+    {
+      "id": "ticket-planning",
+      "task": {
+        "path": "",
+        "sha256": ""
+      },
+      "stage_outcome": {
+        "path": "",
+        "sha256": ""
+      },
+      "capability": "unobserved",
+      "profiles": {
+        "general": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        },
+        "claude-5": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        }
+      }
+    },
+    {
+      "id": "tdd-implementation",
+      "task": {
+        "path": "",
+        "sha256": ""
+      },
+      "stage_outcome": {
+        "path": "",
+        "sha256": ""
+      },
+      "capability": "unobserved",
+      "profiles": {
+        "general": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        },
+        "claude-5": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        }
+      }
+    },
+    {
+      "id": "direct-implementation",
+      "task": {
+        "path": "",
+        "sha256": ""
+      },
+      "stage_outcome": {
+        "path": "",
+        "sha256": ""
+      },
+      "capability": "unobserved",
+      "profiles": {
+        "general": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        },
+        "claude-5": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        }
+      }
+    },
+    {
+      "id": "full-review",
+      "task": {
+        "path": "",
+        "sha256": ""
+      },
+      "stage_outcome": {
+        "path": "",
+        "sha256": ""
+      },
+      "capability": "unobserved",
+      "profiles": {
+        "general": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          },
+          "reviewer-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        },
+        "claude-5": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          },
+          "reviewer-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        }
+      }
+    },
+    {
+      "id": "architecture-diagnosis",
+      "task": {
+        "path": "",
+        "sha256": ""
+      },
+      "stage_outcome": {
+        "path": "",
+        "sha256": ""
+      },
+      "capability": "unobserved",
+      "profiles": {
+        "general": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        },
+        "claude-5": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        }
+      }
+    },
+    {
+      "id": "normal-lite",
+      "task": {
+        "path": "",
+        "sha256": ""
+      },
+      "stage_outcome": {
+        "path": "",
+        "sha256": ""
+      },
+      "capability": "unobserved",
+      "profiles": {
+        "general": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        },
+        "claude-5": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        }
+      }
+    },
+    {
+      "id": "high-risk-lite",
+      "task": {
+        "path": "",
+        "sha256": ""
+      },
+      "stage_outcome": {
+        "path": "",
+        "sha256": ""
+      },
+      "capability": "unobserved",
+      "profiles": {
+        "general": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        },
+        "claude-5": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        }
+      }
+    },
+    {
+      "id": "model-switch-continuation",
+      "task": {
+        "path": "",
+        "sha256": ""
+      },
+      "stage_outcome": {
+        "path": "",
+        "sha256": ""
+      },
+      "capability": "unobserved",
+      "profiles": {
+        "general": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        },
+        "claude-5": {
+          "stage-ready": {
+            "capture_complete": false,
+            "trace": {
+              "path": "",
+              "sha256": ""
+            },
+            "events": []
+          }
+        }
+      }
+    }
+  ]
+}
