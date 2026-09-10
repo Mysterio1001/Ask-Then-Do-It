@@ -1,8 +1,0 @@
-source_url: https://platform.claude.com/docs/en/models/overview
-checked_on: 2026-09-07
-normalization: Manually transcribed exact Claude API ID row from the rendered official table.
-
-claude-fable-5-1 | current
-claude-opus-5 | current
-claude-sonnet-5 | current
-claude-haiku-4-5-20251001 | current

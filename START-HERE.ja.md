@@ -20,13 +20,6 @@ $ask-then-do-it 作りたいものは……
 
 設定方法、モード選択、機能上の制限は [Generic 使用ガイド](docs/guides/generic.ja.md)を参照してください。
 
-<!-- claude:begin -->
-
-**3. Claude Code — 1.4.0-preview.1 公開プレビュー**
-
-[Claude Code ガイド](docs/guides/claude-code.ja.md)は明示的に選ぶ `claude-preview` Marketplace ブランチ、両入口、更新、削除、フィードバック、session-only ZIP リカバリーを説明します。プレビュー公開後に使用し、利用できない場合は公開を待ってください。Codex と Generic は安定版 1.3.1 を維持します。検証範囲は native strict validation とローカル自動テストです。実際の公式 Claude session は検証を延期しています。
-
-<!-- claude:end -->
 ## ワークフローについて知る
 
 - [Full と Lite の完全なワークフローガイド](docs/guides/getting-started-simple.ja.md)
