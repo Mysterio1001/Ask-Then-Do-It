@@ -21,21 +21,52 @@ Please read the [User Guide](/START-HERE.en.md) first, then choose how you want 
 # Install
 codex plugin marketplace add Mysterio1001/Ask-Then-Do-It
 codex plugin add ask-then-do-it@ask-then-do-it
-# Update
-codex plugin marketplace upgrade ask-then-do-it
 ```
 > **Tip: Enter the commands above into AI.**
 
+
+#### Claude Code
+```bash
+# Install
+/plugin marketplace add Mysterio1001/Ask-Then-Do-It
+/plugin install ask-then-do-it@ask-then-do-it
+```
+
+
 ### Manual installation
 
-- Codex Plugin: [Download ask-then-do-it-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip), install it, and start with `$ask-then-do-it`.
-- Gemini or another AI: [Download ask-then-do-it-generic-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip), extract it, and paste `generic-workflow.md` into each new conversation.
+- Codex Plugin: [Download ask-then-do-it-1.4.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-1.4.0.zip), install it, and start with `$ask-then-do-it`.
+- Claude Plugin: [Download ask-then-do-it-claude-1.4.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-claude-1.4.0.zip), extract it, load it using the [Claude Code guide](docs/guides/claude-code.en.md#zip), and start with `/ask-then-do-it:ask-then-do-it`.
+- Gemini or another AI: [Download ask-then-do-it-generic-1.4.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-generic-1.4.0.zip), extract it, and paste `generic-workflow.md` into each new conversation.
 
 Read more:
+
 - [Beginner workflow](docs/guides/getting-started-simple.en.md)
 - [Codex Plugin guide](docs/guides/codex.en.md)
+- [Claude Code guide](docs/guides/claude-code.en.md)
 - [Generic guide](docs/guides/generic.en.md)
 - [Design guide](docs/design/ai-development-skills.en.md)
+
+## Updating
+
+<details>
+<summary>Already installed? Show update commands</summary>
+
+**Codex CLI**
+
+```bash
+codex plugin marketplace upgrade ask-then-do-it
+```
+
+**Claude Code**
+
+```text
+/plugin marketplace update ask-then-do-it
+/plugin update ask-then-do-it@ask-then-do-it
+/reload-plugins
+```
+
+</details>
 
 ## 介紹
 
@@ -54,22 +85,51 @@ Read more:
 # 安裝
 codex plugin marketplace add Mysterio1001/Ask-Then-Do-It
 codex plugin add ask-then-do-it@ask-then-do-it
-# 更新
-codex plugin marketplace upgrade ask-then-do-it
 ```
-> **提示 對 AI 輸入以上的指令**
+
+#### Claude Code
+```bash
+# 安裝
+/plugin marketplace add Mysterio1001/Ask-Then-Do-It
+/plugin install ask-then-do-it@ask-then-do-it
+```
 
 ### 手動安裝
 
-- Codex Plugin：[下載 ask-then-do-it-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip)，安裝後從 `$ask-then-do-it` 開始。
-- Gemini 或其他 AI：[下載 ask-then-do-it-generic-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip)，解壓縮後，在每個新對話貼上 `generic-workflow.md`。
+- Codex Plugin：[下載 ask-then-do-it-1.4.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-1.4.0.zip)，安裝後從 `$ask-then-do-it` 開始。
 
+- Claude Plugin：[下載 ask-then-do-it-claude-1.4.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-claude-1.4.0.zip)，解壓縮後依[使用說明](docs/guides/claude-code.zh-TW.md#zip)載入，從 `/ask-then-do-it:ask-then-do-it` 開始。
+
+- Gemini 或其他 AI：[下載 ask-then-do-it-generic-1.4.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-generic-1.4.0.zip)，解壓縮後，在每個新對話貼上 `generic-workflow.md`。
 
 更多說明：
+
 - [初學者流程](docs/guides/getting-started-simple.zh-TW.md)
 - [Codex Plugin 使用說明](docs/guides/codex.zh-TW.md)
+- [Claude Code 使用說明](docs/guides/claude-code.zh-TW.md)
 - [Generic 使用說明](docs/guides/generic.zh-TW.md)
 - [設計說明](docs/design/ai-development-skills.zh-TW.md)
+
+## 更新方式
+
+<details>
+<summary>已安裝？查看更新指令</summary>
+
+**Codex CLI**
+
+```bash
+codex plugin marketplace upgrade ask-then-do-it
+```
+
+**Claude Code**
+
+```text
+/plugin marketplace update ask-then-do-it
+/plugin update ask-then-do-it@ask-then-do-it
+/reload-plugins
+```
+
+</details>
 
 ## はじめに
 
@@ -88,18 +148,50 @@ codex plugin marketplace upgrade ask-then-do-it
 # インストール
 codex plugin marketplace add Mysterio1001/Ask-Then-Do-It
 codex plugin add ask-then-do-it@ask-then-do-it
-# 更新
-codex plugin marketplace upgrade ask-then-do-it
 ```
 > **ヒント：上記のコマンドを AI に入力してください。**
 
+
+
+#### Claude Code
+```bash
+# インストール
+/plugin marketplace add Mysterio1001/Ask-Then-Do-It
+/plugin install ask-then-do-it@ask-then-do-it
+```
+
+
 ### 手動インストール
 
-- Codex Plugin：[ask-then-do-it-1.3.1.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip)し、インストール後に `$ask-then-do-it` から始めます。
-- Gemini またはその他の AI：[ask-then-do-it-generic-1.3.1.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip)して展開し、新しい会話ごとに `generic-workflow.md` を貼り付けます。
+- Codex Plugin：[ask-then-do-it-1.4.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-1.4.0.zip)し、インストール後に `$ask-then-do-it` から始めます。
+- Claude Plugin：[ask-then-do-it-claude-1.4.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-claude-1.4.0.zip)して展開し、[Claude Code ガイド](docs/guides/claude-code.ja.md#zip)に従って読み込み、`/ask-then-do-it:ask-then-do-it` から始めます。
+- Gemini またはその他の AI：[ask-then-do-it-generic-1.4.0.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-generic-1.4.0.zip)して展開し、新しい会話ごとに `generic-workflow.md` を貼り付けます。
 
 詳しい説明：
+
 - [初心者向けフロー](docs/guides/getting-started-simple.ja.md)
 - [Codex Plugin 使用ガイド](docs/guides/codex.ja.md)
+- [Claude Code ガイド](docs/guides/claude-code.ja.md)
 - [Generic 使用ガイド](docs/guides/generic.ja.md)
 - [設計ガイド](docs/design/ai-development-skills.ja.md)
+
+## 更新方法
+
+<details>
+<summary>インストール済みの場合：更新コマンドを表示</summary>
+
+**Codex CLI**
+
+```bash
+codex plugin marketplace upgrade ask-then-do-it
+```
+
+**Claude Code**
+
+```text
+/plugin marketplace update ask-then-do-it
+/plugin update ask-then-do-it@ask-then-do-it
+/reload-plugins
+```
+
+</details>

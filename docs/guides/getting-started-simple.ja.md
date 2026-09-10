@@ -5,6 +5,7 @@ Ask Then Do It には `Full` と `Lite` の 2 つのフローがあります。F
 どちらのモードも、範囲を明確にし、利用者の許可を得て、既存の変更を保護し、検証結果を正直に報告してから完了を主張します。Lite は Full より簡潔ですが、リスク確認や検証を省略する許可ではありません。
 
 ## モードの優先順位
+利用方法を選んでください。記録を残す作業には Full、範囲が明確な変更には Lite が適しています。 [Codex](codex.ja.md) · [Claude Code](claude-code.ja.md) · [Generic](generic.ja.md)。
 
 Codex は操作を始めるたびに、次の順序でモードを決定します。
 

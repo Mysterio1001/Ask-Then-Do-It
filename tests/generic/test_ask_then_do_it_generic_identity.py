@@ -18,7 +18,7 @@ class AskThenDoItGenericIdentityTests(unittest.TestCase):
         self.assertEqual(config["package_id"], "ask-then-do-it")
         self.assertEqual(config["display_name"], "Ask Then Do It")
         self.assertEqual(
-            config["generic"]["directory"], "generic/ask-then-do-it-generic-1.3.1"
+            config["generic"]["directory"], "generic/ask-then-do-it-generic-1.4.0"
         )
 
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
@@ -31,8 +31,8 @@ class AskThenDoItGenericIdentityTests(unittest.TestCase):
                 check=False,
             )
             self.assertEqual(result.returncode, 0, result.stderr)
-            package = output / "generic" / "ask-then-do-it-generic-1.3.1"
-            archive = output / "generic" / "ask-then-do-it-generic-1.3.1.zip"
+            package = output / "generic" / "ask-then-do-it-generic-1.4.0"
+            archive = output / "generic" / "ask-then-do-it-generic-1.4.0.zip"
             manifest = (package / "manifest.yaml").read_text(encoding="utf-8")
             combined = (package / "generic-workflow.md").read_text(encoding="utf-8")
             guide = (package / "START-HERE.zh-TW.md").read_text(encoding="utf-8")
@@ -41,12 +41,12 @@ class AskThenDoItGenericIdentityTests(unittest.TestCase):
             self.assertIn('display_name: "Ask Then Do It"', manifest)
             self.assertIn("same effective response", combined)
             self.assertIn("exactly one high-impact requirement question", combined)
-            self.assertIn("沒有從屬關係", guide)
+            self.assertRegex(guide, r"沒有從屬(?:或背書)?關係")
             self.assertIn("THIRD_PARTY_NOTICES.md", guide)
             for legal_file in ("LICENSE", "THIRD_PARTY_NOTICES.md"):
                 self.assertEqual((package / legal_file).read_bytes(), (ROOT / legal_file).read_bytes())
                 with zipfile.ZipFile(archive) as bundle:
-                    self.assertEqual(bundle.read(f"ask-then-do-it-generic-1.3.1/{legal_file}"), (ROOT / legal_file).read_bytes())
+                    self.assertEqual(bundle.read(f"ask-then-do-it-generic-1.4.0/{legal_file}"), (ROOT / legal_file).read_bytes())
 
 
 if __name__ == "__main__":

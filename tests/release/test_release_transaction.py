@@ -8,6 +8,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
+from tests.release.test_release_safety import tree_hashes, write_prior_release
+
 
 ROOT = Path(__file__).resolve().parents[2]
 BUILDER = ROOT / "scripts" / "build_release.py"
@@ -290,6 +292,38 @@ class ReleaseTransactionTests(unittest.TestCase):
             self.assertIn("candidate was not committed", str(caught.exception))
             self.assertEqual(read_outputs(output, prior), prior)
             self.assertEqual(list((staging / ".previous-release").iterdir()), [])
+
+    def test_three_provider_upgrade_failure_restores_complete_two_provider_release(self):
+        for failed_name in ("claude", "checksums.sha256"):
+            with self.subTest(failed_name=failed_name), tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+                root = Path(temporary)
+                output = root / "dist"
+                write_prior_release(output)
+                before = tree_hashes(output)
+                args = types.SimpleNamespace(
+                    config=CONFIG, output_root=output, allow_test_output_root=True,
+                    package="all", preview_claude=False,
+                )
+                real_replace = self.builder.os.replace
+
+                def fail_candidate(source, target):
+                    source, target = Path(source), Path(target)
+                    if target == output / failed_name and source.parent.name.startswith(".dist-release-staging-"):
+                        raise windows_error(32, "simulated upgrade commit failure")
+                    real_replace(source, target)
+
+                stderr = io.StringIO()
+                with (
+                    mock.patch.object(self.builder, "parse_args", return_value=args),
+                    mock.patch.object(self.builder.os, "replace", side_effect=fail_candidate),
+                    contextlib.redirect_stderr(stderr),
+                    contextlib.redirect_stdout(io.StringIO()),
+                ):
+                    self.assertEqual(self.builder.main(), 1)
+                self.assertIn("candidate was not committed", stderr.getvalue())
+                self.assertEqual(tree_hashes(output), before)
+                self.assertFalse((output / "claude").exists())
+                self.assertFalse(list(root.glob(".dist-release-staging-*")))
 
     def test_recovery_retries_winerror_5_while_removing_installed_candidate(
         self,

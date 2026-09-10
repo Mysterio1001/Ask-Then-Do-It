@@ -1,121 +1,64 @@
-# Ask Then Do It Codex Plugin ガイド
+# Ask Then Do It Codex Plugin 使用ガイド
 
-このガイドでは Ask Then Do It のダウンロード、インストール、使い方を説明します。Plugin には開発ワークフローの各段階を担当する Skill が含まれています。
+Codex Plugin で要件確認から実装、Review まで進めます。通常は `$ask-then-do-it` から始めます。
 
-## ダウンロードと展開
+以下は 1.4.0 のインストール／ダウンロード先です。遠隔側で利用できない場合は公開を待ってください。
 
-[ask-then-do-it-1.3.1.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip)して展開します。
+## インストールと準備
 
-展開後、一番外側のフォルダーは `ask-then-do-it/` です。次の内容を含む完全なフォルダーを使ってください。
+初回はターミナルで次を実行します。AI に実行を依頼することもできます。
 
-- `.codex-plugin/`
-- `skills/`
-- 使用方法、ライセンス、出典の文書
-
-`skills/` だけをコピーしたり、別のバージョン名フォルダーで包んだりしないでください。
-
-## AI によるインストールと更新
-
-自然言語で AI に依頼することが主なインターフェースです。
-
-```text
-公式 marketplace から Ask Then Do It をインストールまたは更新してください。
-```
-
-AI は書き込みの前に marketplace とインストール済み Plugin の状態を確認します。
-
-```powershell
-codex plugin marketplace list
-codex plugin list
-```
-
-公式 marketplace がない場合だけ追加し、その後に Plugin を追加します。
-
-```powershell
+```bash
 codex plugin marketplace add Mysterio1001/Ask-Then-Do-It
 codex plugin add ask-then-do-it@ask-then-do-it
 ```
 
-公式 marketplace があり、新しい正式版が利用できる場合は、marketplace を先に更新します。
+<a id="zip"></a>
+<details>
+<summary>ZIP フォールバック</summary>
 
-```powershell
-codex plugin marketplace upgrade ask-then-do-it
-codex plugin add ask-then-do-it@ask-then-do-it
-```
+[ダウンロード ask-then-do-it-1.4.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-1.4.0.zip)
 
-インストール済みの版が最新なら状態だけを報告し、書き込みません。ソース、バージョン、CLI の対応、または結果を確実に判定できない場合は停止して不確実性を報告します。書き込みに失敗したら後続の書き込みを止め、現在の Plugin を先に削除したり、別のソースを選んだり、自動でダウングレードしたりしません。対応する `add` サブコマンドだけを使い、ほかのインストール別名は使いません。
+`skills/` だけでなく完全な `ask-then-do-it/` を保持します。設定済みで編集可能なローカル Marketplace の `plugins/ask-then-do-it/` に置き、entry もそこを指すようにしてから実行します。
 
-成功後は新しい Codex タスクを開始して新しい Plugin の内容を読み込ませます。marketplace の処理ができない場合は、対応する `1.3.1` ZIP を手動のフォールバックとして使います。ダウングレードはユーザーが古い版を明示的に選んだ場合だけ許可されます。
-
-## 手動インストールのフォールバック
-
-ローカル marketplace を使う手動方式では、完全な `ask-then-do-it/` を `<local-marketplace-root>/plugins/ask-then-do-it` に置き、entry がその場所を指すことを確認します。
-
-```powershell
-codex plugin marketplace list
+```bash
 codex plugin add ask-then-do-it --marketplace <local-marketplace-name>
 codex plugin list --marketplace <local-marketplace-name>
 ```
 
-完了後は新しい Codex タスクを開きます。
+ローカル Marketplace がなければ[公式ガイド](https://developers.openai.com/plugins/build/plugins)で作成してください。
 
-## ワークフローモードの設定
+</details>
 
-Codex は操作ごとに、次の順序でワークフローモードを決定します。
+## 使い始める
 
-1. 「今回は Full」「今回は Lite」など、現在の操作に対する明示的な指示。
-2. プロジェクト Config。
-3. ユーザー Config。
-4. Full fallback。
-
-Plugin が所有する設定ファイルは次の場所にあります。
-
-- プロジェクト：`<project>/.codex/ask-then-do-it.toml`。
-- ユーザー：`~/.codex/ask-then-do-it.toml`。
-
-各ファイルでは、トップレベルに `mode = "full"` または `mode = "lite"` だけを指定できます。
-
-```toml
-mode = "full"
-```
-
-```toml
-mode = "lite"
-```
-
-たとえば、`mode = lite` は不正な形式で、`mode = "fast"` は未対応の値です。プロジェクト Config が存在しない場合だけ、ユーザー Config の読み取りへ進みます。無効なプロジェクト Config は Full にフォールバックし、ユーザー Config には進みません。存在するファイルが読み取れない、形式が不正、トップレベルの `mode` がない、または値が未対応の場合は無効です。現在の操作への明示指示は Config を読み取らずに優先します。
-
-モード判定は読み取り専用であり、設定ファイルを作成、書き込み、修復、正規化しません。明示的な上書きは現在の操作だけに影響し、Config を変更しません。プロジェクト Config はそのプロジェクトだけに適用されます。新しいセッションでは、その操作の指示と現在の Config からモードを再判定します。
-
-高リスクの作業では、現在の操作だけを Full に切り替えるか、リスクを明示的に受け入れて Lite を続けるか確認します。この選択は Config に保存されません。両モードの流れと高リスクの分類は [Full / Lite ワークフローガイド](getting-started-simple.ja.md)を参照してください。
-
-## 初回使用
-
-新しい Codex タスクで次のように入力します。
+インストール後、新しい Codex タスクを開いて入力します。
 
 ```text
-$ask-then-do-it を使って、この機能の開発を手伝ってください：……
+$ask-then-do-it 予約サイトの開発を手伝ってください。日本語で進めてください。
 ```
 
-決定されたモードによって、その後のライフサイクルが変わります。
+## Full／Lite モード
 
-### Full モード
+**Full** は要件、仕様、Ticket 計画を保存し、実装前に三つの承認を求めます。**Lite** は範囲が明確な変更向けで、短い変更概要と一度の承認を使います。
 
-Full は一度に一つの要件質問だけを行い、推奨回答と主なトレードオフを添えます。Full には 3 つの承認点があります：
+「今回は Full を使って」または「今回は Lite を使って」と伝えると、現在の操作だけに適用されます。
 
-1. 要件の合意。
-2. 仕様。
-3. Ticket 計画。
+既定値を設定するには、次のいずれかに `mode = "full"` または `mode = "lite"` を記入します。
 
-3 回目の承認前に全 Ticket とテストの推奨を示し、どの Ticket にテストを追加するかを一度に確認します。既定値はありません。
+- `<project>/.codex/ask-then-do-it.toml`
+- `~/.codex/ask-then-do-it.toml`
 
-承認後、内部ではテストを追加する Ticket を `tdd` として `$implement-tdd` に渡し、追加しない Ticket を `direct` として `$implement-direct` に渡します。Review は `tests: skipped-by-user` を保持し、未テストのリスクを説明します。3 回目の承認が終わるまで正式な実装は始まりません。
+優先順位は今回の明示的指示、プロジェクト設定、ユーザー設定、最後に Full です。無効な設定では Full に戻り、プロジェクト設定が無効ならユーザー設定へ進みません。判定中に設定を書き換えません。
 
-### Lite モード
+詳しい手順、テスト選択、進捗の保存は次を参照： [初心者向けガイド](getting-started-simple.ja.md)。
 
-repository の根拠ですべての阻害要因を解消できる場合、Lite は質問が不要な場合があります。それ以外では、各回最大 3 つの阻害要因に関する質問を行います。その後、1 つの Change Brief を提示し、実装前に 1 回の承認を待ちます。
+## 利用できるコマンド
 
-## Skill 入口
+通常は `$ask-then-do-it` を使います。特定の段階を選ぶ場合は表を開いてください。直接呼び出す場合も各段階の前提条件は必要です。
+
+<details>
+<summary>詳細な入口を表示</summary>
 
 | Skill | 用途 |
 | --- | --- |
@@ -129,31 +72,42 @@ repository の根拠ですべての阻害要因を解消できる場合、Lite �
 | `$review-code` | 変更と証拠を Review |
 | `$improve-architecture` | アーキテクチャを分析し改善案を提示 |
 
-任意の Skill を直接指定できます。Skill の直接呼び出しは段階を選択するだけで、ワークフローモードは選択しません。`$ask-then-do-it` が引き続き正規のモード判定を担います。通常の開始点にもなります。
+</details>
 
-モードが未決定なら `$ask-then-do-it` に委ねます。Lite と判定済みなら Lite ライフサイクルへ進みます。Full と判定済みなら通常の前提条件を満たした後にだけ、選択した段階へ進めます。モード指定が競合した場合は停止して確認を求めます。無効な Config は Full にフォールバックします。直接入口ではモード状態を永続化しません。
+## 更新と削除
 
-## 手動更新
+インストール済みの場合はターミナルで実行します。
 
-1. 対応する版の ZIP をダウンロードして展開します。
-2. marketplace にある現在の `plugins/ask-then-do-it/` をバックアップします。
-3. 新しい完全なフォルダーで置き換えます。
-4. Plugin を再度有効にし、新しい Codex タスクで `$ask-then-do-it` を確認します。
-
-自動でダウングレードしないでください。古い版を使う場合は、ユーザーがその版を明示的に選択してください。
-
-## 手動削除
-
-```powershell
-codex plugin remove ask-then-do-it --marketplace <local-marketplace-name>
-codex plugin list --marketplace <local-marketplace-name>
+```bash
+codex plugin marketplace upgrade ask-then-do-it
+codex plugin add ask-then-do-it@ask-then-do-it
 ```
 
-Plugin を削除する前に、同じ marketplace を使うほかの環境がないことを確認してください。
+手動更新では先にバックアップし、新版の完全なフォルダーで置き換えて再追加します。読み込み失敗時はバックアップを戻せます。
+
+更新後は新しい Codex タスクを開いてください。
+
+Plugin を削除するには：
+
+```text
+codex plugin remove ask-then-do-it --marketplace ask-then-do-it
+```
+
+ローカル Marketplace を使った場合は、削除コマンドの名前を自分の `<local-marketplace-name>` に置き換えてください。
+
+インストールだけを削除します。ローカル Marketplace のファイルを消す前に、他の環境が共有していないことを確認してください。
+
+バージョンや出所が不明な場合、更新に失敗した場合は停止して確認します。先に削除したり、自動で降版・出所変更をしたりしません。現行版なら再インストールは不要で、無効化状態も維持します。
+
+## よくある質問
+
+- Skill がない：`codex plugin list` でインストールを確認し、新しいタスクを開きます。
+- 出所が不明：まず `codex plugin marketplace list` で確認します。
+
+問題は [GitHub Issues](https://github.com/Mysterio1001/Ask-Then-Do-It/issues) に、プロジェクトの版、AI サービス／主プログラム、環境、再現手順を添えてください。
 
 ## ライセンスと出典
 
-Ask Then Do It は Matt Pocock の skills repository に着想を得た独立プロジェクトです。Matt Pocock との提携・推奨関係はありません。詳細は `LICENSE` と `THIRD_PARTY_NOTICES.md` を参照してください。
-
+本プロジェクトは Matt Pocock の skills repository に着想を得た独立プロジェクトです。Matt Pocock との所属関係や同氏による承認はありません。`LICENSE` と `THIRD_PARTY_NOTICES.md` を参照してください。
 
 [README に戻る](../../README.md)

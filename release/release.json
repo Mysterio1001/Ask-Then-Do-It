@@ -2,12 +2,12 @@
   "schema_version": 2,
   "package_id": "ask-then-do-it",
   "display_name": "Ask Then Do It",
-  "release_version": "1.3.1",
-  "core_version": "1.3.1",
+  "release_version": "1.4.0",
+  "core_version": "1.4.0",
   "codex": {
     "source": "adapters/codex/plugin/ask-then-do-it",
     "directory": "codex/ask-then-do-it",
-    "archive": "codex/ask-then-do-it-1.3.1.zip",
+    "archive": "codex/ask-then-do-it-1.4.0.zip",
     "skills": [
       "ask-then-do-it",
       "ask-requirements",
@@ -22,8 +22,8 @@
   },
   "generic": {
     "source": "adapters/generic-prompts",
-    "directory": "generic/ask-then-do-it-generic-1.3.1",
-    "archive": "generic/ask-then-do-it-generic-1.3.1.zip",
+    "directory": "generic/ask-then-do-it-generic-1.4.0",
+    "archive": "generic/ask-then-do-it-generic-1.4.0.zip",
     "entrypoint": "generic-workflow.md",
     "start_guide": "release/generic/START-HERE.zh-TW.md",
     "modules": [
@@ -53,11 +53,57 @@
     "zip-equivalence",
     "sha256-verification",
     "removed-artifact-scan",
-    "release-architecture-diagnosis"
+    "release-architecture-diagnosis",
+    "claude-plugin-validation",
+    "claude-conformance",
+    "claude-package-inventory",
+    "claude-behavior",
+    "claude-context",
+    "claude-live-smoke"
   ],
   "managed_outputs": [
     "codex",
     "generic",
+    "claude",
     "checksums.sha256"
-  ]
+  ],
+  "claude": {
+    "source": "adapters/claude-code/plugin/ask-then-do-it",
+    "directory": "claude/ask-then-do-it",
+    "archive": "claude/ask-then-do-it-claude-1.4.0.zip",
+    "inventory": [
+      ".claude-plugin/plugin.json",
+      "LICENSE",
+      "START-HERE.en.md",
+      "START-HERE.ja.md",
+      "START-HERE.zh-TW.md",
+      "THIRD_PARTY_NOTICES.md",
+      "agents/ask-then-do-it-reviewer.md",
+      "config/model-classifications.json",
+      "hooks/hooks.json",
+      "profiles/claude-5/architecture-improvement.md",
+      "profiles/claude-5/direct-implementation.md",
+      "profiles/claude-5/documented-requirements.md",
+      "profiles/claude-5/lite-workflow.md",
+      "profiles/claude-5/orchestration.md",
+      "profiles/claude-5/requirements.md",
+      "profiles/claude-5/review.md",
+      "profiles/claude-5/specification.md",
+      "profiles/claude-5/tdd-implementation.md",
+      "profiles/claude-5/ticket-planning.md",
+      "profiles/general/architecture-improvement.md",
+      "profiles/general/direct-implementation.md",
+      "profiles/general/documented-requirements.md",
+      "profiles/general/lite-workflow.md",
+      "profiles/general/orchestration.md",
+      "profiles/general/requirements.md",
+      "profiles/general/review.md",
+      "profiles/general/specification.md",
+      "profiles/general/tdd-implementation.md",
+      "profiles/general/ticket-planning.md",
+      "scripts/router.mjs",
+      "skills/ask-then-do-it-5/SKILL.md",
+      "skills/ask-then-do-it/SKILL.md"
+    ]
+  }
 }

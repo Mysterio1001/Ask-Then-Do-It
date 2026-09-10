@@ -100,10 +100,28 @@ class ReleaseSafetyTests(unittest.TestCase):
             self.assertFalse(
                 (output / "generic" / "ask-then-do-it-generic-1.1.0.zip").exists()
             )
-            self.assertTrue((output / "codex" / "ask-then-do-it-1.3.1.zip").is_file())
+            self.assertTrue((output / "codex" / "ask-then-do-it-1.4.0.zip").is_file())
             self.assertTrue(
-                (output / "generic" / "ask-then-do-it-generic-1.3.1.zip").is_file()
+                (output / "generic" / "ask-then-do-it-generic-1.4.0.zip").is_file()
             )
+            self.assertTrue((output / "claude" / "ask-then-do-it-claude-1.4.0.zip").is_file())
+
+    def test_invalid_two_provider_history_cannot_authorize_three_provider_upgrade(self):
+        for defect in ("checksum", "extra", "payload-mismatch"):
+            with self.subTest(defect=defect), tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+                output = Path(temporary) / "dist"
+                write_prior_release(output)
+                if defect == "checksum":
+                    (output / "checksums.sha256").write_text("0" * 64 + "  codex/ask-then-do-it-1.1.0.zip\n")
+                elif defect == "extra":
+                    (output / "codex" / "unmanaged.txt").write_text("preserve")
+                else:
+                    (output / "generic" / "ask-then-do-it-generic-1.1.0" / "version.txt").unlink()
+                before = tree_hashes(output)
+                result = run_builder(output)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual(tree_hashes(output), before)
+                self.assertFalse((output / "claude").exists())
 
     def test_unmanaged_collision_stops_without_partial_outputs(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
@@ -148,8 +166,9 @@ class ReleaseSafetyTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
 
             for name in (
-                "codex/ask-then-do-it-1.3.1.zip",
-                "generic/ask-then-do-it-generic-1.3.1.zip",
+                "codex/ask-then-do-it-1.4.0.zip",
+                "generic/ask-then-do-it-generic-1.4.0.zip",
+                "claude/ask-then-do-it-claude-1.4.0.zip",
                 "checksums.sha256",
             ):
                 self.assertEqual(
@@ -159,11 +178,12 @@ class ReleaseSafetyTests(unittest.TestCase):
                 )
 
             pairs = (
-                ("codex/ask-then-do-it", "codex/ask-then-do-it-1.3.1.zip", "ask-then-do-it"),
+                ("claude/ask-then-do-it", "claude/ask-then-do-it-claude-1.4.0.zip", "ask-then-do-it"),
+                ("codex/ask-then-do-it", "codex/ask-then-do-it-1.4.0.zip", "ask-then-do-it"),
                 (
-                    "generic/ask-then-do-it-generic-1.3.1",
-                    "generic/ask-then-do-it-generic-1.3.1.zip",
-                    "ask-then-do-it-generic-1.3.1",
+                    "generic/ask-then-do-it-generic-1.4.0",
+                    "generic/ask-then-do-it-generic-1.4.0.zip",
+                    "ask-then-do-it-generic-1.4.0",
                 ),
             )
             for directory_name, archive_name, archive_root in pairs:

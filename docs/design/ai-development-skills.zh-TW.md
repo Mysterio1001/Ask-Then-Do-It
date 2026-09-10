@@ -93,6 +93,6 @@ Release gate 使用一個等價的代表情境比較 Full 和 Lite。Fixture 固
 - [初學者 Full/Lite 流程](../guides/getting-started-simple.zh-TW.md)
 - [Codex Plugin 使用說明](../guides/codex.zh-TW.md)
 - [Generic 使用說明](../guides/generic.zh-TW.md)
-
+- [維護者架構與文件索引](../project/knowledge-base.md)
 
 [回到 README](../../README.md)

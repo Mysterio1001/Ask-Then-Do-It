@@ -77,6 +77,14 @@ class ReleaseEvidenceGateTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("validated", result.stdout.lower())
 
+    def test_unverified_claude_evidence_cannot_complete_release(self):
+        for check in ("claude-behavior", "claude-context", "claude-live-smoke"):
+            with self.subTest(check=check), tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+                ledger, evidence = self.make_artifacts(Path(temporary), (check, "unverified"))
+                result = run_validator(ledger, evidence)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(check, result.stderr)
+
     def test_failed_or_blocked_check_rejects_completed_evidence(self) -> None:
         for status in ("failed", "blocked"):
             with self.subTest(status=status):

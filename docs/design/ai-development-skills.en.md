@@ -93,6 +93,6 @@ This proxy validates only repository-controlled workflow material. It does not g
 - [Beginner's Full/Lite Workflow Guide](../guides/getting-started-simple.en.md)
 - [Codex Plugin Guide](../guides/codex.en.md)
 - [Generic Guide](../guides/generic.en.md)
-
+- [Maintainer architecture and documentation index](../project/knowledge-base.md)
 
 [Back to README](../../README.md)

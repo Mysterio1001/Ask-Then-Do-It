@@ -1,0 +1,60 @@
+adapter_id: claude-code
+adapter_version: 1.4.0
+target: claude-code-plugin
+core_version: 1.4.0
+capabilities:
+- conversation
+- tools
+- multi_agent
+artifact_persistence: Repository-backed Full artifacts; Lite state is not persisted
+  across sessions.
+implemented_rules:
+- CAP-DECLARE-001
+- CAP-CLAIM-001
+- MODE-RESOLVE-001
+- FULL-PRESERVE-001
+- LITE-QUESTIONS-001
+- LITE-BRIEF-001
+- LITE-RISK-001
+- LITE-VALIDATE-001
+- LITE-REVIEW-001
+- LITE-SESSION-001
+- GATE-REQ-001
+- GATE-SPEC-001
+- GATE-PLAN-001
+- GRILL-ONE-001
+- SPEC-NOCODE-001
+- PLAN-VERTICAL-001
+- TDD-RED-001
+- REVIEW-EVIDENCE-001
+- ART-STATE-001
+- ADAPTER-COVERAGE-001
+- KB-EVIDENCE-001
+- KB-DRAFT-001
+- KB-SYNC-001
+- REVIEW-LENSES-001
+- ARCH-DIAG-001
+- ARCH-DELETE-001
+- ARCH-REPORT-001
+- ARCH-REFLOW-001
+- ROUTE-USER-001
+- ROUTE-DOCS-001
+capability_evidence:
+  conversation:
+  - adapters/claude-code/plugin/ask-then-do-it/profiles/general/requirements.md
+  - adapters/claude-code/plugin/ask-then-do-it/profiles/claude-5/requirements.md
+  tools:
+  - adapters/claude-code/plugin/ask-then-do-it/profiles/general/tdd-implementation.md
+  - tests/claude/test_router_contract.py
+  multi_agent:
+  - adapters/claude-code/plugin/ask-then-do-it/agents/ask-then-do-it-reviewer.md
+  - tests/claude/test_public_plugin_contract.py
+validation:
+  status: unverified
+  environment: Source contract and offline tests only; authenticated host, model behavior,
+    context reduction and live lifecycle remain unverified.
+  commands:
+  - python scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest
+    adapters/claude-code/conformance.yaml
+  - python scripts/validate_claude_plugin.py
+  - python -m unittest discover -s tests/claude -p test_*.py

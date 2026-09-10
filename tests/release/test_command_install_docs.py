@@ -1,4 +1,5 @@
-import hashlib
+"""Installation commands and README navigation, independent of prose hashes."""
+
 import re
 import unittest
 from pathlib import Path
@@ -6,114 +7,107 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 README = ROOT / "README.md"
-CODEX_GUIDES = (
-    ROOT / "docs" / "guides" / "codex.en.md",
-    ROOT / "docs" / "guides" / "codex.zh-TW.md",
-    ROOT / "docs" / "guides" / "codex.ja.md",
-)
-CODEX_STARTS = (
-    ROOT / "adapters" / "codex" / "plugin" / "ask-then-do-it" / "START-HERE.en.md",
-    ROOT / "adapters" / "codex" / "plugin" / "ask-then-do-it" / "START-HERE.zh-TW.md",
-    ROOT / "adapters" / "codex" / "plugin" / "ask-then-do-it" / "START-HERE.ja.md",
-)
+LOCALES = ("en", "zh-TW", "ja")
+CODEX_GUIDES = tuple(ROOT / f"docs/guides/codex.{locale}.md" for locale in LOCALES)
+CODEX_STARTS = tuple(ROOT / f"adapters/codex/plugin/ask-then-do-it/START-HERE.{locale}.md" for locale in LOCALES)
 REQUIRED_COMMANDS = (
     "codex plugin marketplace list",
     "codex plugin marketplace add Mysterio1001/Ask-Then-Do-It",
     "codex plugin marketplace upgrade ask-then-do-it",
     "codex plugin list",
     "codex plugin add ask-then-do-it@ask-then-do-it",
+    "codex plugin remove ask-then-do-it --marketplace ask-then-do-it",
 )
-FORBIDDEN_COMMANDS = ("codex plugin install",)
 LOCALIZED_CONCEPTS = {
-    "en": ("new Codex task", "downgrade"),
-    "zh-TW": ("新的 Codex 任務", "降級"),
-    "ja": ("新しい Codex タスク", "ダウングレード"),
+    "en": (r"new Codex task", r"downgrade", r"disabled", r"backup", r"Restore"),
+    "zh-TW": (r"新的 Codex 任務", r"降版|降級", r"停用", r"備份", r"還原"),
+    "ja": (r"新しい Codex タスク", r"降版|ダウングレード", r"無効化", r"バックアップ", r"戻せ"),
+}
+README_LOCALE_SECTIONS = {
+    "en": {
+        "intro": "## Introduction", "quick": "## Quick Start",
+        "automatic": "### Automatic installation (CLI)", "manual": "### Manual installation",
+        "more": "Read more:", "update": "## Updating", "next": "## 介紹",
+    },
+    "zh-TW": {
+        "intro": "## 介紹", "quick": "## 快速開始",
+        "automatic": "### 自動安裝 ( CLI )", "manual": "### 手動安裝",
+        "more": "更多說明：", "update": "## 更新方式", "next": "## はじめに",
+    },
+    "ja": {
+        "intro": "## はじめに", "quick": "## クイックスタート",
+        "automatic": "### 自動インストール（CLI）", "manual": "### 手動インストール",
+        "more": "詳しい説明：", "update": "## 更新方法", "next": None,
+    },
 }
 
 
-def normalize_release_versions(text: str) -> str:
-    text = re.sub(r"(?<=-)\d+\.\d+\.\d+(?=\.zip)", "<VERSION>", text)
-    return re.sub(r"(?<=/v)\d+\.\d+\.\d+(?=/)", "<VERSION>", text)
-
-
-def digest(text: str) -> str:
-    return hashlib.sha256(text.encode("utf-8")).hexdigest()
-
-
 def readme_block(body: str, start: str, end: str | None) -> str:
+    if start not in body or (end and end not in body):
+        raise AssertionError(f"Missing README boundary: {start}, {end}")
     begin = body.index(start)
     finish = body.index(end, begin) if end else len(body)
     return body[begin:finish]
 
 
-README_PRESERVED_DIGESTS = {
-    "preamble": "417cb00c1890f8d8dc9896d702a5f8b21393b6ea5f149b4bcde6f84cfaeee33e",
-    "en": {
-        "automatic": "b37758b1bf4a2bcc9851c82601e2d32c8acd7c411472c225308dc8552393e469",
-        "manual": "06cf80e46c2c73809607212288d26fa72940fba809254bd49377013ccf44c37f",
-        "read-more": "27ce8bda49ab34829834fc762786151de9c9942b8bd1f826b84c244311292ab2",
-    },
-    "zh-TW": {
-        "automatic": "0f1d65607a3de5142b8fa6d671c70c12cd86650119853c85f341618e956e08a0",
-        "manual": "648b6ec06aef7fd2d685401d52ddc7a940a2d9c27c349e796367ff3a04208ae0",
-        "read-more": "6587249a484cabfa2d78caf37cf4ce449a80b93a51f7bf6299bb8e3bfbcc9514",
-    },
-    "ja": {
-        "automatic": "aab937e6ccad5a242acc2d9ee1eb02997d61ae198f4bd0b17785062b8a575372",
-        "manual": "b541ccdfee4ac9407bedd843314592941c06d335506c40a7221d32745c4d1e2a",
-        "read-more": "bfd1dbadb1ba45908d64f6dc162263f2b441796e7118196a79b956de6d2779d1",
-    },
-}
-
-
-README_LOCALE_SECTIONS = {
-    "en": {
-        "intro": "## Introduction",
-        "quick": "## Quick Start",
-        "automatic": "### Automatic installation (CLI)",
-        "manual": "### Manual installation",
-        "more": "Read more:",
-        "next": "## 介紹",
-    },
-    "zh-TW": {
-        "intro": "## 介紹",
-        "quick": "## 快速開始",
-        "automatic": "### 自動安裝 ( CLI )",
-        "manual": "### 手動安裝",
-        "more": "更多說明：",
-        "next": "## はじめに",
-    },
-    "ja": {
-        "intro": "## はじめに",
-        "quick": "## クイックスタート",
-        "automatic": "### 自動インストール（CLI）",
-        "manual": "### 手動インストール",
-        "more": "詳しい説明：",
-        "next": None,
-    },
-}
+def assert_readme_layout(body: str) -> None:
+    """Protect user-approved layout without restoring old insertion markers."""
+    if "<!-- claude:" in body:
+        raise AssertionError("Obsolete insertion markers must not return")
+    for locale, markers in README_LOCALE_SECTIONS.items():
+        section = readme_block(body, markers["intro"], markers["next"])
+        ordered = [markers["intro"], markers["quick"], markers["automatic"], "#### Codex CLI", "#### Claude Code", markers["manual"], markers["more"], markers["update"]]
+        if any(section.count(marker) != 1 for marker in ordered):
+            raise AssertionError(f"Each README section must occur once: {locale}")
+        positions = [section.index(marker) for marker in ordered]
+        if positions != sorted(positions):
+            raise AssertionError(f"README section order changed: {locale}")
+        quick = readme_block(section, markers["quick"], markers["manual"])
+        commands = re.findall(r"^(?:codex plugin |/plugin ).+$", quick, re.M)
+        if commands != [
+            "codex plugin marketplace add Mysterio1001/Ask-Then-Do-It",
+            "codex plugin add ask-then-do-it@ask-then-do-it",
+            "/plugin marketplace add Mysterio1001/Ask-Then-Do-It",
+            "/plugin install ask-then-do-it@ask-then-do-it",
+        ]:
+            raise AssertionError("Quick Start must contain only first-install commands")
+        more = readme_block(section, markers["more"], markers["update"])
+        links = re.findall(r"\[[^]]+\]\(([^)]+)\)", more)
+        expected = [f"docs/guides/{name}.{locale}.md" for name in ("getting-started-simple", "codex", "claude-code", "generic")]
+        expected.append(f"docs/design/ai-development-skills.{locale}.md")
+        if links != expected:
+            raise AssertionError("Read-more links must remain beginner, Codex, Claude, Generic, design")
+        update = readme_block(section, markers["update"], None)
+        if not re.search(r"(?s)<details>\s*<summary>.+?</summary>.*</details>", update):
+            raise AssertionError("Updating must have its own collapsible section")
+        updates = re.findall(r"^(?:codex plugin |/plugin |/reload-plugins).*$", update, re.M)
+        if updates != [
+            "codex plugin marketplace upgrade ask-then-do-it",
+            "/plugin marketplace update ask-then-do-it",
+            "/plugin update ask-then-do-it@ask-then-do-it",
+            "/reload-plugins",
+        ]:
+            raise AssertionError("Updating must preserve supported host commands")
 
 
 class CommandInstallDocumentationTests(unittest.TestCase):
     def test_detailed_codex_guides_share_the_safe_command_contract(self) -> None:
-        for path in CODEX_GUIDES:
-            text = path.read_text(encoding="utf-8")
-            with self.subTest(path=path):
+        for locale, path in zip(LOCALES, CODEX_GUIDES):
+            body = path.read_text(encoding="utf-8")
+            with self.subTest(locale=locale):
                 for command in REQUIRED_COMMANDS:
-                    self.assertIn(command, text)
-                for command in FORBIDDEN_COMMANDS:
-                    self.assertNotIn(command, text)
-                for concept in ("ZIP", "marketplace"):
-                    self.assertIn(concept.lower(), text.lower())
-                language = (
-                    "zh-TW"
-                    if "zh-TW" in path.name
-                    else "ja"
-                    if ".ja." in path.name
-                    else "en"
-                )
-                for concept in LOCALIZED_CONCEPTS[language]:
-                    self.assertIn(concept, text)
+                    self.assertIn(command, body)
+                self.assertNotIn("codex plugin install", body)
+                for command in (
+                    "codex plugin add ask-then-do-it --marketplace <local-marketplace-name>",
+                    "codex plugin list --marketplace <local-marketplace-name>",
+                ):
+                    self.assertIn(command, body)
+                for concept in LOCALIZED_CONCEPTS[locale]:
+                    self.assertRegex(body, concept)
+                self.assertIn('<a id="zip"></a>', body)
+                self.assertIn("plugins/ask-then-do-it/", body)
+                self.assertIn("https://developers.openai.com/plugins/build/plugins", body)
 
     def test_start_pages_handoff_to_the_detailed_command_contract(self) -> None:
         for path in CODEX_STARTS:
@@ -129,64 +123,23 @@ class CommandInstallDocumentationTests(unittest.TestCase):
                 self.assertIn(f"/docs/guides/codex.{language}.md", text)
                 self.assertNotIn("codex plugin install", text)
 
-    def test_readme_preserved_blocks_are_independent_of_git_head(self) -> None:
-        body = README.read_text(encoding="utf-8").replace("\r\n", "\n")
-        self.assertIn("## Introduction", body)
-        preamble = body[: body.index("## Introduction")]
-        self.assertEqual(digest(preamble), README_PRESERVED_DIGESTS["preamble"])
+    def test_readme_keeps_install_update_and_navigation_layout(self) -> None:
+        assert_readme_layout(README.read_text(encoding="utf-8"))
 
-        for locale, markers in README_LOCALE_SECTIONS.items():
-            required = (
-                markers["intro"],
-                markers["quick"],
-                markers["automatic"],
-                markers["manual"],
-                markers["more"],
-            )
-            self.assertTrue(
-                all(marker in body for marker in required),
-                f"Missing README marker for {locale}: {required}",
-            )
-            automatic = normalize_release_versions(
-                readme_block(body, markers["automatic"], markers["manual"])
-            )
-            manual = normalize_release_versions(
-                readme_block(body, markers["manual"], markers["more"])
-            )
-            read_more = normalize_release_versions(
-                readme_block(body, markers["more"], markers["next"]).rstrip() + "\n"
-            )
-            expected = README_PRESERVED_DIGESTS[locale]
-            with self.subTest(locale=locale, block="automatic"):
-                self.assertEqual(digest(automatic), expected["automatic"])
-            with self.subTest(locale=locale, block="manual"):
-                self.assertEqual(digest(manual), expected["manual"])
-            with self.subTest(locale=locale, block="read-more"):
-                self.assertEqual(digest(read_more), expected["read-more"])
-
-    def test_readme_keeps_install_heading_order_and_single_sections(self) -> None:
+    def test_readme_contract_rejects_mixed_install_update_and_navigation_drift(self) -> None:
         body = README.read_text(encoding="utf-8")
-        for locale, markers in README_LOCALE_SECTIONS.items():
-            section = readme_block(body, markers["intro"], markers["next"])
-            ordered = [
-                markers["intro"],
-                markers["quick"],
-                markers["automatic"],
-                "#### Codex CLI",
-                markers["manual"],
-                markers["more"],
-            ]
-            self.assertTrue(
-                all(marker in body for marker in ordered),
-                f"Missing README marker for {locale}: {ordered}",
-            )
-            positions = [section.index(marker) for marker in ordered]
-            with self.subTest(locale=locale):
-                self.assertEqual(positions, sorted(positions))
-            for marker in ordered:
-                expected_count = 3 if marker == "#### Codex CLI" else 1
-                with self.subTest(locale=locale, marker=marker):
-                    self.assertEqual(body.count(marker), expected_count)
+        mutations = {
+            "update-in-install": body.replace("# Install", "# Install\ncodex plugin marketplace upgrade ask-then-do-it", 1),
+            "invalid-codex-command": body.replace("codex plugin add ask-then-do-it@ask-then-do-it", "codex plugin install ask-then-do-it@ask-then-do-it", 1),
+            "missing-collapse": body.replace("<details>", "", 1),
+            "wrong-update": body.replace("/plugin update ask-then-do-it@ask-then-do-it", "/plugin install ask-then-do-it@ask-then-do-it", 1),
+            "missing-update-heading": body.replace("## Updating", "", 1),
+            "read-more-order": body.replace("docs/guides/getting-started-simple.en.md", "docs/guides/generic.en.md", 1),
+            "old-markers": body + "\n<!-- claude:begin -->old<!-- claude:end -->\n",
+        }
+        for name, changed in mutations.items():
+            with self.subTest(mutation=name), self.assertRaises(AssertionError):
+                assert_readme_layout(changed)
 
     def test_localized_guide_relative_links_resolve(self) -> None:
         pattern = re.compile(r"\[[^]]+\]\(([^)]+)\)")

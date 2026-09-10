@@ -5,6 +5,7 @@ Ask Then Do It 提供 `Full` 與 `Lite` 兩種流程。Full 適合需要完整�
 兩種模式都必須先釐清範圍、取得使用者授權、保留現有變更，並誠實回報驗證結果。Lite 比 Full 精簡，但不是跳過風險或驗證。
 
 ## 模式優先順序
+先選擇使用方式。需要完整流程用 Full；範圍明確的改動可用 Lite。 [Codex](codex.zh-TW.md) · [Claude Code](claude-code.zh-TW.md) · [Generic](generic.zh-TW.md)。
 
 Codex 每次開始操作時，依下列順序判定模式：
 

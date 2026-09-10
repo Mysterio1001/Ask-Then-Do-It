@@ -1,7 +1,7 @@
 adapter_id: generic-prompts
-adapter_version: 1.3.1
+adapter_version: 1.4.0
 target: copyable-general-language-model-prompts
-core_version: 1.3.1
+core_version: 1.4.0
 capabilities:
   - conversation
 artifact_persistence: user-managed-markdown
@@ -50,7 +50,7 @@ capability_evidence:
     - adapters/generic-prompts/architecture-improvement.md
 validation:
   status: validated
-  environment: CPython 3.12 with PyYAML 6.x on Windows
+  environment: Windows; CPython 3.12; offline Core/adapter suites validated on 2026-09-10; no Claude live claim.
   commands:
     - python -m unittest tests.generic.test_generic_prompts
     - python -m unittest tests.generic.test_generic_lite_workflow
