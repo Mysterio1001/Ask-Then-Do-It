@@ -26,10 +26,6 @@ ticket*-build*/
 ticket*-validation*/
 dist-pre-*-backup/
 
-# Local Claude verification kits, binaries, and publication output
-.claude-offline/
-.ticket3-preflight/
-
 # Editor and operating-system files
 .DS_Store
 Thumbs.db

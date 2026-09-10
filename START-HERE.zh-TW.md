@@ -20,13 +20,6 @@ $ask-then-do-it 我想做一個……
 
 設定方式、模式選擇與能力限制請見 [Generic 使用說明](docs/guides/generic.zh-TW.md)。
 
-<!-- claude:begin -->
-
-**3. Claude Code — 1.4.0-preview.1 公開預覽版**
-
-[Claude Code 使用說明](docs/guides/claude-code.zh-TW.md)涵蓋主動選用的 `claude-preview` Marketplace 分支、兩個入口、更新、移除、回饋及 session-only ZIP 復原。指令須等預覽發布後才可使用；若尚不可用，請等待。Codex 與 Generic 維持穩定版 1.3.1。驗證範圍是 native strict validation 與本機自動化測試；真實官方 Claude 工作階段延後驗證。
-
-<!-- claude:end -->
 ## 想先了解流程
 
 - [完整 Full 與 Lite 流程](docs/guides/getting-started-simple.zh-TW.md)

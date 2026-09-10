@@ -1,5 +1,0 @@
-# Claude source and evidence use stable bytes across operating systems.
-adapters/claude-code/** text eol=lf
-.claude-plugin/** text eol=lf
-tests/claude/fixtures/** text eol=lf
-tests/release/fixtures/claude-context-proxy/** text eol=lf

@@ -26,22 +26,6 @@ codex plugin marketplace upgrade ask-then-do-it
 ```
 > **Tip: Enter the commands above into AI.**
 
-<!-- claude:begin -->
-
-#### Claude Code — 1.4.0-preview.1 public preview
-
-These instructions apply once the preview tag, ZIP, and Marketplace branch are published; if unavailable, wait.
-
-Opt in to the Claude preview; Codex and Generic remain on stable **1.3.1**. Requires Claude Code 2.1.251+, Claude model 4.6+, and Node.js 22+ for automatic routing.
-
-```sh
-claude plugin marketplace add "https://github.com/Mysterio1001/Ask-Then-Do-It.git#claude-preview" --scope user
-claude plugin install ask-then-do-it@ask-then-do-it --scope user
-```
-
-Start with `/ask-then-do-it:ask-then-do-it`. The [Claude Code guide](docs/guides/claude-code.en.md) covers both entries, updates, removal, and feedback. [Download the preview ZIP](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0-preview.1/ask-then-do-it-claude-1.4.0-preview.1.zip) for session-only recovery. Verification covers native strict validation and local automated tests; real official Claude session verification is deferred.
-
-<!-- claude:end -->
 ### Manual installation
 
 - Codex Plugin: [Download ask-then-do-it-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip), install it, and start with `$ask-then-do-it`.
@@ -51,9 +35,6 @@ Read more:
 - [Beginner workflow](docs/guides/getting-started-simple.en.md)
 - [Codex Plugin guide](docs/guides/codex.en.md)
 - [Generic guide](docs/guides/generic.en.md)
-<!-- claude:begin -->
-- [Claude Code guide — 1.4.0-preview.1](docs/guides/claude-code.en.md)
-<!-- claude:end -->
 - [Design guide](docs/design/ai-development-skills.en.md)
 
 ## 介紹
@@ -78,22 +59,6 @@ codex plugin marketplace upgrade ask-then-do-it
 ```
 > **提示 對 AI 輸入以上的指令**
 
-<!-- claude:begin -->
-
-#### Claude Code — 1.4.0-preview.1 公開預覽版
-
-指令須等預覽 tag、ZIP 與 Marketplace 分支發布後才可使用；若尚不可用，請等待。
-
-Claude 預覽版需主動選用；Codex 與 Generic 維持穩定版 **1.3.1**。需要 Claude Code 2.1.251+、Claude model 4.6+，自動 routing 另需 Node.js 22+。
-
-```sh
-claude plugin marketplace add "https://github.com/Mysterio1001/Ask-Then-Do-It.git#claude-preview" --scope user
-claude plugin install ask-then-do-it@ask-then-do-it --scope user
-```
-
-從 `/ask-then-do-it:ask-then-do-it` 開始。[Claude Code 使用說明](docs/guides/claude-code.zh-TW.md)包含兩個入口、更新、移除及回饋方式；也可[下載預覽 ZIP](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0-preview.1/ask-then-do-it-claude-1.4.0-preview.1.zip)作 session-only 復原。驗證範圍是 native strict validation 與本機自動化測試；真實官方 Claude 工作階段延後驗證。
-
-<!-- claude:end -->
 ### 手動安裝
 
 - Codex Plugin：[下載 ask-then-do-it-1.3.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip)，安裝後從 `$ask-then-do-it` 開始。
@@ -104,9 +69,6 @@ claude plugin install ask-then-do-it@ask-then-do-it --scope user
 - [初學者流程](docs/guides/getting-started-simple.zh-TW.md)
 - [Codex Plugin 使用說明](docs/guides/codex.zh-TW.md)
 - [Generic 使用說明](docs/guides/generic.zh-TW.md)
-<!-- claude:begin -->
-- [Claude Code 使用說明 — 1.4.0-preview.1](docs/guides/claude-code.zh-TW.md)
-<!-- claude:end -->
 - [設計說明](docs/design/ai-development-skills.zh-TW.md)
 
 ## はじめに
@@ -131,22 +93,6 @@ codex plugin marketplace upgrade ask-then-do-it
 ```
 > **ヒント：上記のコマンドを AI に入力してください。**
 
-<!-- claude:begin -->
-
-#### Claude Code — 1.4.0-preview.1 公開プレビュー
-
-プレビュー tag、ZIP、Marketplace ブランチの公開後に使用してください。利用できない場合は公開を待ってください。
-
-Claude プレビューは明示的に選んで利用します。Codex と Generic は安定版 **1.3.1** を維持します。Claude Code 2.1.251+、Claude model 4.6+、自動 routing には Node.js 22+ が必要です。
-
-```sh
-claude plugin marketplace add "https://github.com/Mysterio1001/Ask-Then-Do-It.git#claude-preview" --scope user
-claude plugin install ask-then-do-it@ask-then-do-it --scope user
-```
-
-`/ask-then-do-it:ask-then-do-it` から開始します。[Claude Code ガイド](docs/guides/claude-code.ja.md)に両入口、更新、削除、フィードバックを記載しています。[プレビュー ZIP](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0-preview.1/ask-then-do-it-claude-1.4.0-preview.1.zip)で session-only リカバリーも可能です。検証範囲は native strict validation とローカル自動テストです。実際の公式 Claude session は検証を延期しています。
-
-<!-- claude:end -->
 ### 手動インストール
 
 - Codex Plugin：[ask-then-do-it-1.3.1.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip)し、インストール後に `$ask-then-do-it` から始めます。
@@ -156,7 +102,4 @@ claude plugin install ask-then-do-it@ask-then-do-it --scope user
 - [初心者向けフロー](docs/guides/getting-started-simple.ja.md)
 - [Codex Plugin 使用ガイド](docs/guides/codex.ja.md)
 - [Generic 使用ガイド](docs/guides/generic.ja.md)
-<!-- claude:begin -->
-- [Claude Code ガイド — 1.4.0-preview.1](docs/guides/claude-code.ja.md)
-<!-- claude:end -->
 - [設計ガイド](docs/design/ai-development-skills.ja.md)

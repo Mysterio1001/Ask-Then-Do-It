@@ -5,13 +5,6 @@ Ask Then Do It には `Full` と `Lite` の 2 つのフローがあります。F
 どちらのモードも、範囲を明確にし、利用者の許可を得て、既存の変更を保護し、検証結果を正直に報告してから完了を主張します。Lite は Full より簡潔ですが、リスク確認や検証を省略する許可ではありません。
 
 ## モードの優先順位
-<!-- claude:begin -->
-
-### 利用する host を選ぶ
-
-このガイドは各 host 共通の Full/Lite フローを説明します。[Claude Code ガイド](claude-code.ja.md)は明示的に選ぶ公開プレビュー `1.4.0-preview.1`、両 namespaced entries、Claude 専用の読み取り専用 Config を説明します。インストール手順はプレビュー公開後に適用されます。検証範囲は native strict validation とローカル自動テストです。実際の公式 Claude session は検証を延期しています。Codex と Generic は安定版 1.3.1 と以下の既存の設定を維持します。
-
-<!-- claude:end -->
 
 Codex は操作を始めるたびに、次の順序でモードを決定します。
 

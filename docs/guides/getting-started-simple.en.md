@@ -5,13 +5,6 @@ Ask Then Do It offers two workflows: `Full` and `Lite`. Full is for work that ne
 Both modes clarify scope, obtain user authority, preserve existing changes, and report verification honestly before claiming completion. Lite is smaller than Full; it is not permission to skip risk checks or validation.
 
 ## Mode precedence
-<!-- claude:begin -->
-
-### Choose your host
-
-The Full/Lite behavior in this guide is shared across hosts. The [Claude Code guide](claude-code.en.md) covers the opt-in public preview `1.4.0-preview.1`, both namespaced entries, and Claude-specific read-only Config. Its installation instructions apply after preview publication. Verification covers native strict validation and local automated tests; real official Claude session verification is deferred. Codex and Generic retain stable 1.3.1 and their existing setup below.
-
-<!-- claude:end -->
 
 At the start of each operation, Codex resolves the mode in this order:
 
