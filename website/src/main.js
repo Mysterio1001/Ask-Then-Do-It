@@ -45,7 +45,7 @@ document.querySelector("#app").innerHTML = `
     <div class="scene-grain"></div>
   </div>
   <header class="site-header">
-    <div class="brand" aria-label="Ask-Then-Do-It"><img class="brand-mark" src="/logo.png" alt="" width="34" height="34"><span>ASK THEN DO IT<span class="brand-period">.</span></span></div>
+    <div class="brand" aria-label="Ask-Then-Do-It"><img class="brand-mark" src="${import.meta.env.BASE_URL}logo.png" alt="" width="34" height="34"><span>ASK THEN DO IT<span class="brand-period">.</span></span></div>
     <div class="header-actions">
       <div class="language-switcher">
         <button id="language-toggle" class="language-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="language-menu" data-i18n-aria="nav.language"><span id="current-language">繁中</span>${icon("chevron-down")}</button>
