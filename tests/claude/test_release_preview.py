@@ -210,11 +210,11 @@ class ClaudeReleasePreviewTests(unittest.TestCase):
         self.assertFalse(self.output.exists())
         config = self.builder.claude_preview_config()
         del config["offline_preview"]
-        config["release_version"] = config["core_version"] = "1.4.0"
+        config["release_version"] = config["core_version"] = "1.4.1"
         (self.source / ".claude-plugin/plugin.json").write_text(json.dumps({
-            "name": "ask-then-do-it", "displayName": "Ask Then Do It", "version": "1.4.0",
+            "name": "ask-then-do-it", "displayName": "Ask Then Do It", "version": "1.4.1",
         }), encoding="utf-8")
-        config["claude"]["archive"] = "claude/ask-then-do-it-claude-1.4.0.zip"
+        config["claude"]["archive"] = "claude/ask-then-do-it-claude-1.4.1.zip"
         config["claude"]["inventory"] = sorted(RUNTIME | LEGAL)
         config["required_validation_checks"] = [
             "claude-plugin-validation", "claude-conformance", "claude-package-inventory",
@@ -223,7 +223,7 @@ class ClaudeReleasePreviewTests(unittest.TestCase):
         with self.assertRaisesRegex(self.builder.BuildError, "canonical declaration"):
             self.builder.validate_claude_config(config)
         declaration = self.root / "adapters/claude-code/conformance.yaml"
-        declaration.write_text("adapter_id: claude-code\ntarget: claude-code-plugin\nadapter_version: 1.4.0\ncore_version: 1.4.0\n")
+        declaration.write_text("adapter_id: claude-code\ntarget: claude-code-plugin\nadapter_version: 1.4.1\ncore_version: 1.4.1\n")
         self.builder.validate_claude_config(config)
         config["required_validation_checks"].remove("claude-live-smoke")
         with self.assertRaisesRegex(self.builder.BuildError, "validation checks"):

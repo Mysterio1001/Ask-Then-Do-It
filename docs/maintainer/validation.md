@@ -1,6 +1,6 @@
 # 驗證手冊
 
-適用來源版本：1.4.0。此文件集合既有工具操作、Claude 實測程序及重要回歸測試對照；來源／已知缺口見[工作狀態](../project/status.md)。**離線測試、來源 integrity、simulated hook 結果與真實 Claude 行為是不同證據。** 不以其中一項代替全部驗收。
+適用來源版本：1.4.1。此文件集合既有工具操作、Claude 實測程序及重要回歸測試對照；來源／已知缺口見[工作狀態](../project/status.md)。**離線測試、來源 integrity、simulated hook 結果與真實 Claude 行為是不同證據。** 不以其中一項代替全部驗收。
 
 ## 開發環境與一般檢查
 
@@ -72,7 +72,7 @@ the fixture identity. Keep this evidence output separate from that directory.
 The staged conformance fixture maps all 30 Core rules and cumulative
 conversation/tools/multi_agent capabilities. Its `staged-unverified` status is
 intentional. It is a test recipe, not the current canonical conformance
-declaration. Current 1.4.0 declarations already exist; do not overwrite them
+declaration. Current 1.4.1 declarations already exist; do not overwrite them
 with staged-unverified fixture data.
 
 ### 執行實測

@@ -9,6 +9,8 @@ import unittest
 import zipfile
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "release" / "release.json"
 SOURCE = ROOT / "adapters" / "generic-prompts"
@@ -65,7 +67,7 @@ def read_generated_manifest(path: Path) -> dict[str, object]:
 
 class GenericReleaseTests(unittest.TestCase):
     def test_built_workflow_allows_only_default_mode_declaration_edits(self) -> None:
-        combined = (current_distribution() / "generic/ask-then-do-it-generic-1.4.0/generic-workflow.md").read_text(encoding="utf-8")
+        combined = (current_distribution() / "generic/ask-then-do-it-generic-1.4.1/SKILL.md").read_text(encoding="utf-8")
         declaration = "Default workflow mode: full"
 
         self.assertIn(MODE_EDIT_PERMISSION, combined)
@@ -76,15 +78,47 @@ class GenericReleaseTests(unittest.TestCase):
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
         generic = config["generic"]
         self.assertEqual(generic["source"], "adapters/generic-prompts")
-        self.assertEqual(generic["directory"], "generic/ask-then-do-it-generic-1.4.0")
-        self.assertEqual(generic["archive"], "generic/ask-then-do-it-generic-1.4.0.zip")
-        self.assertEqual(generic["entrypoint"], "generic-workflow.md")
+        self.assertEqual(generic["directory"], "generic/ask-then-do-it-generic-1.4.1")
+        self.assertEqual(generic["archive"], "generic/ask-then-do-it-generic-1.4.1.zip")
+        self.assertEqual(generic["entrypoint"], "SKILL.md")
         self.assertEqual(
             generic["start_guide"],
             "release/generic/START-HERE.zh-TW.md",
         )
         self.assertEqual(generic["modules"], MODULES)
-        self.assertFalse((SOURCE / "generic-workflow.md").exists())
+        self.assertFalse((SOURCE / "SKILL.md").exists())
+
+    def test_built_skill_has_parseable_required_frontmatter(self) -> None:
+        skill = current_distribution() / "generic/ask-then-do-it-generic-1.4.1/SKILL.md"
+        content = skill.read_bytes().decode("utf-8")
+        self.assertTrue(content.startswith("---\n"))
+        _, frontmatter, body = content.split("---\n", 2)
+        metadata = yaml.safe_load(frontmatter)
+        self.assertEqual(set(metadata), {"name", "description"})
+        self.assertEqual(metadata["name"], "ask-then-do-it-generic")
+        self.assertIsInstance(metadata["description"], str)
+        self.assertTrue(metadata["description"].strip())
+        self.assertLessEqual(len(metadata["description"]), 1024)
+        self.assertNotRegex(metadata["description"], r"[<>]")
+        self.assertIn(MODE_EDIT_PERMISSION, body)
+
+    def test_builder_rejects_nonstandard_skill_entrypoint(self) -> None:
+        for entrypoint in ("generic-workflow.md", "skill.md"):
+            with self.subTest(entrypoint=entrypoint), tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+                config = json.loads(CONFIG.read_text(encoding="utf-8"))
+                config["generic"]["entrypoint"] = entrypoint
+                candidate = Path(temporary) / "release.json"
+                candidate.write_text(json.dumps(config), encoding="utf-8")
+                output = Path(temporary) / "dist"
+                result = subprocess.run(
+                    [sys.executable, str(ROOT / "scripts/build_release.py"),
+                     "--package", "generic", "--config", str(candidate),
+                     "--allow-test-output-root", "--output-root", str(output)],
+                    cwd=ROOT, capture_output=True, text=True, check=False,
+                )
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("generic.entrypoint must be SKILL.md", result.stderr)
+                self.assertFalse(any(output.rglob("*.zip")))
 
     def test_builder_emits_self_contained_conversation_only_package(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
@@ -106,8 +140,8 @@ class GenericReleaseTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
 
-            package = output_root / "generic" / "ask-then-do-it-generic-1.4.0"
-            archive = output_root / "generic" / "ask-then-do-it-generic-1.4.0.zip"
+            package = output_root / "generic" / "ask-then-do-it-generic-1.4.1"
+            archive = output_root / "generic" / "ask-then-do-it-generic-1.4.1.zip"
             checksums = output_root / "checksums.sha256"
             actual_files = {
                 path.relative_to(package).as_posix()
@@ -118,7 +152,7 @@ class GenericReleaseTests(unittest.TestCase):
                 *START_GUIDES,
                 "LICENSE",
                 "THIRD_PARTY_NOTICES.md",
-                "generic-workflow.md",
+                "SKILL.md",
                 "manifest.yaml",
                 *{f"prompts/{name}" for name in MODULES},
             }
@@ -132,7 +166,7 @@ class GenericReleaseTests(unittest.TestCase):
             )
             for required in (
                 "每個新對話",
-                "generic-workflow.md",
+                "SKILL.md",
                 "全文",
                 "generic.zh-TW.md",
                 "getting-started-simple.zh-TW.md",
@@ -159,7 +193,8 @@ class GenericReleaseTests(unittest.TestCase):
                     (SOURCE / name).read_bytes(),
                 )
 
-            combined = (package / "generic-workflow.md").read_text(encoding="utf-8")
+            combined = (package / "SKILL.md").read_text(encoding="utf-8")
+            self.assertNotIn("generic-workflow.md", actual_files)
             self.assertIn(MODE_EDIT_PERMISSION, combined)
             self.assertLess(
                 combined.index(MODE_EDIT_PERMISSION),
@@ -179,21 +214,26 @@ class GenericReleaseTests(unittest.TestCase):
 
             manifest = read_generated_manifest(package / "manifest.yaml")
             self.assertEqual(manifest["package_id"], "ask-then-do-it")
-            self.assertEqual(manifest["release_version"], "1.4.0")
-            self.assertEqual(manifest["core_version"], "1.4.0")
+            self.assertEqual(manifest["release_version"], "1.4.1")
+            self.assertEqual(manifest["core_version"], "1.4.1")
             self.assertEqual(manifest["adapter_id"], "generic-prompts")
+            self.assertEqual(manifest["entrypoint"], "SKILL.md")
             self.assertEqual(manifest["capabilities"], ["conversation"])
             self.assertEqual(manifest["source_modules"], MODULES)
 
             with zipfile.ZipFile(archive) as bundle:
+                self.assertEqual(
+                    bundle.namelist(),
+                    sorted(f"ask-then-do-it-generic-1.4.1/{name}" for name in expected_files),
+                )
                 for relative in expected_files:
                     self.assertEqual(
-                        bundle.read(f"ask-then-do-it-generic-1.4.0/{relative}"),
+                        bundle.read(f"ask-then-do-it-generic-1.4.1/{relative}"),
                         (package / relative).read_bytes(),
                     )
             self.assertEqual(
                 checksums.read_text(encoding="ascii"),
-                f"{sha256(archive)}  generic/ask-then-do-it-generic-1.4.0.zip\n",
+                f"{sha256(archive)}  generic/ask-then-do-it-generic-1.4.1.zip\n",
             )
 
 

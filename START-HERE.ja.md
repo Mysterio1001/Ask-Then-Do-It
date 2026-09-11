@@ -1,4 +1,4 @@
-# Ask Then Do It 1.4.0
+# Ask Then Do It 1.4.1
 
 利用方法を選んでください。記録を残す作業には Full、範囲が明確な変更には Lite が適しています。
 

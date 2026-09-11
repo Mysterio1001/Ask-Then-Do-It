@@ -6,19 +6,21 @@ Artifact ID: `ask-then-do-it-project-knowledge-base`
 
 Workflow ID: `repository-cleanup-2026-09-10`
 
-Core version: `1.4.0`
+Core version: `1.4.1`
 
 Status: Consolidated — 既有核准知識的整理；不新增產品行為核准。
 
 Inputs: 現行 Core／adapter sources、既有核准需求／規格／計畫、最新關鍵 Reviews 與發布收據；原始版本見[來源索引](../evidence/release-history.md#document-sources)。
 
-Assumptions: 當前來源 1.4.0，離線工具與真實模型驗證分開判斷。
+Assumptions: 當前來源 1.4.1，離線工具與真實模型驗證分開判斷；歷史 1.4.0 核准、Review 與實測紀錄保留原版本。
 
 Deferred: 未完成的 live gates 與未接受的架構提案列在[狀態文件](status.md)。
 
 Handoff: 維護時先讀本索引，再讀相關規格／手冊；不要依舊 Ticket 的下一步重走已完成工作。
 
 Approval: 使用者在 2026-09-10 看過逐檔合併／刪除去向及保留範圍後回覆「核准 開始執行」，授權本次內容整理與知識遷移；不變更產品 Full／Lite 契約。
+
+Version update approval: 使用者於 2026-09-11 確認專案與三平台 ZIP 採相同版本後回覆「好 核准 調整成1.4.1吧」，授權同步來源版本、套件名稱與目前下載連結；不授權提交或對外發布，也不將歷史驗收改寫為新版結果。
 
 ## Glossary
 
@@ -58,6 +60,7 @@ Codex catalog 位於 `.agents/plugins/marketplace.json`，Claude 位於 `.claude
 - **只保存最小 runtime state**：session ID 立即 SHA-256；禁止 prompt、task、repository paths、credentials、diff、個資或 telemetry；state 不寫 cached Plugin。來源、path、input 均視為 untrusted。模型來源日期／snapshot hashes 是 mapping 維護依據。
 - **驗證能力與完成狀態分開**：General／Claude 5 靜態指令修正通過，不代表各 30 scenarios 的實際行為通過。先 behavior 100%，再每個 context checkpoint 50%；Codex tools 的 Full／Lite 另有固定 60% proxy 門檻。Generic composed prompt 是兩模式共同固定成本，不宣稱 60% 縮減；上述量測都不是帳單保證。依據：兩個最新 profile Reviews 與[驗證手冊](../maintainer/validation.md)。
 - **來源升版不等於發布完成**：2026-09-10 已核准先對齊 1.4.0 與離線 ZIP，不新增缺 live evidence 即禁止 builder 的限制。正式 completion 仍保留原驗收 gates。來源下載連結不是遠端存在證明。
+- **專案與套件統一版本**：2026-09-11 核准目前專案、Core、Codex／Claude／Generic ZIP、catalogs 與 consumer 文件同步到 1.4.1。原 1.4.0 歷史證據和固定 1.4.0-preview.1 不升版；1.4.1 candidate 必須重建並留下對應的驗證，不覆蓋已發布的同版 bytes。
 - **安全安裝更新**：明確 install/update/remove 請求授權該次必要 writes；status 唯讀。已 current／disabled 維持 no-op／disabled，未知來源、scope 或 partial failure 停止而不 remove-first。Claude 只支援 user scope；normal uninstall 保留 marketplace／mode Config，可重建 data 預設刪除，明確要求才 keep-data。
 - **串行輸出與復原**：Windows WinError 5 bounded retry 也適用 rollback；permanent ACL 可能等到上限，unknown error 立即失敗。Recovery 未完成必須保留 primary／recovery errors 及 staging／backup。Same-output concurrent builds 不是現行承諾。依據：1.3.1 規格與[發布手冊](../maintainer/releasing.md)。
 - **品牌與歸屬**：獨立專案，受 Matt Pocock MIT skills 啟發，不宣稱隸屬或背書。透明紅色海馬問號與 `#C8262A`，保留 LICENSE／THIRD_PARTY_NOTICES；原資產製作 source-image SHA-256 為 `C22CF733EBF01ECFEB9C5E9A29AC37496A8B78BBE09F22D5942EC31F0B374EBB`，只作歷史製作來源。

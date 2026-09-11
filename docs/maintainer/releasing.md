@@ -1,6 +1,6 @@
 # 維護與發布手冊
 
-適用來源版本：1.4.0。此手冊承接指令安裝 1.2.0、Windows 發布可靠性 1.3.1、文件／版本統一 1.4.0 與歷次發布計畫；它描述維護操作，不宣稱正式 1.4.0 已發布。當前進度見[狀態](../project/status.md)，歷史依據見[發布紀錄](../evidence/release-history.md)。
+適用來源版本：1.4.1。此手冊承接指令安裝 1.2.0、Windows 發布可靠性 1.3.1、文件／版本統一 1.4.0 與歷次發布計畫；它描述維護操作，不宣稱正式 1.4.1 已發布。當前進度見[狀態](../project/status.md)，歷史依據見[發布紀錄](../evidence/release-history.md)。
 
 ## 開發環境
 
@@ -54,13 +54,17 @@ python scripts/build_release.py --allow-test-output-root --output-root .claude-o
 
 | 平台 | 展開目錄 | ZIP（相對 output root） |
 | --- | --- | --- |
-| Codex | `codex/ask-then-do-it` | `codex/ask-then-do-it-1.4.0.zip` |
-| Generic | `generic/ask-then-do-it-generic-1.4.0` | `generic/ask-then-do-it-generic-1.4.0.zip` |
-| Claude | `claude/ask-then-do-it` | `claude/ask-then-do-it-claude-1.4.0.zip` |
+| Codex | `codex/ask-then-do-it` | `codex/ask-then-do-it-1.4.1.zip` |
+| Generic | `generic/ask-then-do-it-generic-1.4.1` | `generic/ask-then-do-it-generic-1.4.1.zip` |
+| Claude | `claude/ask-then-do-it` | `claude/ask-then-do-it-claude-1.4.1.zip` |
 
 三平台 inventory 必須符合來源與 release config。展開內容與 ZIP 相對清單／bytes 相同，ZIP metadata 固定，拒絕重複成員、路徑逃逸、symlink、未知檔案與非預期目錄。每個 archive 在 `checksums.sha256` 恰有一筆 SHA-256，順序穩定；catalogs、tests、維護 evidence、local state 與機器路徑不得進 consumer payload。
 
-Generic builder 依固定 module 順序組合 `generic-workflow.md`，維持可貼上的自足入口；單獨 modules 是維護來源，不增加跨 session 持久性的宣稱。Claude package validator 另核對 canonical source 的精確 bytes。
+Generic builder 依固定 module 順序組合 `SKILL.md`，維持可上傳至 Claude Desktop 的自足 Skill 入口；文字對話服務可直接貼上同一份 `SKILL.md`。單獨 modules 是維護來源，不增加跨 session 持久性的宣稱。Claude package validator 另核對 canonical source 的精確 bytes。
+
+Generic ZIP 保留單一套件資料夾，入口位於 `ask-then-do-it-generic-<version>/SKILL.md`，不是 ZIP 最外層。檔案從 YAML frontmatter 開始，包含 `name` 與 `description`；這個資料夾封裝方式與 [Anthropic 的 Skill packager](https://github.com/anthropics/skills/blob/main/skills/skill-creator/scripts/package_skill.py) 一致。ZIP inventory 與 frontmatter 通過僅代表本機格式驗證，不代表 Claude Desktop 已完成安全掃描、成功匯入或觸發。
+
+Generic-only 本機候選包請使用獨立且已忽略的輸出目錄，例如 `python scripts/build_release.py --package generic --allow-test-output-root --output-root ticket-generic-build-candidate`。不要手動混入既有 `dist/`，否則多版本目錄與額外 checksum 會破壞 managed output inventory。本次已核准將專案、Core 與三平台套件統一升至 1.4.1，release config、各平台與 Marketplace 必須同步；不能以新 bytes 覆蓋已發布的同版資產。
 
 ## 更新既有輸出與失敗復原
 
@@ -86,7 +90,7 @@ python scripts/validate_release_evidence.py --config release/release.json --ledg
 
 該工具驗證 evidence／ledger 的結構、版本、check 完整性與狀態，不會替維護者執行或認證每個命令。只填 passed 不是真實證據；保留命令、exit code、raw output、candidate hashes 及必要人工判讀。
 
-來源 1.4.0 與離線 ZIP 可以先完成，缺少 Claude 實測時仍不得宣稱正式 release gate 或完整 local candidate 驗收通過。不得為省步驟把 behavior、context、live-smoke 的 unverified 改成 passed；也不新增「缺實測就禁止任何離線 ZIP」的限制。
+來源 1.4.1 與離線 ZIP 可以先完成，缺少 Claude 實測時仍不得宣稱正式 release gate 或完整 local candidate 驗收通過。不得為省步驟把 behavior、context、live-smoke 的 unverified 改成 passed；也不新增「缺實測就禁止任何離線 ZIP」的限制。
 
 ## 對外發布與歷史保存
 
@@ -94,6 +98,6 @@ python scripts/validate_release_evidence.py --config release/release.json --ledg
 
 不要改寫已發布 tag 或把新文件升版套到舊 ledger。歷史原始文件可在已核准清理後移出工作目錄，但 bytes、hash 與定位必須能找回；保存方式見[歷史來源](../evidence/release-history.md#archive)。
 
-固定 `--preview-claude` 入口仍只適用 `1.4.0-preview.1` 的來源。它不能用目前 1.4.0 source 建立 preview；若要重現，使用相應歷史 source 和隔離 output。這次文件整理沒有退役此功能或移除其安全測試。
+固定 `--preview-claude` 入口仍只適用 `1.4.0-preview.1` 的來源。它不能用目前 1.4.1 source 建立 preview；若要重現，使用相應歷史 source 和隔離 output。這次升版沒有退役此功能或移除其安全測試。
 
 [回到 README](../../README.md)

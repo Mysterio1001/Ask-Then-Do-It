@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "fixture_id": "claude-context-1.4.0",
-  "version": "1.4.0",
+  "fixture_id": "claude-context-1.4.1",
+  "version": "1.4.1",
   "evidence_kind": "unobserved",
   "capture_review": "",
   "scenarios": [

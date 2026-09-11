@@ -274,6 +274,8 @@ def load_config(path: Path) -> dict[str, Any]:
     for key in ("directory", "archive"):
         validate_relative_output_path(generic[key], f"generic.{key}")
     validate_relative_name(generic["entrypoint"], "generic.entrypoint")
+    if generic["entrypoint"] != "SKILL.md":
+        raise BuildError("generic.entrypoint must be SKILL.md")
     start_guide = (ROOT / generic["start_guide"]).resolve()
     if not start_guide.is_relative_to(ROOT) or not start_guide.is_file():
         raise BuildError(f"Missing Generic start guide source: {start_guide}")
@@ -761,7 +763,11 @@ def validate_generic_source(config: dict[str, Any]) -> Path:
 
 def compose_generic_workflow(config: dict[str, Any], source: Path) -> bytes:
     generic = config["generic"]
-    header = f"""<!-- GENERATED FILE — YOU MAY EDIT ONLY THE "Default workflow mode" DECLARATION BELOW -->
+    header = f"""---
+name: ask-then-do-it-generic
+description: "Guide software requests through Full or Lite workflows, requirements, planning, implementation guidance, and review. Use when the user requests the Ask Then Do It workflow or structured software-development guidance. Conversation-only; does not perform repository changes or run tests."
+---
+<!-- GENERATED FILE — YOU MAY EDIT ONLY THE "Default workflow mode" DECLARATION BELOW -->
 # {config['display_name']} — Generic Workflow
 
 Release version: `{config['release_version']}`\x20\x20
@@ -825,7 +831,7 @@ def generic_manifest(config: dict[str, Any]) -> str:
         f"release_version: {yaml_string(config['release_version'])}",
         f"core_version: {yaml_string(config['core_version'])}",
         'adapter_id: "generic-prompts"',
-        'entrypoint: "generic-workflow.md"',
+        f"entrypoint: {yaml_string(generic['entrypoint'])}",
         'artifact_persistence: "user-managed-markdown"',
         "capabilities:",
         '  - "conversation"',

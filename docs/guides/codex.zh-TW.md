@@ -2,7 +2,7 @@
 
 使用 Codex Plugin 引導需求、實作與 Review。一般從 `$ask-then-do-it` 開始。
 
-以下為 1.4.0 的安裝／下載目標；若遠端尚未提供，請等待發布。
+以下為 1.4.1 的安裝／下載目標；若遠端尚未提供，請等待發布。
 
 ## 安裝與準備
 
@@ -17,7 +17,7 @@ codex plugin add ask-then-do-it@ask-then-do-it
 <details>
 <summary>ZIP 備援</summary>
 
-[下載 ask-then-do-it-1.4.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-1.4.0.zip)
+[下載 ask-then-do-it-1.4.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.1/ask-then-do-it-1.4.1.zip)
 
 保留完整 `ask-then-do-it/`，不要只複製 `skills/`。將它放到已設定且可修改的本機 Marketplace 的 `plugins/ask-then-do-it/`，其 entry 也須指向該位置，再執行：
 

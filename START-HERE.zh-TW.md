@@ -1,4 +1,4 @@
-# Ask Then Do It 1.4.0
+# Ask Then Do It 1.4.1
 
 先選擇使用方式。需要完整流程用 Full；範圍明確的改動可用 Lite。
 

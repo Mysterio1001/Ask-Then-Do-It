@@ -155,9 +155,9 @@ $ask-then-do-it 我想做一個……
 
 未特別指定模式時，AI 依 Config 判定 Full 或 Lite。已核准的 Full `direct` Ticket 會交由 `$implement-direct`；Lite 則依上方的單一 Change Brief 流程執行。
 
-## 在 Gemini 或其他 AI 開始
+## 在 Claude Desktop 或其他 AI 開始
 
-每個新對話先貼上 `generic-workflow.md`，再說明需求。Generic workflow 只能依其實際工具能力操作；只有對話能力時，不能宣稱已修改檔案或執行驗證。
+在 Claude Desktop 中，將 Generic ZIP 上傳為 Skill；入口 `SKILL.md` 位於 ZIP 內套件資料夾的根目錄。安全掃描完成後，啟用 Skill 並指定使用 Ask Then Do It。只有文字對話能力的服務，則在每個新對話先貼上完整 `SKILL.md`，再說明需求。Generic workflow 仍限於對話指引，不能宣稱已修改專案檔案或執行驗證。
 
 ## 換新工作階段時
 

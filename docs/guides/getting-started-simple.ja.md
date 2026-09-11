@@ -155,9 +155,9 @@ $ask-then-do-it 作りたいものは……
 
 モードを明示しない場合、AI は Config から Full または Lite を選びます。承認済みの Full `direct` Ticket は `$implement-direct` へ進み、Lite は上記の単一 Change Brief フローに従います。
 
-## Gemini またはその他の AI で始める
+## Claude Desktop またはその他の AI で始める
 
-新しい会話ごとに `generic-workflow.md` を貼り付けてから、要望を説明します。Generic workflow は実際に利用できるツールの範囲でのみ動作し、会話だけのホストはファイル編集や検証を実行したと主張できません。
+Claude Desktop では Generic ZIP を Skill としてアップロードします。入口の `SKILL.md` は ZIP 内のパッケージフォルダーの直下にあります。セキュリティスキャン後に Skill を有効にし、Ask Then Do It の使用を依頼します。テキストのみのホストでは、新しい会話ごとに `SKILL.md` 全文を貼り付けてから要望を説明します。Generic workflow は引き続き会話による案内に限定され、プロジェクトファイルの編集や検証を実行したと主張できません。
 
 ## 新しいセッションを始めるとき
 

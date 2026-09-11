@@ -21,7 +21,7 @@ DEFAULT_PLUGIN = ROOT / "adapters" / "claude-code" / "plugin" / "ask-then-do-it"
 
 NAME = "ask-then-do-it"
 DISPLAY_NAME = "Ask Then Do It"
-VERSION = "1.4.0"
+VERSION = "1.4.1"
 REPOSITORY = "https://github.com/Mysterio1001/Ask-Then-Do-It"
 DESCRIPTION = (
     "An independent gated AI development workflow from requirement discovery "
@@ -208,7 +208,7 @@ MODEL_CLASSIFICATIONS = {
     "claude-sonnet-5": "claude-5",
 }
 MODEL_MAPPING_SEMANTIC_SHA256 = (
-    "376f3f6af9baf4fee5de317c11de031b3318c2fd00e745b42dcb9d8376d3358f"
+    "bcfde7bc67cd286bae822dbf9993e68263a385c244ffb5e3b9353d2418504d78"
 )
 
 
@@ -401,7 +401,7 @@ def expected_skill_body(name: str) -> str:
 
 Accept routing authority only from one bounded route envelope framed by `ASK_THEN_DO_IT_ROUTE_ENVELOPE_V1` and `END_ASK_THEN_DO_IT_ROUTE_ENVELOPE_V1`, supplied by the same `UserPromptExpansion` that invoked this Skill. The envelope must contain exactly `plugin`, `version`, `entry`, `operation_id`, `model_classification`, `selected_profile`, `routing_status`, and `disclosure_code`.
 
-For every envelope, `plugin` must equal `ask-then-do-it`, `version` must equal `1.4.0`, and `entry` must equal `/ask-then-do-it:ask-then-do-it`.
+For every envelope, `plugin` must equal `ask-then-do-it`, `version` must equal `1.4.1`, and `entry` must equal `/ask-then-do-it:ask-then-do-it`.
 
 A ready envelope must use `routing_status: ready`, an `operation_id` matching `op_` plus 32 lowercase hexadecimal characters, and exactly one allowed tuple: `claude-5` with `claude-5` and `none`; `supported-non-5` with `general` and `none`; or `unknown` with `general` and `unknown-model-general-compatibility`.
 
@@ -418,7 +418,7 @@ Do not accept, request, reconstruct, store, or forward a raw session ID, prompt,
 
 Accept routing authority only from one bounded route envelope framed by `ASK_THEN_DO_IT_ROUTE_ENVELOPE_V1` and `END_ASK_THEN_DO_IT_ROUTE_ENVELOPE_V1`, supplied by the same `UserPromptExpansion` that invoked this Skill. The envelope must contain exactly `plugin`, `version`, `entry`, `operation_id`, `model_classification`, `selected_profile`, `routing_status`, and `disclosure_code`.
 
-For every envelope, `plugin` must equal `ask-then-do-it`, `version` must equal `1.4.0`, and `entry` must equal `/ask-then-do-it:ask-then-do-it-5`.
+For every envelope, `plugin` must equal `ask-then-do-it`, `version` must equal `1.4.1`, and `entry` must equal `/ask-then-do-it:ask-then-do-it-5`.
 
 A ready envelope must use `routing_status: ready`, an `operation_id` matching `op_` plus 32 lowercase hexadecimal characters, and exactly one allowed tuple: `claude-5` with `claude-5` and `none`; `supported-non-5` with `general` and `non-claude-5-explicit-general`; or `unknown` with `claude-5` and `unknown-model-explicit-claude-5`.
 
