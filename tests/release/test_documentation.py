@@ -111,10 +111,10 @@ HEADINGS = {
 }
 
 VERSIONED_GUIDE_ROOT = (
-    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.0/docs/guides"
+    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.1/docs/guides"
 )
 VERSIONED_README = (
-    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.0/README.md"
+    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.1/README.md"
 )
 
 
@@ -345,7 +345,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
             "架構改善",
             "$ask-then-do-it",
             "$implement-direct",
-            "generic-workflow.md",
+            "SKILL.md",
             "執行測試可能增加工時",
             "`tests: skipped-by-user`",
         ):
@@ -1054,7 +1054,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
             for locale, document in documents.items():
                 with self.subTest(group=group, locale=locale):
                     body = document.read_text(encoding="utf-8")
-                    self.assertIn("1.4.0", body.splitlines()[0])
+                    self.assertIn("1.4.1", body.splitlines()[0])
                     self.assertLess(len(body.splitlines()), 65)
                     self.assertIn("Full", body)
                     self.assertIn("Lite", body)
@@ -1078,7 +1078,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
                         self.assertIn("claude --plugin-dir", body)
                         self.assertIn("session-only", body)
                     elif group == "generic":
-                        self.assertIn("generic-workflow.md", body)
+                        self.assertIn("SKILL.md", body)
 
     def test_nine_main_guides_have_seven_ordered_chapters_and_start_examples(self) -> None:
         for host, documents in HOST_GUIDES.items():
@@ -1101,7 +1101,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
                     elif host == "claude-code":
                         self.assertIn("/ask-then-do-it:ask-then-do-it ", start)
                     else:
-                        self.assertIn("generic-workflow.md", start)
+                        self.assertIn("SKILL.md", start)
 
     def test_current_consumer_documents_use_current_release_targets(self) -> None:
         documents = set(USER_ZH_DOCUMENTS + USER_LOCALIZED_DOCUMENTS)
@@ -1113,10 +1113,10 @@ class ReleaseDocumentationTests(unittest.TestCase):
                 self.assertNotRegex(body.lower(), r"preview|預覽版|閱覽版|プレビュー")
                 self.assertNotIn("vscode://", body)
                 for version in re.findall(re.escape(repository) + r"/(?:blob|releases/download)/v([^/]+)/", body):
-                    self.assertEqual(version, "1.4.0")
+                    self.assertEqual(version, "1.4.1")
         for host, documents in HOST_GUIDES.items():
             suffix = {"codex": "", "claude-code": "-claude", "generic": "-generic"}[host]
-            expected = f"{repository}/releases/download/v1.4.0/ask-then-do-it{suffix}-1.4.0.zip"
+            expected = f"{repository}/releases/download/v1.4.1/ask-then-do-it{suffix}-1.4.1.zip"
             for document in documents.values():
                 self.assertIn(expected, document.read_text(encoding="utf-8"))
             self.assertIn(expected, README.read_text(encoding="utf-8"))
@@ -1170,7 +1170,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
     def test_current_document_navigation_anchors_resolve_offline(self) -> None:
         documents = set(USER_ZH_DOCUMENTS + USER_LOCALIZED_DOCUMENTS)
         documents.update((ROOT / "docs").rglob("*.md"))
-        prefix = "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.0/"
+        prefix = "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.1/"
         for document in documents:
             for target in re.findall(r"\[[^]]+\]\(([^)]+)\)", document.read_text(encoding="utf-8")):
                 if target.startswith(prefix):

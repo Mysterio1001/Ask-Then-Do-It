@@ -2,12 +2,12 @@
   "schema_version": 2,
   "package_id": "ask-then-do-it",
   "display_name": "Ask Then Do It",
-  "release_version": "1.4.0",
-  "core_version": "1.4.0",
+  "release_version": "1.4.1",
+  "core_version": "1.4.1",
   "codex": {
     "source": "adapters/codex/plugin/ask-then-do-it",
     "directory": "codex/ask-then-do-it",
-    "archive": "codex/ask-then-do-it-1.4.0.zip",
+    "archive": "codex/ask-then-do-it-1.4.1.zip",
     "skills": [
       "ask-then-do-it",
       "ask-requirements",
@@ -22,9 +22,9 @@
   },
   "generic": {
     "source": "adapters/generic-prompts",
-    "directory": "generic/ask-then-do-it-generic-1.4.0",
-    "archive": "generic/ask-then-do-it-generic-1.4.0.zip",
-    "entrypoint": "generic-workflow.md",
+    "directory": "generic/ask-then-do-it-generic-1.4.1",
+    "archive": "generic/ask-then-do-it-generic-1.4.1.zip",
+    "entrypoint": "SKILL.md",
     "start_guide": "release/generic/START-HERE.zh-TW.md",
     "modules": [
       "bootstrap.md",
@@ -70,7 +70,7 @@
   "claude": {
     "source": "adapters/claude-code/plugin/ask-then-do-it",
     "directory": "claude/ask-then-do-it",
-    "archive": "claude/ask-then-do-it-claude-1.4.0.zip",
+    "archive": "claude/ask-then-do-it-claude-1.4.1.zip",
     "inventory": [
       ".claude-plugin/plugin.json",
       "LICENSE",

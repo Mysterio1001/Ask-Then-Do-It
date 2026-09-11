@@ -1,6 +1,6 @@
 # Ask Then Do It 工作流程規格
 
-本文件彙整現行 Core 1.4.0 的 Full／Lite 與 Ticket 測試選擇契約，供維護者查閱。2026-09-10 的文件整理核准只改變文件組織，沒有重新授權或改變產品行為。原始需求、規格及核准紀錄的定位見[來源索引](../evidence/release-history.md#document-sources)。
+本文件彙整現行 Core 1.4.1 的 Full／Lite 與 Ticket 測試選擇契約，供維護者查閱。2026-09-10 的文件整理核准只改變文件組織；2026-09-11 核准統一升至 1.4.1，亦不改變這些產品行為。原始需求、規格及核准紀錄的定位見[來源索引](../evidence/release-history.md#document-sources)。
 
 執行來源仍為 [Core](../../core/CORE.md)、[規則目錄](../../core/rules/rules.yaml)及各 adapter。使用者操作見[初學者流程](../guides/getting-started-simple.zh-TW.md)；Claude 特有行為見 [Claude 規格](claude-code-adapter.md)。
 

@@ -79,10 +79,10 @@ class ClaudeContextProxyTests(unittest.TestCase):
 
     def test_current_runtime_route_rejects_other_versions(self):
         tool = self.tool()
-        self.assertEqual(tool.prepare_template()["version"], "1.4.0")
+        self.assertEqual(tool.prepare_template()["version"], "1.4.1")
         for profile in ("general", "claude-5"):
             envelope = {
-                "plugin": "ask-then-do-it", "version": "1.4.0",
+                "plugin": "ask-then-do-it", "version": "1.4.1",
                 "entry": "/ask-then-do-it:ask-then-do-it", "operation_id": "op_" + "a" * 32,
                 "model_classification": "supported-non-5" if profile == "general" else "claude-5",
                 "selected_profile": profile, "routing_status": "ready", "disclosure_code": "none",
@@ -90,7 +90,7 @@ class ClaudeContextProxyTests(unittest.TestCase):
             def framed():
                 return "ASK_THEN_DO_IT_ROUTE_ENVELOPE_V1\n" + json.dumps(envelope) + "\nEND_ASK_THEN_DO_IT_ROUTE_ENVELOPE_V1"
             tool.validate_route_text(framed(), profile)
-            for wrong_version in ("1.4.0-preview.1", "1.3.1", "1.4.0-preview.2"):
+            for wrong_version in ("1.4.0", "1.4.0-preview.1", "1.3.1", "1.4.0-preview.2"):
                 envelope["version"] = wrong_version
                 with self.subTest(profile=profile, wrong_version=wrong_version):
                     with self.assertRaisesRegex(ValueError, "route identity"):
@@ -236,7 +236,7 @@ class ClaudeContextProxyTests(unittest.TestCase):
                                     canonical.write_text(text, encoding="utf-8")
                             else:
                                 text = "ASK_THEN_DO_IT_ROUTE_ENVELOPE_V1\n" + json.dumps({
-                                    "plugin": "ask-then-do-it", "version": "1.4.0",
+                                    "plugin": "ask-then-do-it", "version": "1.4.1",
                                     "entry": "/ask-then-do-it:ask-then-do-it", "operation_id": "op_" + "a" * 32,
                                     "model_classification": "supported-non-5" if profile == "general" else "claude-5",
                                     "selected_profile": profile, "routing_status": "ready", "disclosure_code": "none",

@@ -1,8 +1,11 @@
 """Current release boundaries; this does not claim live Claude verification."""
 import copy
 import json
+import re
 import unittest
 from pathlib import Path
+
+import yaml
 
 from tests.release.test_release_transaction import load_builder_module
 
@@ -16,11 +19,41 @@ class ReleaseAlignmentTests(unittest.TestCase):
 
     def test_current_config_loads_three_version_matched_families(self):
         config = self.builder.load_config(ROOT / 'release/release.json')
-        self.assertEqual(config['release_version'], '1.4.0')
-        self.assertEqual(config['core_version'], '1.4.0')
+        self.assertEqual(config['release_version'], '1.4.1')
+        self.assertEqual(config['core_version'], '1.4.1')
         self.assertEqual(set(config['managed_outputs']), {'codex', 'generic', 'claude', 'checksums.sha256'})
         for family in ('codex', 'generic', 'claude'):
-            self.assertTrue(config[family]['archive'].endswith('-1.4.0.zip'))
+            self.assertTrue(config[family]['archive'].endswith('-1.4.1.zip'))
+
+    def test_readme_downloads_and_adapter_manifests_match_release_version(self):
+        version = self.config['release_version']
+        repository = 'https://github.com/Mysterio1001/Ask-Then-Do-It'
+        readme = (ROOT / 'README.md').read_text(encoding='utf-8')
+        downloads = re.findall(
+            re.escape(repository) + r'/releases/download/v([^/]+)/([^\s)]+\.zip)',
+            readme,
+        )
+        self.assertEqual(
+            set(downloads),
+            {(version, Path(self.config[family]['archive']).name)
+             for family in ('codex', 'generic', 'claude')},
+        )
+        for family, manifest_directory in (
+            ('codex', '.codex-plugin'), ('claude', '.claude-plugin'),
+        ):
+            with self.subTest(family=family):
+                manifest = ROOT / self.config[family]['source'] / manifest_directory / 'plugin.json'
+                self.assertEqual(json.loads(manifest.read_text(encoding='utf-8'))['version'], version)
+        for adapter, declaration in (
+            ('codex', 'conformance.yaml'), ('generic-prompts', 'manifest.yaml'),
+            ('claude-code', 'conformance.yaml'),
+        ):
+            with self.subTest(adapter=adapter):
+                manifest = yaml.safe_load(
+                    (ROOT / 'adapters' / adapter / declaration).read_text(encoding='utf-8')
+                )
+                self.assertEqual(manifest['adapter_version'], version)
+                self.assertEqual(manifest['core_version'], self.config['core_version'])
 
     def test_claude_required_checks_cannot_be_omitted(self):
         self.assertIn('claude', self.config)

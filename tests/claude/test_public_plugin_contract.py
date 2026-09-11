@@ -201,7 +201,7 @@ class ClaudePublicPluginContractTests(unittest.TestCase):
         )
         self.assertEqual(entry["name"], "ask-then-do-it")
         self.assertEqual(entry["displayName"], "Ask Then Do It")
-        self.assertEqual(entry["version"], "1.4.0")
+        self.assertEqual(entry["version"], "1.4.1")
         self.assertEqual(entry["description"], DESCRIPTION)
         self.assertEqual(entry["author"], AUTHOR)
         self.assertEqual(entry["homepage"], REPOSITORY)
@@ -217,7 +217,7 @@ class ClaudePublicPluginContractTests(unittest.TestCase):
                 "source": "git-subdir",
                 "url": SOURCE_REPOSITORY,
                 "path": "adapters/claude-code/plugin/ask-then-do-it",
-                "ref": "v1.4.0",
+                "ref": "v1.4.1",
             },
         )
 
@@ -326,7 +326,7 @@ class ClaudePublicPluginContractTests(unittest.TestCase):
 
         manifest_source = load_json(MANIFEST)
         manifest_mutations = {
-            "identity-drift": lambda value: value.update({"version": "1.4.1"}),
+            "identity-drift": lambda value: value.update({"version": "1.4.0"}),
             "numeric-default-enabled": lambda value: value.update({"defaultEnabled": 1}),
             "custom-skill-path": lambda value: value.update({"skills": "./skills/"}),
             "hook-path": lambda value: value.update({"hooks": "./hooks/hooks.json"}),

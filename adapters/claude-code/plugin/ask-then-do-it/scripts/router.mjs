@@ -6,10 +6,10 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 
 const PLUGIN = "ask-then-do-it";
-const VERSION = "1.4.0";
+const VERSION = "1.4.1";
 const STATE_SCHEMA_VERSION = 1;
 const MINIMUM_NODE_MAJOR = 22;
-const MAPPING_SEMANTIC_SHA256 = "376f3f6af9baf4fee5de317c11de031b3318c2fd00e745b42dcb9d8376d3358f";
+const MAPPING_SEMANTIC_SHA256 = "bcfde7bc67cd286bae822dbf9993e68263a385c244ffb5e3b9353d2418504d78";
 const MAPPING_KEYS = new Set([
   "schema_version",
   "release_version",

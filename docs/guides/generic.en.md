@@ -1,21 +1,21 @@
 # Ask Then Do It Generic guide
 
-For Gemini and other AI services that accept long text. Paste the workflow; no Plugin installation is needed.
+For Claude Desktop Skills and other AI services that accept long text. Upload the ZIP as a Skill in Claude Desktop, or paste the workflow when using a text-only host.
 
-These are the 1.4.0 installation/download targets. If remote artifacts are unavailable, wait for publication.
+These are the 1.4.1 installation/download targets. If remote artifacts are unavailable, wait for publication.
 
 ## Installation and preparation
 
-Download and extract the package. Keep `generic-workflow.md` and `prompts/`.
+Download the package. In Claude Desktop, upload the ZIP through the Skills interface. It contains one package folder with `SKILL.md` at that folder's root, starting with YAML `name` and `description` fields. For a text-only host, extract the package and keep `SKILL.md` and `prompts/`.
 
-[Download ask-then-do-it-generic-1.4.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-generic-1.4.0.zip)
+[Download ask-then-do-it-generic-1.4.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.1/ask-then-do-it-generic-1.4.1.zip)
 
 ## Getting started
 
-In every new conversation, paste the **entire** `generic-workflow.md`, then describe your task, for example:
+In Claude Desktop, wait for the upload and security scan to complete, enable the Skill, and ask to use Ask Then Do It. Claude loads the instructions when the Skill is selected. For a text-only host, paste the **entire** `SKILL.md` into every new conversation, then describe your task, for example:
 
 ```text
-Help me build a booking website. Please use English.
+Use Ask Then Do It to help me plan a booking website. Please use English.
 ```
 
 ## Full / Lite modes
@@ -24,13 +24,13 @@ Help me build a booking website. Please use English.
 
 Say “Use Full for this operation” or “Use Lite for this operation.” This affects only the current operation.
 
-Keep one declaration, `Default workflow mode: full`, or change it to `Default workflow mode: lite`. This setting belongs to the pasted text; it does not read Codex or Claude Config. Missing or invalid declarations select Full.
+Keep one declaration in `SKILL.md`, `Default workflow mode: full`, or change it to `Default workflow mode: lite`. For an installed Skill, repackage and re-upload the edited copy. This setting belongs to the workflow text; it does not read Codex or Claude Config. Missing or invalid declarations select Full.
 
 For the full workflow, test choices, and saving progress, see the [beginner guide](getting-started-simple.en.md)。
 
 ## Available commands
 
-Normally use `generic-workflow.md`. Advanced users can paste one module from `prompts/`; this does not bypass mode resolution or approvals.
+Normally use the uploaded Skill or the complete `SKILL.md`. Advanced users can paste one module from `prompts/`; this does not bypass mode resolution or approvals.
 
 <details>
 <summary>Show advanced entries</summary>
@@ -53,11 +53,11 @@ Normally use `generic-workflow.md`. Advanced users can paste one module from `pr
 
 ## Updating and removal
 
-Get the newer ZIP and paste its workflow in a new conversation. To stop using it, stop pasting it; optionally delete the downloaded copy. Keep your project documents separately.
+Get the newer ZIP and upload it as a Skill, or paste its `SKILL.md` in a new text-only conversation. To stop using it, disable or remove the Skill, or stop pasting it; optionally delete the downloaded copy. Keep your project documents separately.
 
 ## Common questions
 
-- Missing progress in a new conversation: paste the workflow again. To continue Full, also provide saved requirements, specification, and Ticket Plan. Lite does not persist state across conversations.
+- Missing progress in a new conversation: use the enabled Skill, or paste the workflow again on a text-only host. To continue Full, provide saved requirements, specification, and Ticket Plan. Installing the Skill does not save project progress; Lite does not persist state across conversations.
 - AI cannot edit files or run tests: available capabilities depend on the service and tools. With chat only, apply the output yourself and supply the results.
 
 Report remaining issues through [GitHub Issues](https://github.com/Mysterio1001/Ask-Then-Do-It/issues). Include the project version, AI service/host, platform, and reproduction steps.

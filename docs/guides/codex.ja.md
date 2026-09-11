@@ -2,7 +2,7 @@
 
 Codex Plugin で要件確認から実装、Review まで進めます。通常は `$ask-then-do-it` から始めます。
 
-以下は 1.4.0 のインストール／ダウンロード先です。遠隔側で利用できない場合は公開を待ってください。
+以下は 1.4.1 のインストール／ダウンロード先です。遠隔側で利用できない場合は公開を待ってください。
 
 ## インストールと準備
 
@@ -17,7 +17,7 @@ codex plugin add ask-then-do-it@ask-then-do-it
 <details>
 <summary>ZIP フォールバック</summary>
 
-[ダウンロード ask-then-do-it-1.4.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.0/ask-then-do-it-1.4.0.zip)
+[ダウンロード ask-then-do-it-1.4.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.1/ask-then-do-it-1.4.1.zip)
 
 `skills/` だけでなく完全な `ask-then-do-it/` を保持します。設定済みで編集可能なローカル Marketplace の `plugins/ask-then-do-it/` に置き、entry もそこを指すようにしてから実行します。
 

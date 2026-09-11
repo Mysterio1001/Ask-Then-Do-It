@@ -155,9 +155,9 @@ $ask-then-do-it I want to build...
 
 Without an explicit mode instruction, the AI uses Config to choose Full or Lite. An approved Full `direct` Ticket routes to `$implement-direct`; Lite follows the single Change Brief flow above.
 
-## Start in Gemini or another AI
+## Start in Claude Desktop or another AI
 
-Paste `generic-workflow.md` into every new conversation before describing the request. The Generic workflow acts only within its real tool capabilities; a conversation-only host must not claim to have edited files or run validation.
+In Claude Desktop, upload the Generic ZIP as a Skill; `SKILL.md` is at the root of the package folder inside the ZIP. After the security scan, enable the Skill and ask to use Ask Then Do It. With a text-only host, paste the entire `SKILL.md` into every new conversation before describing the request. The Generic workflow remains conversation-only and must not claim to have edited repository files or run validation.
 
 ## Starting a new session
 
