@@ -1,8 +1,21 @@
-@font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('/fonts/dm-sans-latin.woff2') format('woff2'); }
-@font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/ibm-plex-mono-latin.woff2') format('woff2'); }
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/dm-sans-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/ibm-plex-mono-latin.woff2") format("woff2");
+}
 
 :root {
-  font-family: 'DM Sans', 'Noto Sans TC', 'PingFang TC', 'Hiragino Sans', sans-serif;
+  font-family:
+    "DM Sans", "Noto Sans TC", "PingFang TC", "Hiragino Sans", sans-serif;
   color: #eff1ed;
   background: #060809;
   font-synthesis: none;
@@ -15,376 +28,1676 @@
   letter-spacing: 0;
 }
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; }
-button, a { -webkit-tap-highlight-color: transparent; }
-button { font: inherit; color: inherit; cursor: pointer; }
-a { color: inherit; text-decoration: none; }
-button, a { touch-action: manipulation; }
-button { border: 0; background: none; }
-button:disabled { cursor: wait; }
-svg { width: 18px; height: 18px; flex-shrink: 0; }
-[hidden] { display: none !important; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
-::selection { background: var(--accent); color: #111811; }
-.mono { font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Consolas, monospace; }
-.muted { color: var(--muted); }
-.accent-text { color: var(--accent); }
-.skip-link { position: fixed; z-index: 100; top: -70px; left: 20px; padding: 12px 20px; background: var(--accent); color: #060809; }
-.skip-link:focus { top: 15px; }
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button,
+a {
+  touch-action: manipulation;
+}
+button {
+  border: 0;
+  background: none;
+}
+button:disabled {
+  cursor: wait;
+}
+svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+[hidden] {
+  display: none !important;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+::selection {
+  background: var(--accent);
+  color: #111811;
+}
+.mono {
+  font-family:
+    "IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.muted {
+  color: var(--muted);
+}
+.accent-text {
+  color: var(--accent);
+}
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: -70px;
+  left: 20px;
+  padding: 12px 20px;
+  background: var(--accent);
+  color: #060809;
+}
+.skip-link:focus {
+  top: 15px;
+}
 
-.universe { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: #060809; pointer-events: none; }
-#universe-canvas { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity 1.6s ease; }
-.scene-ready #universe-canvas { opacity: 1; }
-.space-fallback { position: absolute; inset: 0; background: radial-gradient(circle at 78% 28%, rgb(107 133 137 / 12%), transparent 28%), #060809; opacity: .4; transition: opacity 1s; }
-.scene-ready .space-fallback { opacity: 0; }
-.webgl-unavailable .space-fallback { opacity: .3; }
-.scene-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(4 7 8 / 65%) 0%, transparent 57%), linear-gradient(0deg, #060809 1%, rgb(6 8 9 / 40%) 17%, transparent 30%, transparent 80%, rgb(6 8 9 / 45%)); box-shadow: inset 0 0 160px 15px rgb(0 0 0 / 28%); }
-.scene-grain { position: absolute; inset: 0; opacity: .028; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.7' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.universe {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #060809;
+  pointer-events: none;
+}
+#universe-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+.scene-ready #universe-canvas {
+  opacity: 1;
+}
+.space-fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 78% 28%, rgb(107 133 137 / 12%), transparent 28%),
+    #060809;
+  opacity: 0.4;
+  transition: opacity 1s;
+}
+.scene-ready .space-fallback {
+  opacity: 0;
+}
+.webgl-unavailable .space-fallback {
+  opacity: 0.3;
+}
+.scene-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgb(4 7 8 / 65%) 0%, transparent 57%),
+    linear-gradient(
+      0deg,
+      #060809 1%,
+      rgb(6 8 9 / 40%) 17%,
+      transparent 30%,
+      transparent 80%,
+      rgb(6 8 9 / 45%)
+    );
+  box-shadow: inset 0 0 160px 15px rgb(0 0 0 / 28%);
+}
+.scene-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.7' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 
-.site-header { position: fixed; z-index: 20; top: 0; left: 0; right: 0; height: var(--header-height); margin: 0 var(--page-gutter); display: flex; align-items: center; justify-content: space-between; gap: 30px; border-bottom: 1px solid var(--line); }
-.brand { display: inline-flex; align-items: center; gap: 11px; font-size: 14px; font-weight: 650; white-space: nowrap; }
-.brand-mark { width: 34px; height: 34px; object-fit: contain; flex-shrink: 0; filter: drop-shadow(0 0 8px rgb(232 42 54 / 22%)); }
-.brand-period { color: var(--accent); margin-left: 2px; }
-.github-link, .language-toggle { transition: color .2s; }
-.github-link:hover, .language-toggle:hover { color: var(--accent); }
-.header-actions { display: flex; align-items: center; gap: 23px; }
-.header-divider { height: 16px; width: 1px; background: var(--line); }
-.github-link { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; }
-.github-link svg { width: 16px; height: 16px; }
-.github-arrow { color: #89948b; }
-.language-switcher { position: relative; }
-.language-toggle { display: flex; align-items: center; gap: 8px; min-height: 40px; font-size: 12px; padding: 0; }
-.language-toggle svg { width: 12px; height: 12px; color: #859386; }
-.language-menu { position: absolute; z-index: 30; top: 45px; right: -12px; width: 165px; padding: 6px; background: rgb(15 20 19 / 96%); backdrop-filter: blur(20px); border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 10px 35px #0008; }
-.language-menu button { width: 100%; display: flex; justify-content: space-between; padding: 12px 10px; font-size: 12px; text-align: left; border-radius: 2px; }
-.language-menu button span { color: #67756d; font: 10px 'IBM Plex Mono', monospace; }
-.language-menu button:hover, .language-menu button[aria-pressed='true'] { color: var(--accent); background: #d0f7a00c; }
+.site-header {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  margin: 0 var(--page-gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 14px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px rgb(232 42 54 / 22%));
+}
+.brand-period {
+  color: var(--accent);
+  margin-left: 2px;
+}
+.github-link,
+.language-toggle {
+  transition: color 0.2s;
+}
+.github-link:hover,
+.language-toggle:hover {
+  color: var(--accent);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 23px;
+}
+.header-divider {
+  height: 16px;
+  width: 1px;
+  background: var(--line);
+}
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+}
+.github-link svg {
+  width: 16px;
+  height: 16px;
+}
+.github-arrow {
+  color: #89948b;
+}
+.language-switcher {
+  position: relative;
+}
+.language-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  font-size: 12px;
+  padding: 0;
+}
+.language-toggle svg {
+  width: 12px;
+  height: 12px;
+  color: #859386;
+}
+.language-menu {
+  position: absolute;
+  z-index: 30;
+  top: 45px;
+  right: -12px;
+  width: 165px;
+  padding: 6px;
+  background: rgb(15 20 19 / 96%);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 0 10px 35px #0008;
+}
+.language-menu button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 10px;
+  font-size: 12px;
+  text-align: left;
+  border-radius: 2px;
+}
+.language-menu button span {
+  color: #67756d;
+  font:
+    10px "IBM Plex Mono",
+    monospace;
+}
+.language-menu button:hover,
+.language-menu button[aria-pressed="true"] {
+  color: var(--accent);
+  background: #d0f7a00c;
+}
 
-.mission-viewport { position: fixed; z-index: 2; top: var(--header-height); bottom: var(--deck-height); left: 0; right: 0; pointer-events: none; }
-.mission-id { position: absolute; top: 29px; left: var(--page-gutter); display: flex; align-items: center; gap: 11px; color: #a0aaa5; font-size: 9px; }
-.mission-id-separator { color: #4b5b4d; padding: 0 3px; }
-.status-dot { width: 5px; height: 5px; flex-shrink: 0; border-radius: 50%; background: var(--accent); box-shadow: 0 0 9px #d0f7a050; }
-.top-coordinates { position: absolute; top: 29px; right: var(--page-gutter); display: flex; gap: 24px; font-size: 9px; color: #5e6d67; }
-.top-coordinates > span:first-child { color: #b5c2b4; }
-.story-panel { position: absolute; top: 50%; left: var(--page-gutter); width: 48%; max-width: 660px; transform: translateY(-43%); pointer-events: auto; }
-.story-panel.is-active { animation: panel-enter .65s ease both; }
-@keyframes panel-enter { from { opacity: 0; translate: 0 13px; } to { opacity: 1; translate: 0 0; } }
-.eyebrow { display: flex; align-items: center; gap: 12px; font-size: 10px; line-height: 1.5; color: #b6c4b2; margin-bottom: 24px; }
-.orbit-number { display: inline-grid; place-items: center; width: 25px; height: 21px; border: 1px solid #798b6c61; color: var(--accent); font-size: 10px; }
-.eyebrow-line { width: 40px; height: 1px; background: #bdde9a4d; }
-h1 { font-size: 112px; font-weight: 550; line-height: .98; margin: 0 0 26px; }
-h1 > span { display: block; white-space: nowrap; }
-.hero-statement { font-size: 23px; font-weight: 450; line-height: 1.4; margin: 0 0 14px; }
-.story-description { font-size: 14px; color: #a1a9a6; line-height: 1.95; margin: 0; max-width: 400px; text-wrap: pretty; }
-.hero-actions, .terminal-actions { display: flex; align-items: center; gap: 19px; margin-top: 28px; }
-.button { display: inline-flex; align-items: center; justify-content: center; gap: 13px; min-height: 47px; padding: 0 20px; border-radius: 3px; font-size: 12px; font-weight: 550; transition: background .2s, box-shadow .2s, color .2s; }
-.button svg { width: 16px; height: 16px; }
-.button-primary { color: #1c2516; background: var(--accent); border: 1px solid var(--accent); }
-.button-primary:hover { background: #e4ffc5; box-shadow: 0 0 25px #d0f7a021; }
-.button-text { color: #cad1cb; padding-left: 5px; padding-right: 5px; }
-.button-text:hover { color: var(--accent); }
-.button-text > svg { color: #95a58e; }
-.hero-footnote { display: flex; align-items: center; gap: 9px; color: #6d7b73; font-size: 9px; margin-top: 24px; }
-.tiny-cross { color: #a1b092; font-size: 16px; font-weight: 400; }
-.planet-name { font-size: 11px; color: #bac2b8; display: flex; gap: 12px; margin: 0 0 19px; }
-.planet-name span { color: #5f7462; }
-.orbit-panel { max-width: 550px; }
-.orbit-panel h2, .terminal-panel h2 { font-size: 49px; font-weight: 500; line-height: 1.28; margin: 0 0 23px; max-width: 530px; text-wrap: balance; }
-.orbit-panel .story-description { max-width: 405px; font-size: 15px; }
-.principles { list-style: none; padding: 22px 0; margin: 22px 0 0; border-top: 1px solid var(--line); max-width: 380px; }
-.principles li { display: flex; align-items: center; gap: 13px; font-size: 12px; color: #bac4ba; line-height: 1.5; margin-bottom: 14px; }
-.principles li:last-child { margin-bottom: 0; }
-.principles svg { width: 14px; height: 14px; color: var(--accent); }
-.stage-next { font-size: 11px; color: var(--accent); min-height: 38px; }
+.mission-viewport {
+  position: fixed;
+  z-index: 2;
+  top: var(--header-height);
+  bottom: var(--deck-height);
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+.mission-id {
+  position: absolute;
+  top: 29px;
+  left: var(--page-gutter);
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: #a0aaa5;
+  font-size: 9px;
+}
+.mission-id-separator {
+  color: #4b5b4d;
+  padding: 0 3px;
+}
+.status-dot {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 9px #d0f7a050;
+}
+.top-coordinates {
+  position: absolute;
+  top: 29px;
+  right: var(--page-gutter);
+  display: flex;
+  gap: 24px;
+  font-size: 9px;
+  color: #5e6d67;
+}
+.top-coordinates > span:first-child {
+  color: #b5c2b4;
+}
+.story-panel {
+  position: absolute;
+  top: 50%;
+  left: var(--page-gutter);
+  width: 48%;
+  max-width: 660px;
+  transform: translateY(-43%);
+  pointer-events: auto;
+}
+.story-panel.is-active {
+  animation: panel-enter 0.65s ease both;
+}
+@keyframes panel-enter {
+  from {
+    opacity: 0;
+    translate: 0 13px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 10px;
+  line-height: 1.5;
+  color: #b6c4b2;
+  margin-bottom: 24px;
+}
+.orbit-number {
+  display: inline-grid;
+  place-items: center;
+  width: 25px;
+  height: 21px;
+  border: 1px solid #798b6c61;
+  color: var(--accent);
+  font-size: 10px;
+}
+.eyebrow-line {
+  width: 40px;
+  height: 1px;
+  background: #bdde9a4d;
+}
+h1 {
+  font-size: 112px;
+  font-weight: 550;
+  line-height: 0.98;
+  margin: 0 0 26px;
+}
+h1 > span {
+  display: block;
+  white-space: nowrap;
+}
+.hero-statement {
+  font-size: 23px;
+  font-weight: 450;
+  line-height: 1.4;
+  margin: 0 0 14px;
+}
+.story-description {
+  font-size: 14px;
+  color: #a1a9a6;
+  line-height: 1.95;
+  margin: 0;
+  max-width: 400px;
+  text-wrap: pretty;
+}
+.hero-actions,
+.terminal-actions {
+  display: flex;
+  align-items: center;
+  gap: 19px;
+  margin-top: 28px;
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  min-height: 47px;
+  padding: 0 20px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 550;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s,
+    color 0.2s;
+}
+.button svg {
+  width: 16px;
+  height: 16px;
+}
+.button-primary {
+  color: #1c2516;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+}
+.button-primary:hover {
+  background: #e4ffc5;
+  box-shadow: 0 0 25px #d0f7a021;
+}
+.button-text {
+  color: #cad1cb;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.button-text:hover {
+  color: var(--accent);
+}
+.button-text > svg {
+  color: #95a58e;
+}
+.hero-footnote {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #6d7b73;
+  font-size: 9px;
+  margin-top: 24px;
+}
+.tiny-cross {
+  color: #a1b092;
+  font-size: 16px;
+  font-weight: 400;
+}
+.planet-name {
+  font-size: 11px;
+  color: #bac2b8;
+  display: flex;
+  gap: 12px;
+  margin: 0 0 19px;
+}
+.planet-name span {
+  color: #5f7462;
+}
+.orbit-panel {
+  max-width: 550px;
+}
+.orbit-panel h2,
+.terminal-panel h2 {
+  font-size: 49px;
+  font-weight: 500;
+  line-height: 1.28;
+  margin: 0 0 23px;
+  max-width: 530px;
+  text-wrap: balance;
+}
+.orbit-panel .story-description {
+  max-width: 405px;
+  font-size: 15px;
+}
+.principles {
+  list-style: none;
+  padding: 22px 0;
+  margin: 22px 0 0;
+  border-top: 1px solid var(--line);
+  max-width: 380px;
+}
+.principles li {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 12px;
+  color: #bac4ba;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.principles li:last-child {
+  margin-bottom: 0;
+}
+.principles svg {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+}
+.stage-next {
+  font-size: 11px;
+  color: var(--accent);
+  min-height: 38px;
+}
 
-.planet-annotation { position: absolute; top: 66%; right: 10%; display: flex; align-items: center; gap: 0; color: #c9d1c7; transition: opacity .3s; }
-.annotation-cross { align-self: flex-start; margin-top: -5px; font-size: 17px; font-weight: 400; color: #a7b5a3; }
-.annotation-line { display: block; height: 1px; width: 44px; margin-right: 11px; background: #889a8066; transform: rotate(-23deg); transform-origin: right; }
-.planet-annotation > div { display: flex; flex-direction: column; gap: 7px; }
-#planet-label { font-size: 11px; }
-#planet-type { font-size: 10px; color: #8b988d; }
-.planet-telemetry { position: absolute; right: var(--page-gutter); bottom: 34px; display: flex; gap: 27px; font-size: 9px; color: #aab7a7; }
-.planet-telemetry > div { display: flex; gap: 10px; align-items: center; }
-.telemetry-label { color: #566b5c; }
-.signal-bars { display: flex; gap: 2px; align-items: flex-end; height: 10px; }
-.signal-bars i { width: 2px; background: #cbe9ac; height: 4px; }
-.signal-bars i:nth-child(2) { height: 5px; }.signal-bars i:nth-child(3) { height: 7px; }.signal-bars i:nth-child(4) { height: 8px; }.signal-bars i:nth-child(5) { height: 10px; }
-body[data-stage='0'] .signal-bars i:nth-child(n+3) { background: #3c5043; }
-.scene-status { position: absolute; right: var(--page-gutter); bottom: 65px; color: #a4b9a5; font-size: 10px; max-width: 240px; }
+.planet-annotation {
+  position: absolute;
+  top: 66%;
+  right: 10%;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  color: #c9d1c7;
+  transition: opacity 0.3s;
+}
+.annotation-cross {
+  align-self: flex-start;
+  margin-top: -5px;
+  font-size: 17px;
+  font-weight: 400;
+  color: #a7b5a3;
+}
+.annotation-line {
+  display: block;
+  height: 1px;
+  width: 44px;
+  margin-right: 11px;
+  background: #889a8066;
+  transform: rotate(-23deg);
+  transform-origin: right;
+}
+.planet-annotation > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+#planet-label {
+  font-size: 11px;
+}
+#planet-type {
+  font-size: 10px;
+  color: #8b988d;
+}
+.planet-telemetry {
+  position: absolute;
+  right: var(--page-gutter);
+  bottom: 34px;
+  display: flex;
+  gap: 27px;
+  font-size: 9px;
+  color: #aab7a7;
+}
+.planet-telemetry > div {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.telemetry-label {
+  color: #566b5c;
+}
+.signal-bars {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  height: 10px;
+}
+.signal-bars i {
+  width: 2px;
+  background: #cbe9ac;
+  height: 4px;
+}
+.signal-bars i:nth-child(2) {
+  height: 5px;
+}
+.signal-bars i:nth-child(3) {
+  height: 7px;
+}
+.signal-bars i:nth-child(4) {
+  height: 8px;
+}
+.signal-bars i:nth-child(5) {
+  height: 10px;
+}
+body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
+  background: #3c5043;
+}
+.scene-status {
+  position: absolute;
+  right: var(--page-gutter);
+  bottom: 65px;
+  color: #a4b9a5;
+  font-size: 10px;
+  max-width: 240px;
+}
 
-.flight-deck { position: fixed; z-index: 4; left: var(--page-gutter); right: var(--page-gutter); bottom: 0; height: var(--deck-height); }
-.flight-deck-heading { display: flex; align-items: center; justify-content: space-between; font-size: 9px; color: #76877a; height: 42px; border-top: 1px solid var(--line); }
-.flight-label { display: flex; align-items: center; gap: 9px; color: #b9c4b8; }
-.scroll-cue { display: flex; align-items: center; gap: 7px; margin-left: -50px; font-size: 9px; }
-.scroll-cue svg { width: 12px; height: 12px; animation: drift 2.8s ease-in-out infinite; }
-@keyframes drift { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(2px); } }
-.flight-controls { display: flex; align-items: center; gap: 13px; color: #b9c9b0; }
-#progress-value { min-width: 31px; text-align: right; }
-.icon-button { position: relative; width: 31px; height: 31px; display: inline-flex; align-items: center; justify-content: center; padding: 0; color: #a3b49d; border: 1px solid var(--line); border-radius: 3px; transition: color .2s, border-color .2s; }
-.icon-button:hover { color: var(--accent); border-color: #d0f7a065; }
-.icon-button svg { height: 13px; width: 13px; }
-.tooltip { position: absolute; bottom: calc(100% + 9px); right: 0; color: #d7e0d1; padding: 7px 9px; background: #192119; border: 1px solid var(--line); font-size: 10px; font-weight: 400; white-space: nowrap; opacity: 0; visibility: hidden; pointer-events: none; }
-.icon-button:hover .tooltip, .icon-button:focus-visible .tooltip { opacity: 1; visibility: visible; }
-.journey-nav { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; height: 94px; padding-top: 7px; }
-.route-line { position: absolute; left: 3px; right: 3px; top: 10px; height: 1px; background: #b5c5ad30; }
-#route-progress { width: 100%; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; }
-.journey-stop { position: relative; display: flex; flex-direction: column; gap: 8px; color: #7a897e; padding-top: 20px; padding-bottom: 5px; transition: color .25s; min-width: 0; }
-.route-dot { position: absolute; top: 0; left: 0; width: 7px; height: 7px; border: 1px solid #62725f; background: #111713; border-radius: 50%; }
-.journey-stop:last-child .route-dot { left: auto; right: 0; }
-.journey-stop:last-child { align-items: flex-end; }
-.stop-heading { display: flex; align-items: center; gap: 9px; font-size: 10px; min-height: 16px; }
-.stop-heading svg { width: 12px; height: 12px; opacity: 0; transition: opacity .2s; }
-.stop-number { font-size: 9px; color: #657763; }
-.stop-subtitle { font-size: 10px; color: #637466; padding-left: 23px; }
-.journey-stop:last-child .stop-subtitle { padding-left: 0; padding-right: 21px; }
-.journey-stop.is-current, .journey-stop:hover { color: #d0f7a0; }
-.journey-stop.is-current .stop-heading svg, .journey-stop:hover .stop-heading svg { opacity: 1; }
-.journey-stop.is-current .stop-subtitle { color: #a5b899; }
-.journey-stop.is-current .stop-number { color: var(--accent); }
-.journey-stop.is-current .route-dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px #d0f7a014, 0 0 12px #d0f7a03a; }
-.journey-stop.is-past .route-dot { border-color: var(--accent); background: #d0f7a060; }
-.site-footer { height: 45px; border-top: 1px solid #c2d7c813; display: flex; align-items: center; justify-content: space-between; gap: 24px; color: #69786e; font-size: 8px; }
-.footer-developer, .footer-contact { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.footer-developer strong { color: #a6b2aa; font-weight: 500; }
-.footer-contact { color: #84938a; transition: color .2s; }
-.footer-contact:hover { color: var(--accent); }
-.scroll-track { position: relative; z-index: -1; pointer-events: none; }
-.scroll-stop { height: 100vh; }
+.flight-deck {
+  position: fixed;
+  z-index: 4;
+  left: var(--page-gutter);
+  right: var(--page-gutter);
+  bottom: 0;
+  height: var(--deck-height);
+}
+.flight-deck-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #76877a;
+  height: 42px;
+  border-top: 1px solid var(--line);
+}
+.flight-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #b9c4b8;
+}
+.scroll-cue {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: -50px;
+  font-size: 9px;
+}
+.scroll-cue svg {
+  width: 12px;
+  height: 12px;
+  animation: drift 2.8s ease-in-out infinite;
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+.flight-controls {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: #b9c9b0;
+}
+#progress-value {
+  min-width: 31px;
+  text-align: right;
+}
+.icon-button {
+  position: relative;
+  width: 31px;
+  height: 31px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #a3b49d;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.icon-button:hover {
+  color: var(--accent);
+  border-color: #d0f7a065;
+}
+.icon-button svg {
+  height: 13px;
+  width: 13px;
+}
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 9px);
+  right: 0;
+  color: #d7e0d1;
+  padding: 7px 9px;
+  background: #192119;
+  border: 1px solid var(--line);
+  font-size: 10px;
+  font-weight: 400;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.icon-button:hover .tooltip,
+.icon-button:focus-visible .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+.journey-nav {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  height: 94px;
+  padding-top: 7px;
+}
+.route-line {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: 10px;
+  height: 1px;
+  background: #b5c5ad30;
+}
+#route-progress {
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.journey-stop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #7a897e;
+  padding-top: 20px;
+  padding-bottom: 5px;
+  transition: color 0.25s;
+  min-width: 0;
+}
+.route-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border: 1px solid #62725f;
+  background: #111713;
+  border-radius: 50%;
+}
+.journey-stop:last-child .route-dot {
+  left: auto;
+  right: 0;
+}
+.journey-stop:last-child {
+  align-items: flex-end;
+}
+.stop-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 10px;
+  min-height: 16px;
+}
+.stop-heading svg {
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.stop-number {
+  font-size: 9px;
+  color: #657763;
+}
+.stop-subtitle {
+  font-size: 10px;
+  color: #637466;
+  padding-left: 23px;
+}
+.journey-stop:last-child .stop-subtitle {
+  padding-left: 0;
+  padding-right: 21px;
+}
+.journey-stop.is-current,
+.journey-stop:hover {
+  color: #d0f7a0;
+}
+.journey-stop.is-current .stop-heading svg,
+.journey-stop:hover .stop-heading svg {
+  opacity: 1;
+}
+.journey-stop.is-current .stop-subtitle {
+  color: #a5b899;
+}
+.journey-stop.is-current .stop-number {
+  color: var(--accent);
+}
+.journey-stop.is-current .route-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 4px #d0f7a014,
+    0 0 12px #d0f7a03a;
+}
+.journey-stop.is-past .route-dot {
+  border-color: var(--accent);
+  background: #d0f7a060;
+}
+.site-footer {
+  height: 45px;
+  border-top: 1px solid #c2d7c813;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  color: #69786e;
+  font-size: 8px;
+}
+.footer-developer,
+.footer-contact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.footer-developer strong {
+  color: #a6b2aa;
+  font-weight: 500;
+}
+.footer-contact {
+  color: #84938a;
+  transition: color 0.2s;
+}
+.footer-contact:hover {
+  color: var(--accent);
+}
+.scroll-track {
+  position: relative;
+  z-index: -1;
+  pointer-events: none;
+}
+.scroll-stop {
+  height: 100vh;
+}
 
-.terminal-panel { max-width: 590px; width: 49%; transform: translateY(-44%); }
-.terminal-panel .eyebrow { margin-bottom: 19px; }
-.terminal-panel .planet-name { margin-bottom: 12px; }
-.terminal-panel h2 { font-size: 41px; margin-bottom: 15px; }
-.terminal-panel .story-description { max-width: 490px; font-size: 13px; line-height: 1.8; }
-.install-terminal { margin-top: 24px; border: 1px solid #9aac882a; background: rgb(9 14 13 / 84%); backdrop-filter: blur(18px); border-radius: 6px; overflow: hidden; box-shadow: 0 15px 40px #0002; }
-.terminal-heading { height: 38px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--line); padding: 0 15px; color: #8a9b8c; font-size: 9px; }
-.terminal-lights { display: flex; gap: 5px; }
-.terminal-lights i { width: 6px; height: 6px; border-radius: 50%; background: #a78676; }
-.terminal-lights i:nth-child(2) { background: #a6a07a; }.terminal-lights i:nth-child(3) { background: #8aab7c; }
-.terminal-shell { margin-left: auto; font-size: 9px; color: #526454; }
-.install-tabs { display: flex; gap: 23px; padding: 0 17px; border-bottom: 1px solid #c2d7c810; }
-.install-tabs button { min-height: 37px; font-size: 10px; padding: 0; color: #82917f; border-bottom: 1px solid transparent; }
-.install-tabs button[aria-selected='true'] { color: var(--accent); border-bottom-color: var(--accent); }
-.command-panel { position: relative; display: flex; align-items: flex-start; padding: 20px 50px 8px 16px; min-height: 85px; gap: 11px; }
-.command-prompt { color: #92b777; line-height: 1.9; font-size: 10px; }
-.command-panel pre { margin: 0; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; color: #c7d7bd; font: 10px / 1.9 'IBM Plex Mono', monospace; }
-.command-panel .icon-button { position: absolute; top: 16px; right: 12px; }
-.copy-status { min-height: 27px; padding: 0 16px 8px; font-size: 10px; color: var(--accent); }
-.terminal-actions { margin-top: 22px; gap: 22px; }
-.terminal-footnote { font-size: 9px; color: #7f8e7b; line-height: 1.7; margin: 15px 0 0; }
-.motion-paused *, .motion-paused *::before, .motion-paused *::after { animation: none !important; transition: none !important; }
+.terminal-panel {
+  max-width: 590px;
+  width: 49%;
+  transform: translateY(-44%);
+}
+.terminal-panel .eyebrow {
+  margin-bottom: 19px;
+}
+.terminal-panel .planet-name {
+  margin-bottom: 12px;
+}
+.terminal-panel h2 {
+  font-size: 41px;
+  margin-bottom: 15px;
+}
+.terminal-panel .story-description {
+  max-width: 490px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.install-terminal {
+  margin-top: 24px;
+  border: 1px solid #9aac882a;
+  background: rgb(9 14 13 / 84%);
+  backdrop-filter: blur(18px);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px #0002;
+}
+.terminal-heading {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid var(--line);
+  padding: 0 15px;
+  color: #8a9b8c;
+  font-size: 9px;
+}
+.terminal-lights {
+  display: flex;
+  gap: 5px;
+}
+.terminal-lights i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a78676;
+}
+.terminal-lights i:nth-child(2) {
+  background: #a6a07a;
+}
+.terminal-lights i:nth-child(3) {
+  background: #8aab7c;
+}
+.terminal-shell {
+  margin-left: auto;
+  font-size: 9px;
+  color: #526454;
+}
+.install-tabs {
+  display: flex;
+  gap: 23px;
+  padding: 0 17px;
+  border-bottom: 1px solid #c2d7c810;
+}
+.install-tabs button {
+  min-height: 37px;
+  font-size: 10px;
+  padding: 0;
+  color: #82917f;
+  border-bottom: 1px solid transparent;
+}
+.install-tabs button[aria-selected="true"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.command-panel {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  padding: 20px 50px 8px 16px;
+  min-height: 85px;
+  gap: 11px;
+}
+.command-prompt {
+  color: #92b777;
+  line-height: 1.9;
+  font-size: 10px;
+}
+.command-panel pre {
+  margin: 0;
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: #c7d7bd;
+  font:
+    10px / 1.9 "IBM Plex Mono",
+    monospace;
+}
+.command-panel .icon-button {
+  position: absolute;
+  top: 16px;
+  right: 12px;
+}
+.copy-status {
+  min-height: 27px;
+  padding: 0 16px 8px;
+  font-size: 10px;
+  color: var(--accent);
+}
+.terminal-actions {
+  margin-top: 22px;
+  gap: 22px;
+}
+.terminal-footnote {
+  font-size: 9px;
+  color: #7f8e7b;
+  line-height: 1.7;
+  margin: 15px 0 0;
+}
+.motion-paused *,
+.motion-paused *::before,
+.motion-paused *::after {
+  animation: none !important;
+  transition: none !important;
+}
 
 @media (min-width: 1700px) {
-  :root { --page-gutter: 8%; --header-height: 100px; --deck-height: 206px; }
-  h1 { font-size: 142px; }
-  .story-panel { max-width: 730px; }
-  .hero-statement { font-size: 28px; }
-  .story-description { font-size: 16px; max-width: 450px; }
-  .hero-actions { margin-top: 35px; }
-  .button { min-height: 52px; font-size: 13px; }
-  .mission-id, .top-coordinates { top: 38px; }
-  .journey-nav { height: 109px; padding-top: 11px; }
-  .route-line { top: 14px; }
-  .journey-stop { padding-top: 25px; }
-  .stop-heading { font-size: 12px; }
-  .flight-deck-heading { height: 48px; }
-  .site-footer { height: 49px; }
-  .terminal-panel { max-width: 650px; }
-  .terminal-panel h2, .orbit-panel h2 { font-size: 55px; }
-  .terminal-panel .story-description { font-size: 15px; }
-  .command-panel pre { font-size: 12px; }
+  :root {
+    --page-gutter: 8%;
+    --header-height: 100px;
+    --deck-height: 206px;
+  }
+  h1 {
+    font-size: 142px;
+  }
+  .story-panel {
+    max-width: 730px;
+  }
+  .hero-statement {
+    font-size: 28px;
+  }
+  .story-description {
+    font-size: 16px;
+    max-width: 450px;
+  }
+  .hero-actions {
+    margin-top: 35px;
+  }
+  .button {
+    min-height: 52px;
+    font-size: 13px;
+  }
+  .mission-id,
+  .top-coordinates {
+    top: 38px;
+  }
+  .journey-nav {
+    height: 109px;
+    padding-top: 11px;
+  }
+  .route-line {
+    top: 14px;
+  }
+  .journey-stop {
+    padding-top: 25px;
+  }
+  .stop-heading {
+    font-size: 12px;
+  }
+  .flight-deck-heading {
+    height: 48px;
+  }
+  .site-footer {
+    height: 49px;
+  }
+  .terminal-panel {
+    max-width: 650px;
+  }
+  .terminal-panel h2,
+  .orbit-panel h2 {
+    font-size: 55px;
+  }
+  .terminal-panel .story-description {
+    font-size: 15px;
+  }
+  .command-panel pre {
+    font-size: 12px;
+  }
 }
 
 @media (max-height: 820px) and (min-width: 901px) {
-  :root { --header-height: 73px; --deck-height: 150px; }
-  .mission-id, .top-coordinates { top: 22px; }
-  .story-panel { transform: translateY(-42%); }
-  .eyebrow { margin-bottom: 17px; }
-  h1 { font-size: 91px; margin-bottom: 19px; }
-  .hero-statement { font-size: 21px; margin-bottom: 10px; }
-  .story-description { font-size: 13px; line-height: 1.8; }
-  .hero-actions { margin-top: 21px; }
-  .hero-footnote { margin-top: 14px; }
-  .button { min-height: 43px; }
-  .journey-nav { height: 72px; }
-  .site-footer { height: 36px; }
-  .terminal-panel { transform: translateY(-42%); }
-  .terminal-panel .eyebrow { margin-bottom: 10px; }
-  .terminal-panel .planet-name { margin-bottom: 10px; }
-  .terminal-panel h2 { font-size: 34px; margin-bottom: 10px; }
-  .install-terminal { margin-top: 16px; }
-  .terminal-heading { height: 30px; }
-  .install-tabs button { min-height: 31px; }
-  .command-panel { padding-top: 13px; min-height: 69px; }
-  .terminal-actions { margin-top: 15px; }
-  .terminal-footnote { margin-top: 10px; }
-  .orbit-panel h2 { font-size: 43px; }
-  .principles { margin-top: 16px; padding: 17px 0; }
+  :root {
+    --header-height: 73px;
+    --deck-height: 150px;
+  }
+  .mission-id,
+  .top-coordinates {
+    top: 22px;
+  }
+  .story-panel {
+    transform: translateY(-42%);
+  }
+  .eyebrow {
+    margin-bottom: 17px;
+  }
+  h1 {
+    font-size: 91px;
+    margin-bottom: 19px;
+  }
+  .hero-statement {
+    font-size: 21px;
+    margin-bottom: 10px;
+  }
+  .story-description {
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .hero-actions {
+    margin-top: 21px;
+  }
+  .hero-footnote {
+    margin-top: 14px;
+  }
+  .button {
+    min-height: 43px;
+  }
+  .journey-nav {
+    height: 72px;
+  }
+  .site-footer {
+    height: 36px;
+  }
+  .terminal-panel {
+    transform: translateY(-42%);
+  }
+  .terminal-panel .eyebrow {
+    margin-bottom: 10px;
+  }
+  .terminal-panel .planet-name {
+    margin-bottom: 10px;
+  }
+  .terminal-panel h2 {
+    font-size: 34px;
+    margin-bottom: 10px;
+  }
+  .install-terminal {
+    margin-top: 16px;
+  }
+  .terminal-heading {
+    height: 30px;
+  }
+  .install-tabs button {
+    min-height: 31px;
+  }
+  .command-panel {
+    padding-top: 13px;
+    min-height: 69px;
+  }
+  .terminal-actions {
+    margin-top: 15px;
+  }
+  .terminal-footnote {
+    margin-top: 10px;
+  }
+  .orbit-panel h2 {
+    font-size: 43px;
+  }
+  .principles {
+    margin-top: 16px;
+    padding: 17px 0;
+  }
 }
 
 @media (max-width: 1100px) and (min-width: 701px) {
-  :root { --page-gutter: 5%; }
-  .header-actions { gap: 15px; }
-  h1 { font-size: 85px; }
-  .hero-statement { font-size: 22px; }
-  .story-panel { width: 53%; }
-  .story-description { max-width: 340px; }
-  .planet-annotation { right: 6%; }
-  .hero-actions { gap: 12px; }
-  .stop-heading { font-size: 9px; gap: 6px; }
-  .terminal-panel { width: 55%; }
-  .terminal-panel h2 { font-size: 35px; }
-  .orbit-panel h2 { font-size: 41px; }
-  .mission-id { font-size: 8px; }
-  .top-coordinates { font-size: 8px; gap: 13px; }
+  :root {
+    --page-gutter: 5%;
+  }
+  .header-actions {
+    gap: 15px;
+  }
+  h1 {
+    font-size: 85px;
+  }
+  .hero-statement {
+    font-size: 22px;
+  }
+  .story-panel {
+    width: 53%;
+  }
+  .story-description {
+    max-width: 340px;
+  }
+  .planet-annotation {
+    right: 6%;
+  }
+  .hero-actions {
+    gap: 12px;
+  }
+  .stop-heading {
+    font-size: 9px;
+    gap: 6px;
+  }
+  .terminal-panel {
+    width: 55%;
+  }
+  .terminal-panel h2 {
+    font-size: 35px;
+  }
+  .orbit-panel h2 {
+    font-size: 41px;
+  }
+  .mission-id {
+    font-size: 8px;
+  }
+  .top-coordinates {
+    font-size: 8px;
+    gap: 13px;
+  }
 }
 
 @media (max-width: 700px) {
-  :root { --page-gutter: 6%; --header-height: 70px; --deck-height: 145px; }
-  .site-header { gap: 16px; }
-  .brand { font-size: 11px; gap: 8px; }
-  .brand-mark { width: 26px; height: 26px; }
-  .header-divider, .github-link span, .github-arrow { display: none; }
-  .header-actions { gap: 19px; }
-  .github-link { min-height: 40px; }
-  .github-link svg { width: 18px; height: 18px; }
-  .language-toggle { font-size: 11px; }
-  .mission-id { top: 20px; font-size: 7px; gap: 7px; }
-  .mission-id .muted, .mission-id-separator, .top-coordinates { display: none; }
-  .scene-shade { background: linear-gradient(0deg, #060809 0%, #060809d9 28%, #06080977 48%, transparent 68%, #06080944 100%); box-shadow: inset 0 0 50px #0003; }
-  .story-panel { width: calc(100% - var(--page-gutter) * 2); max-width: none; top: auto; bottom: 24px; transform: none; }
-  .eyebrow { font-size: 9px; gap: 9px; margin-bottom: 15px; }
-  .orbit-number { width: 23px; height: 18px; font-size: 9px; }
-  .eyebrow-line { width: 29px; }
-  h1 { font-size: 68px; line-height: .97; margin-bottom: 19px; }
-  .hero-statement { font-size: 19px; margin-bottom: 8px; }
-  .story-description { font-size: 12px; line-height: 1.85; max-width: 330px; }
-  .hero-actions { margin-top: 21px; gap: 20px; }
-  .button { font-size: 11px; min-height: 43px; padding: 0 15px; gap: 10px; }
-  .button-text { padding-left: 0; padding-right: 0; }
-  .hero-footnote { font-size: 8px; margin-top: 12px; }
-  .planet-annotation { top: 19%; right: 7%; opacity: .8; }
-  .annotation-line { width: 22px; }
-  #planet-label { font-size: 9px; }
-  #planet-type { font-size: 8px; }
-  .planet-telemetry { display: none; }
-  .scene-status { top: 48px; bottom: auto; font-size: 9px; }
-  .flight-deck-heading { height: 39px; font-size: 8px; }
-  .scroll-cue { margin-left: 0; font-size: 8px; gap: 4px; }
-  .flight-controls { gap: 8px; }
-  .flight-controls .icon-button { width: 27px; height: 27px; }
-  .journey-nav { height: 72px; }
-  .journey-stop { padding-top: 21px; gap: 0; }
-  .stop-heading { flex-direction: column; align-items: flex-start; gap: 5px; font-size: 7px; }
-  .stop-heading svg { display: none; }
-  .stop-number { font-size: 9px; }
-  .journey-stop:last-child .stop-heading { align-items: flex-end; text-align: right; }
-  .stop-subtitle { display: none; }
-  .site-footer { height: 44px; font-size: 6px; line-height: 1.4; gap: 10px; }
-  .footer-developer, .footer-contact { display: grid; gap: 1px; }
-  .footer-contact { text-align: right; }
-  .orbit-panel .eyebrow { margin-bottom: 15px; }
-  .planet-name { font-size: 9px; margin-bottom: 14px; }
-  .orbit-panel h2 { font-size: 37px; line-height: 1.3; max-width: 360px; margin-bottom: 17px; }
-  .orbit-panel .story-description { font-size: 13px; max-width: 350px; }
-  .principles { padding: 16px 0; margin-top: 18px; max-width: 340px; }
-  .principles li { font-size: 11px; gap: 10px; margin-bottom: 11px; }
-  .stage-next { min-height: 30px; font-size: 11px; }
-  .terminal-panel { bottom: 20px; }
-  .terminal-panel .eyebrow { margin-bottom: 12px; }
-  .terminal-panel .planet-name { margin-bottom: 10px; font-size: 9px; }
-  .terminal-panel h2 { font-size: 31px; line-height: 1.28; margin-bottom: 11px; }
-  .terminal-panel .story-description { font-size: 12px; line-height: 1.8; }
-  .install-terminal { margin-top: 18px; }
-  .terminal-heading { height: 30px; font-size: 8px; gap: 11px; padding: 0 12px; }
-  .terminal-lights { gap: 4px; }.terminal-lights i { width: 5px; height: 5px; }
-  .install-tabs { padding: 0 12px; gap: 22px; }.install-tabs button { min-height: 32px; font-size: 9px; }
-  .command-panel { padding: 14px 44px 5px 12px; gap: 6px; min-height: 89px; }
-  .command-panel pre { font-size: 9px; line-height: 1.8; }
-  .command-prompt { font-size: 9px; }
-  .command-panel .icon-button { width: 26px; height: 26px; right: 9px; top: 12px; }
-  .copy-status { font-size: 9px; min-height: 23px; padding: 0 12px 7px; }
-  .terminal-actions { gap: 18px; margin-top: 17px; }
-  .terminal-footnote { font-size: 8px; margin-top: 10px; }
+  :root {
+    --page-gutter: 6%;
+    --header-height: 70px;
+    --deck-height: 156px;
+  }
+  .site-header {
+    gap: 16px;
+  }
+  .brand {
+    font-size: 11px;
+    gap: 8px;
+  }
+  .brand-mark {
+    width: 26px;
+    height: 26px;
+  }
+  .header-divider,
+  .github-link span,
+  .github-arrow {
+    display: none;
+  }
+  .header-actions {
+    gap: 19px;
+  }
+  .github-link {
+    min-height: 40px;
+  }
+  .github-link svg {
+    width: 18px;
+    height: 18px;
+  }
+  .language-toggle {
+    font-size: 11px;
+  }
+  .mission-id {
+    top: 20px;
+    font-size: 7px;
+    gap: 7px;
+  }
+  .mission-id .muted,
+  .mission-id-separator,
+  .top-coordinates {
+    display: none;
+  }
+  .scene-shade {
+    background: linear-gradient(
+      0deg,
+      #060809 0%,
+      #060809d9 28%,
+      #06080977 48%,
+      transparent 68%,
+      #06080944 100%
+    );
+    box-shadow: inset 0 0 50px #0003;
+  }
+  .story-panel {
+    width: calc(100% - var(--page-gutter) * 2);
+    max-width: none;
+    top: auto;
+    bottom: 24px;
+    transform: none;
+  }
+  .eyebrow {
+    font-size: 9px;
+    gap: 9px;
+    margin-bottom: 15px;
+  }
+  .orbit-number {
+    width: 23px;
+    height: 18px;
+    font-size: 9px;
+  }
+  .eyebrow-line {
+    width: 29px;
+  }
+  h1 {
+    font-size: 68px;
+    line-height: 0.97;
+    margin-bottom: 19px;
+  }
+  .hero-statement {
+    font-size: 19px;
+    margin-bottom: 8px;
+  }
+  .story-description {
+    font-size: 12px;
+    line-height: 1.85;
+    max-width: 330px;
+  }
+  .hero-actions {
+    margin-top: 21px;
+    gap: 20px;
+  }
+  .button {
+    font-size: 11px;
+    min-height: 43px;
+    padding: 0 15px;
+    gap: 10px;
+  }
+  .button-text {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .hero-footnote {
+    font-size: 8px;
+    margin-top: 12px;
+  }
+  .planet-annotation {
+    top: 19%;
+    right: 7%;
+    opacity: 0.8;
+  }
+  .annotation-line {
+    width: 22px;
+  }
+  #planet-label {
+    font-size: 9px;
+  }
+  #planet-type {
+    font-size: 8px;
+  }
+  .planet-telemetry {
+    display: none;
+  }
+  .scene-status {
+    top: 48px;
+    bottom: auto;
+    font-size: 9px;
+  }
+  .flight-deck-heading {
+    height: 39px;
+    font-size: 8px;
+  }
+  .scroll-cue {
+    margin-left: 0;
+    font-size: 8px;
+    gap: 4px;
+  }
+  .flight-controls {
+    gap: 8px;
+  }
+  .flight-controls .icon-button {
+    width: 27px;
+    height: 27px;
+  }
+  .journey-nav {
+    height: 72px;
+  }
+  .journey-stop {
+    padding-top: 21px;
+    gap: 0;
+  }
+  .stop-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    font-size: 7px;
+  }
+  .stop-heading svg {
+    display: none;
+  }
+  .stop-number {
+    font-size: 9px;
+  }
+  .journey-stop:last-child .stop-heading {
+    align-items: flex-end;
+    text-align: right;
+  }
+  .stop-subtitle {
+    display: none;
+  }
+  .site-footer {
+    height: 44px;
+    font-size: 6px;
+    line-height: 1.4;
+    gap: 10px;
+  }
+  .footer-developer,
+  .footer-contact {
+    display: grid;
+    gap: 1px;
+  }
+  .footer-contact {
+    text-align: right;
+  }
+  .orbit-panel .eyebrow {
+    margin-bottom: 15px;
+  }
+  .planet-name {
+    font-size: 9px;
+    margin-bottom: 14px;
+  }
+  .orbit-panel h2 {
+    font-size: 37px;
+    line-height: 1.3;
+    max-width: 360px;
+    margin-bottom: 17px;
+  }
+  .orbit-panel .story-description {
+    font-size: 13px;
+    max-width: 350px;
+  }
+  .principles {
+    padding: 16px 0;
+    margin-top: 18px;
+    max-width: 340px;
+  }
+  .principles li {
+    font-size: 11px;
+    gap: 10px;
+    margin-bottom: 11px;
+  }
+  .stage-next {
+    min-height: 30px;
+    font-size: 11px;
+  }
+  .terminal-panel {
+    bottom: 20px;
+  }
+  .terminal-panel .eyebrow {
+    margin-bottom: 12px;
+  }
+  .terminal-panel .planet-name {
+    margin-bottom: 10px;
+    font-size: 9px;
+  }
+  .terminal-panel h2 {
+    font-size: 31px;
+    line-height: 1.28;
+    margin-bottom: 11px;
+  }
+  .terminal-panel .story-description {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  .install-terminal {
+    margin-top: 18px;
+  }
+  .terminal-heading {
+    height: 30px;
+    font-size: 8px;
+    gap: 11px;
+    padding: 0 12px;
+  }
+  .terminal-lights {
+    gap: 4px;
+  }
+  .terminal-lights i {
+    width: 5px;
+    height: 5px;
+  }
+  .install-tabs {
+    padding: 0 12px;
+    gap: 22px;
+  }
+  .install-tabs button {
+    min-height: 32px;
+    font-size: 9px;
+  }
+  .command-panel {
+    padding: 14px 44px 5px 12px;
+    gap: 6px;
+    min-height: 89px;
+  }
+  .command-panel pre {
+    font-size: 9px;
+    line-height: 1.8;
+  }
+  .command-prompt {
+    font-size: 9px;
+  }
+  .command-panel .icon-button {
+    width: 26px;
+    height: 26px;
+    right: 9px;
+    top: 12px;
+  }
+  .copy-status {
+    font-size: 9px;
+    min-height: 23px;
+    padding: 0 12px 7px;
+  }
+  .terminal-actions {
+    gap: 18px;
+    margin-top: 17px;
+  }
+  .terminal-footnote {
+    font-size: 8px;
+    margin-top: 10px;
+  }
 }
 
 @media (max-width: 700px) and (max-height: 750px) {
-  :root { --header-height: 60px; --deck-height: 121px; }
-  .mission-id { top: 15px; }
-  .story-panel { bottom: 14px; }
-  h1 { font-size: 56px; margin-bottom: 15px; }
-  .eyebrow { margin-bottom: 11px; }
-  .hero-statement { font-size: 18px; margin-bottom: 7px; }
-  .hero-actions { margin-top: 15px; }
-  .hero-footnote { margin-top: 9px; }
-  .flight-deck-heading { height: 33px; }
-  .journey-nav { height: 60px; }
-  .journey-stop { padding-top: 17px; }
-  .site-footer { height: 38px; }
-  .orbit-panel h2 { font-size: 31px; margin-bottom: 13px; }
-  .orbit-panel .planet-name { margin-bottom: 11px; }
-  .orbit-panel .story-description { font-size: 12px; }
-  .principles { margin-top: 13px; padding: 13px 0; }
-  .principles li { font-size: 10px; margin-bottom: 9px; }
-  .terminal-panel h2 { font-size: 27px; }
-  .terminal-panel .eyebrow { margin-bottom: 8px; }
-  .terminal-panel .story-description { font-size: 11px; }
-  .install-terminal { margin-top: 12px; }
-  .terminal-heading { height: 27px; }
-  .install-tabs button { min-height: 29px; }
-  .terminal-actions { margin-top: 12px; }
-  .terminal-footnote { margin-top: 7px; font-size: 7px; }
+  :root {
+    --header-height: 60px;
+    --deck-height: 121px;
+  }
+  .mission-id {
+    top: 15px;
+  }
+  .story-panel {
+    bottom: 14px;
+  }
+  h1 {
+    font-size: 56px;
+    margin-bottom: 15px;
+  }
+  .eyebrow {
+    margin-bottom: 11px;
+  }
+  .hero-statement {
+    font-size: 18px;
+    margin-bottom: 7px;
+  }
+  .hero-actions {
+    margin-top: 15px;
+  }
+  .hero-footnote {
+    margin-top: 9px;
+  }
+  .flight-deck-heading {
+    height: 33px;
+  }
+  .journey-nav {
+    height: 60px;
+  }
+  .journey-stop {
+    padding-top: 17px;
+  }
+  .site-footer {
+    height: 38px;
+  }
+  .orbit-panel h2 {
+    font-size: 31px;
+    margin-bottom: 13px;
+  }
+  .orbit-panel .planet-name {
+    margin-bottom: 11px;
+  }
+  .orbit-panel .story-description {
+    font-size: 12px;
+  }
+  .principles {
+    margin-top: 13px;
+    padding: 13px 0;
+  }
+  .principles li {
+    font-size: 10px;
+    margin-bottom: 9px;
+  }
+  .terminal-panel h2 {
+    font-size: 27px;
+  }
+  .terminal-panel .eyebrow {
+    margin-bottom: 8px;
+  }
+  .terminal-panel .story-description {
+    font-size: 11px;
+  }
+  .install-terminal {
+    margin-top: 12px;
+  }
+  .terminal-heading {
+    height: 27px;
+  }
+  .install-tabs button {
+    min-height: 29px;
+  }
+  .terminal-actions {
+    margin-top: 12px;
+  }
+  .terminal-footnote {
+    margin-top: 7px;
+    font-size: 7px;
+  }
 }
 
 @media (max-height: 610px) and (min-width: 701px) {
-  :root { --header-height: 56px; --deck-height: 119px; }
-  .mission-id, .top-coordinates { top: 13px; font-size: 7px; }
-  h1 { font-size: 64px; margin-bottom: 13px; }
-  .hero-statement { font-size: 18px; }.hero-footnote { display: none; }
-  .hero-actions { margin-top: 13px; }.eyebrow { margin-bottom: 12px; }
-  .button { min-height: 36px; }
-  .flight-deck-heading { height: 32px; }.journey-nav { height: 59px; }.site-footer { height: 28px; }
-  .journey-stop { padding-top: 15px; gap: 4px; }
-  .orbit-panel h2 { font-size: 30px; margin-bottom: 12px; }
-  .orbit-panel .story-description { font-size: 12px; }
-  .planet-name { margin-bottom: 10px; }
-  .principles { padding: 10px 0; margin-top: 10px; }.principles li { font-size: 10px; margin-bottom: 6px; }
-  .terminal-panel { transform: translateY(-40%); }
-  .terminal-panel .planet-name, .terminal-panel .terminal-footnote { display: none; }
-  .terminal-panel h2 { font-size: 27px; }
-  .terminal-panel .story-description { font-size: 11px; line-height: 1.6; }
-  .install-terminal { margin-top: 10px; }.terminal-heading { height: 26px; }.install-tabs button { min-height: 27px; }
-  .command-panel { min-height: 61px; padding-top: 9px; padding-bottom: 4px; }.command-panel pre { font-size: 9px; }
-  .copy-status { min-height: 20px; font-size: 8px; }.terminal-actions { margin-top: 10px; }
+  :root {
+    --header-height: 56px;
+    --deck-height: 119px;
+  }
+  .mission-id,
+  .top-coordinates {
+    top: 13px;
+    font-size: 7px;
+  }
+  h1 {
+    font-size: 64px;
+    margin-bottom: 13px;
+  }
+  .hero-statement {
+    font-size: 18px;
+  }
+  .hero-footnote {
+    display: none;
+  }
+  .hero-actions {
+    margin-top: 13px;
+  }
+  .eyebrow {
+    margin-bottom: 12px;
+  }
+  .button {
+    min-height: 36px;
+  }
+  .flight-deck-heading {
+    height: 32px;
+  }
+  .journey-nav {
+    height: 59px;
+  }
+  .site-footer {
+    height: 28px;
+  }
+  .journey-stop {
+    padding-top: 15px;
+    gap: 4px;
+  }
+  .orbit-panel h2 {
+    font-size: 30px;
+    margin-bottom: 12px;
+  }
+  .orbit-panel .story-description {
+    font-size: 12px;
+  }
+  .planet-name {
+    margin-bottom: 10px;
+  }
+  .principles {
+    padding: 10px 0;
+    margin-top: 10px;
+  }
+  .principles li {
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+  .terminal-panel {
+    transform: translateY(-40%);
+  }
+  .terminal-panel .planet-name,
+  .terminal-panel .terminal-footnote {
+    display: none;
+  }
+  .terminal-panel h2 {
+    font-size: 27px;
+  }
+  .terminal-panel .story-description {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .install-terminal {
+    margin-top: 10px;
+  }
+  .terminal-heading {
+    height: 26px;
+  }
+  .install-tabs button {
+    min-height: 27px;
+  }
+  .command-panel {
+    min-height: 61px;
+    padding-top: 9px;
+    padding-bottom: 4px;
+  }
+  .command-panel pre {
+    font-size: 9px;
+  }
+  .copy-status {
+    min-height: 20px;
+    font-size: 8px;
+  }
+  .terminal-actions {
+    margin-top: 10px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 @media (min-width: 701px) and (max-width: 850px) {
-  .site-header { gap: 16px; }
-  .brand { font-size: 11px; gap: 7px; }
-  .brand-mark { width: 25px; height: 25px; }
-  .header-actions { gap: 11px; }
-  .github-link { font-size: 11px; gap: 6px; }
-  .github-arrow { display: none; }
+  .site-header {
+    gap: 16px;
+  }
+  .brand {
+    font-size: 11px;
+    gap: 7px;
+  }
+  .brand-mark {
+    width: 25px;
+    height: 25px;
+  }
+  .header-actions {
+    gap: 11px;
+  }
+  .github-link {
+    font-size: 11px;
+    gap: 6px;
+  }
+  .github-arrow {
+    display: none;
+  }
 }
 
 @media (max-width: 360px) {
-  h1 { font-size: 54px; }
-  .hero-actions { gap: 13px; }
-  .button { padding: 0 12px; font-size: 10px; gap: 8px; }
-  .button-text { padding: 0; }
-  .scroll-cue { display: none; }
-  .terminal-actions { gap: 12px; }
+  h1 {
+    font-size: 54px;
+  }
+  .hero-actions {
+    gap: 13px;
+  }
+  .button {
+    padding: 0 12px;
+    font-size: 10px;
+    gap: 8px;
+  }
+  .button-text {
+    padding: 0;
+  }
+  .scroll-cue {
+    display: none;
+  }
+  .terminal-actions {
+    gap: 12px;
+  }
 }
 
 @media (max-height: 520px) {
-  .story-panel, .terminal-panel { top: 40px; bottom: 12px; transform: none; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: thin; scrollbar-color: #708365 transparent; }
-  .planet-annotation, .planet-telemetry { display: none; }
-  .story-panel.is-active { animation: none; }
+  .story-panel,
+  .terminal-panel {
+    top: 40px;
+    bottom: 12px;
+    transform: none;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #708365 transparent;
+  }
+  .planet-annotation,
+  .planet-telemetry {
+    display: none;
+  }
+  .story-panel.is-active {
+    animation: none;
+  }
 }
