@@ -3,4 +3,4 @@ import en from "./en.js";
 import ja from "./ja.js";
 
 export const locales = { "zh-TW": zhTW, en, ja };
-export const defaultLocale = en;
+export const defaultLocale = "en";
