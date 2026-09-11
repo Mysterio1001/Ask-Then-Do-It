@@ -23,7 +23,14 @@
   --accent: #d0f7a0;
   --line: rgb(194 215 200 / 15%);
   --page-gutter: 6.2%;
-  --deck-height: 181px;
+  --deck-heading-height: 42px;
+  --journey-height: 94px;
+  --footer-height: 45px;
+  --bottom-safe-area: env(safe-area-inset-bottom, 0px);
+  --deck-height: calc(
+    var(--deck-heading-height) + var(--journey-height) + var(--footer-height) +
+      var(--bottom-safe-area)
+  );
   --header-height: 88px;
   letter-spacing: 0;
 }
@@ -274,7 +281,8 @@ svg {
   position: fixed;
   z-index: 2;
   top: var(--header-height);
-  bottom: var(--deck-height);
+  height: calc(100vh - var(--header-height) - var(--deck-height));
+  height: calc(100dvh - var(--header-height) - var(--deck-height));
   left: 0;
   right: 0;
   pointer-events: none;
@@ -592,8 +600,10 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   z-index: 4;
   left: var(--page-gutter);
   right: var(--page-gutter);
-  bottom: 0;
+  top: calc(100vh - var(--deck-height));
+  top: calc(100dvh - var(--deck-height));
   height: var(--deck-height);
+  padding-bottom: var(--bottom-safe-area);
 }
 .flight-deck-heading {
   display: flex;
@@ -601,7 +611,7 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   justify-content: space-between;
   font-size: 9px;
   color: #76877a;
-  height: 42px;
+  height: var(--deck-heading-height);
   border-top: 1px solid var(--line);
 }
 .flight-label {
@@ -689,7 +699,7 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 0;
-  height: 94px;
+  height: var(--journey-height);
   padding-top: 7px;
 }
 .route-line {
@@ -787,7 +797,7 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   background: #d0f7a060;
 }
 .site-footer {
-  height: 45px;
+  height: var(--footer-height);
   border-top: 1px solid #c2d7c813;
   display: flex;
   align-items: center;
@@ -951,11 +961,14 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   transition: none !important;
 }
 
+/* Large desktop monitors (1700px and wider). */
 @media (min-width: 1700px) {
   :root {
     --page-gutter: 8%;
     --header-height: 100px;
-    --deck-height: 206px;
+    --deck-heading-height: 48px;
+    --journey-height: 109px;
+    --footer-height: 49px;
   }
   h1 {
     font-size: 142px;
@@ -982,7 +995,6 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
     top: 38px;
   }
   .journey-nav {
-    height: 109px;
     padding-top: 11px;
   }
   .route-line {
@@ -993,12 +1005,6 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   }
   .stop-heading {
     font-size: 12px;
-  }
-  .flight-deck-heading {
-    height: 48px;
-  }
-  .site-footer {
-    height: 49px;
   }
   .terminal-panel {
     max-width: 650px;
@@ -1015,10 +1021,13 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   }
 }
 
+/* Laptops and desktops with limited viewport height. */
 @media (max-height: 820px) and (min-width: 901px) {
   :root {
     --header-height: 73px;
-    --deck-height: 150px;
+    --deck-heading-height: 42px;
+    --journey-height: 72px;
+    --footer-height: 36px;
   }
   .mission-id,
   .top-coordinates {
@@ -1050,12 +1059,6 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   }
   .button {
     min-height: 43px;
-  }
-  .journey-nav {
-    height: 72px;
-  }
-  .site-footer {
-    height: 36px;
   }
   .terminal-panel {
     transform: translateY(-42%);
@@ -1098,6 +1101,7 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   }
 }
 
+/* Tablets and small laptops (701px to 1100px wide). */
 @media (max-width: 1100px) and (min-width: 701px) {
   :root {
     --page-gutter: 5%;
@@ -1145,11 +1149,14 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   }
 }
 
+/* Phones and narrow tablet windows (700px and narrower). */
 @media (max-width: 700px) {
   :root {
     --page-gutter: 6%;
     --header-height: 70px;
-    --deck-height: 156px;
+    --deck-heading-height: 39px;
+    --journey-height: 72px;
+    --footer-height: 44px;
   }
   .site-header {
     gap: 16px;
@@ -1202,11 +1209,16 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
     box-shadow: inset 0 0 50px #0003;
   }
   .story-panel {
+    --panel-bottom: 24px;
     width: calc(100% - var(--page-gutter) * 2);
     max-width: none;
+    max-height: calc(100% - 44px - var(--panel-bottom));
     top: auto;
-    bottom: 24px;
+    bottom: var(--panel-bottom);
     transform: none;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #708365 transparent;
   }
   .eyebrow {
     font-size: 9px;
@@ -1258,6 +1270,9 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
     right: 7%;
     opacity: 0.8;
   }
+  body[data-stage]:not([data-stage="0"]) .planet-annotation {
+    display: none;
+  }
   .annotation-line {
     width: 22px;
   }
@@ -1276,7 +1291,6 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
     font-size: 9px;
   }
   .flight-deck-heading {
-    height: 39px;
     font-size: 8px;
   }
   .scroll-cue {
@@ -1290,9 +1304,6 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   .flight-controls .icon-button {
     width: 27px;
     height: 27px;
-  }
-  .journey-nav {
-    height: 72px;
   }
   .journey-stop {
     padding-top: 21px;
@@ -1318,7 +1329,6 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
     display: none;
   }
   .site-footer {
-    height: 44px;
     font-size: 6px;
     line-height: 1.4;
     gap: 10px;
@@ -1363,7 +1373,7 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
     font-size: 11px;
   }
   .terminal-panel {
-    bottom: 20px;
+    --panel-bottom: 20px;
   }
   .terminal-panel .eyebrow {
     margin-bottom: 12px;
@@ -1438,16 +1448,19 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   }
 }
 
+/* Phones with short viewports (up to 700px wide and 750px tall). */
 @media (max-width: 700px) and (max-height: 750px) {
   :root {
     --header-height: 60px;
-    --deck-height: 121px;
+    --deck-heading-height: 33px;
+    --journey-height: 60px;
+    --footer-height: 38px;
   }
   .mission-id {
     top: 15px;
   }
   .story-panel {
-    bottom: 14px;
+    --panel-bottom: 14px;
   }
   h1 {
     font-size: 56px;
@@ -1466,17 +1479,8 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   .hero-footnote {
     margin-top: 9px;
   }
-  .flight-deck-heading {
-    height: 33px;
-  }
-  .journey-nav {
-    height: 60px;
-  }
   .journey-stop {
     padding-top: 17px;
-  }
-  .site-footer {
-    height: 38px;
   }
   .orbit-panel h2 {
     font-size: 31px;
@@ -1523,10 +1527,13 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   }
 }
 
+/* Landscape tablets, phones, and desktop windows with low height. */
 @media (max-height: 610px) and (min-width: 701px) {
   :root {
     --header-height: 56px;
-    --deck-height: 119px;
+    --deck-heading-height: 32px;
+    --journey-height: 59px;
+    --footer-height: 28px;
   }
   .mission-id,
   .top-coordinates {
@@ -1551,15 +1558,6 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   }
   .button {
     min-height: 36px;
-  }
-  .flight-deck-heading {
-    height: 32px;
-  }
-  .journey-nav {
-    height: 59px;
-  }
-  .site-footer {
-    height: 28px;
   }
   .journey-stop {
     padding-top: 15px;
@@ -1623,6 +1621,7 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   }
 }
 
+/* All devices with reduced motion enabled. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1635,6 +1634,7 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   }
 }
 
+/* Small tablets and landscape phones (701px to 850px wide). */
 @media (min-width: 701px) and (max-width: 850px) {
   .site-header {
     gap: 16px;
@@ -1659,6 +1659,7 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   }
 }
 
+/* Compact phones (360px and narrower). */
 @media (max-width: 360px) {
   h1 {
     font-size: 54px;
@@ -1682,14 +1683,15 @@ body[data-stage="0"] .signal-bars i:nth-child(n + 3) {
   }
 }
 
-@media (max-height: 520px) {
+/* Landscape phones and other short viewports (610px and shorter). */
+@media (max-height: 610px) {
   .story-panel,
   .terminal-panel {
     top: 40px;
     bottom: 12px;
+    max-height: none;
     transform: none;
     overflow-y: auto;
-    overscroll-behavior-y: contain;
     scrollbar-width: thin;
     scrollbar-color: #708365 transparent;
   }
