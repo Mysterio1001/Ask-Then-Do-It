@@ -87,6 +87,32 @@ TOKEN_PROXY_FIXTURE_SHA256 = {
 }
 
 
+# Git blobs in the historical tags use LF; Windows checkouts may use CRLF.
+# Preserve the original hashes above and accept only these independently
+# verified alternate bytes. No content or arbitrary whitespace is normalized.
+HISTORICAL_CHECKOUT_ALTERNATE_SHA256 = {
+    "docs/evidence/ask-then-do-it-release-1.0.0.json": "25439c4597572462fe1ef58e0e48121cca4a63a3b00af53ace7ff7942c7fa9cf",
+    "docs/evidence/ask-then-do-it-release-1.1.0.json": "615968f1ab1f429b8f4dea646228778485d56d4669b01ca24b2684595659c2c6",
+    "docs/evidence/ask-then-do-it-release-1.2.0.json": "2fe7d1ede91d9a415d97e72e602d148ec45094fc951ec5bbe66b09b2e4771f14",
+    "docs/evidence/ask-then-do-it-release-1.3.0.json": "87d7b14af3a67bdf07389300ec522c52547efc2e54a9413ddc0773e9f3dde060",
+    "docs/evidence/ask-then-do-it-release-1.3.1.json": "82c7e456acb0308b122d8b75aa10ca518bdaec3d1537336928717f936dfdb177",
+    "docs/evidence/grill-me-release-1.0.0.json": "bd9861b1f5d045217f35b1aed6e8057eba29b1227171426a2c3f3116f3fce917",
+    "tests/release/fixtures/workflow-token-proxy/benchmark.json": "4aef5d19720fb4e75c8c0130ae12c53554418eeeb634c99f2c4652c11a762f27",
+    "tests/release/fixtures/workflow-token-proxy/full/completion.md": "17bd47126e95753f8e9e734834aefd7a22acf316692bbb76cb33dc48fc5a9a13",
+    "tests/release/fixtures/workflow-token-proxy/full/handoffs.md": "74f2b89970352aa5dd379cade0d48a401c107eddd8f69a4f31a0de3a3bdb6c26",
+    "tests/release/fixtures/workflow-token-proxy/full/implementation-evidence.md": "1a340bef30f7a0436621ddeffeed81eb0e7f73ed2e72ef8efd5541d8a3ea227e",
+    "tests/release/fixtures/workflow-token-proxy/full/questions.md": "c6ee04d3cd67b1a10b48107f627e7a485a3ca4700e5a7d123271a083521064a8",
+    "tests/release/fixtures/workflow-token-proxy/full/review.md": "665d4464071bbec1938d1bd81fdfa7e9ebff45f6684cbb6dc70bfc004e8551a7",
+    "tests/release/fixtures/workflow-token-proxy/full/scope-and-planning.md": "ee61048f1c72d15d25e713d69fd486dd52a231eca8cab517386431e1228e06f5",
+    "tests/release/fixtures/workflow-token-proxy/lite/change-brief.md": "9a4f163e9ccabb9f554ee1cabf169382002b6e39791d18bcbd026d15a318d8c1",
+    "tests/release/fixtures/workflow-token-proxy/lite/completion.md": "191a8ba8989e8b6676b27752f7acfe4ab513e80841d5d9a40a54e0467d94e40d",
+    "tests/release/fixtures/workflow-token-proxy/lite/handoffs.md": "774b789ef289724974b843435b2e935d15d6e3e00dbd41c5f026a543baeb18a6",
+    "tests/release/fixtures/workflow-token-proxy/lite/implementation-validation.md": "d933f4d7387b6a005b834db4e818af5ebee1793734457e11d9342f952752ae09",
+    "tests/release/fixtures/workflow-token-proxy/lite/questions.md": "86b1078c1ed07f86783cee585ca24e7dd02458b3c2633f7a628acb707cfbb700",
+    "tests/release/fixtures/workflow-token-proxy/lite/review.md": "5555ce9db7a662a6ccf682818a586b61338bc22d099bc79cf77c8604bd0699a0"
+}
+
+
 def read_json(path: Path) -> dict[str, object]:
     value = json.loads(path.read_text(encoding="utf-8"))
     assert isinstance(value, dict)
@@ -436,7 +462,7 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
             path = ROOT / relative
             with self.subTest(relative=relative):
                 self.assertTrue(path.is_file())
-                self.assertEqual(sha256(path), expected)
+                self.assertIn(sha256(path), {expected, HISTORICAL_CHECKOUT_ALTERNATE_SHA256[relative]})
 
 
     def test_frozen_token_proxy_fixture_bytes_are_identical(self) -> None:
@@ -444,7 +470,7 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
             path = ROOT / relative
             with self.subTest(relative=relative):
                 self.assertTrue(path.is_file())
-                self.assertEqual(sha256(path), expected)
+                self.assertIn(sha256(path), {expected, HISTORICAL_CHECKOUT_ALTERNATE_SHA256[relative]})
 
 
 if __name__ == "__main__":
