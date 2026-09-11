@@ -1,22 +1,21 @@
-# Ask Then Do It Generic 1.3.1 Guide
+# Ask Then Do It generic 1.4.0
 
-This package is for Gemini and other AI services that accept long text. It guides the workflow through conversation and can use only the file, command, or other tools that the host actually provides.
+For Gemini and other AI services that accept long text. Paste the workflow; no Plugin installation is needed.
 
-This independent project was inspired by Matt Pocock's skills repository. It is not affiliated with or endorsed by Matt Pocock. See `LICENSE` and `THIRD_PARTY_NOTICES.md` in this package for license and attribution information.
+In every new conversation, paste the **entire** `generic-workflow.md`, then describe your task, for example:
 
-## Start every new conversation
+[guide](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.0/docs/guides/generic.en.md)
 
-1. Open `generic-workflow.md`.
-2. Paste the entire file into a new AI conversation.
-3. In the same message or the next one, describe your request and preferred language.
+## Getting started
 
-The AI's first effective response resolves the workflow mode and follows that mode's question and approval rules. Save important progress. On a conversation-only host, Generic cannot directly edit your files or run tests; any additional action depends on tools the host actually provides.
+```text
+Help me build a booking website. Please use English.
+```
 
-Paste `generic-workflow.md` again in each new conversation. For setup, mode selection, session behavior, and capability limits, see the [detailed Generic guide](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/docs/guides/generic.en.md).
+**Full** keeps requirements, specification, and a Ticket Plan, with three approvals before implementation. **Lite** suits clearly scoped changes and uses a short Change Brief with one approval.
 
-## Choose Full or Lite
+[beginner guide](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.0/docs/guides/getting-started-simple.en.md)
 
-Full uses exactly one requirement question at a time and three approval gates. Lite may ask no questions; when blockers remain, it asks at most three blocking questions per round, then presents one Change Brief and waits for one approval before implementation. See the [complete Full and Lite workflow guide](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/docs/guides/getting-started-simple.en.md) before choosing.
+This independent project is inspired by Matt Pocock’s skills repository and is not affiliated with or endorsed by him. See `LICENSE` and `THIRD_PARTY_NOTICES.md` for license and attribution.
 
-
-[Back to README](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/README.md)
+[Back to README](https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.0/README.md)

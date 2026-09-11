@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "target_claude_code_version": "2.1.251",
+  "status": "unverified",
+  "evidence_kind": "unavailable",
+  "environment": null,
+  "checks": [
+    {
+      "id": "canonical-plugin-strict-validation",
+      "status": "unverified",
+      "evidence_kind": "unavailable",
+      "raw_evidence": null
+    },
+    {
+      "id": "marketplace-strict-validation",
+      "status": "unverified",
+      "evidence_kind": "unavailable",
+      "raw_evidence": null
+    },
+    {
+      "id": "compatibility-plugin-strict-validation",
+      "status": "unverified",
+      "evidence_kind": "unavailable",
+      "raw_evidence": null
+    },
+    {
+      "id": "automatic-entry-expansion",
+      "status": "unverified",
+      "evidence_kind": "unavailable",
+      "raw_evidence": null
+    },
+    {
+      "id": "explicit-entry-expansion",
+      "status": "unverified",
+      "evidence_kind": "unavailable",
+      "raw_evidence": null
+    },
+    {
+      "id": "node-unavailable",
+      "status": "unverified",
+      "evidence_kind": "unavailable",
+      "raw_evidence": null
+    },
+    {
+      "id": "handler-nonzero",
+      "status": "unverified",
+      "evidence_kind": "unavailable",
+      "raw_evidence": null
+    },
+    {
+      "id": "handler-exit-2",
+      "status": "unverified",
+      "evidence_kind": "unavailable",
+      "raw_evidence": null
+    },
+    {
+      "id": "handler-timeout",
+      "status": "unverified",
+      "evidence_kind": "unavailable",
+      "raw_evidence": null
+    },
+    {
+      "id": "bare-alias-observation",
+      "status": "unverified",
+      "evidence_kind": "unavailable",
+      "raw_evidence": null
+    }
+  ]
+}

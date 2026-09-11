@@ -93,6 +93,6 @@ release gate は Full と Lite を同等の代表シナリオで比較します�
 - [初心者向け Full/Lite フロー](../guides/getting-started-simple.ja.md)
 - [Codex Plugin 使用ガイド](../guides/codex.ja.md)
 - [Generic 使用ガイド](../guides/generic.ja.md)
-
+- [保守者向けアーキテクチャと文書索引](../project/knowledge-base.md)
 
 [README に戻る](../../README.md)

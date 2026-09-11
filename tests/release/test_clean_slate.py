@@ -1,3 +1,5 @@
+from tests.release.built_fixture import current_distribution
+
 import json
 import re
 import unittest
@@ -76,10 +78,10 @@ def text(path: Path) -> str:
 class CleanSlateContractTests(unittest.TestCase):
     def test_all_active_component_versions_are_1_3_1(self) -> None:
         config = json.loads(text(RELEASE))
-        self.assertEqual(config["release_version"], "1.3.1")
-        self.assertEqual(config["core_version"], "1.3.1")
-        self.assertIn("Core version: `1.3.1`", text(ROOT / "core" / "CORE.md"))
-        self.assertIn("core_version: 1.3.1", text(ROOT / "core" / "rules" / "rules.yaml"))
+        self.assertEqual(config["release_version"], "1.4.0")
+        self.assertEqual(config["core_version"], "1.4.0")
+        self.assertIn("Core version: `1.4.0`", text(ROOT / "core" / "CORE.md"))
+        self.assertIn("core_version: 1.4.0", text(ROOT / "core" / "rules" / "rules.yaml"))
 
         for manifest in (
             CODEX / "conformance.yaml",
@@ -88,16 +90,16 @@ class CleanSlateContractTests(unittest.TestCase):
         ):
             with self.subTest(manifest=manifest.relative_to(ROOT)):
                 self.assertNotIn("3.0.0", text(manifest))
-                self.assertIn("1.3.1", text(manifest))
+                self.assertIn("1.4.0", text(manifest))
 
         plugin = json.loads(
             text(CODEX / "plugin" / "ask-then-do-it" / ".codex-plugin" / "plugin.json")
         )
-        self.assertEqual(plugin["version"], "1.3.1")
+        self.assertEqual(plugin["version"], "1.4.0")
 
         for prompt in EXPECTED_PROMPTS:
             with self.subTest(prompt=prompt):
-                self.assertIn("Core version: `1.3.1`", text(GENERIC / prompt))
+                self.assertIn("Core version: `1.4.0`", text(GENERIC / prompt))
 
         for skill in EXPECTED_SKILLS:
             with self.subTest(skill=skill):
@@ -124,33 +126,34 @@ class CleanSlateContractTests(unittest.TestCase):
                         self.assertNotIn("v2 first use migration", body)
 
     def test_only_current_canonical_artifacts_remain(self) -> None:
-        specs = {p.name for p in (ROOT / "docs" / "specs").glob("*.md")}
-        plans = {p.name for p in (ROOT / "docs" / "plans").glob("*.md")}
-        evidence = {p.name for p in (ROOT / "docs" / "evidence").glob("*")}
-        self.assertIn("ask-then-do-it-1.0.0.md", specs)
-        self.assertIn("ask-then-do-it-1.0.0.md", plans)
-        for ticket in (1, 2, 3):
-            self.assertIn(f"ask-then-do-it-1.0.0-ticket-{ticket}.md", evidence)
-        for collection in (specs, plans, evidence):
-            self.assertFalse(any("2.1.0" in name or "3.0.0" in name for name in collection))
+        # Historical workflow artifacts are archived; current maintenance
+        # documentation must remain usable in a fresh checkout.
+        for relative in (
+            "docs/specs/workflow.md", "docs/specs/claude-code-adapter.md",
+            "docs/maintainer/releasing.md", "docs/maintainer/validation.md",
+            "docs/project/knowledge-base.md", "docs/project/status.md",
+            "docs/evidence/release-history.md",
+        ):
+            with self.subTest(relative=relative):
+                self.assertTrue((ROOT / relative).is_file())
 
     def test_release_configuration_uses_provider_directories(self) -> None:
         config = json.loads(text(RELEASE))
         self.assertEqual(config["codex"]["directory"], "codex/ask-then-do-it")
         self.assertEqual(
-            config["codex"]["archive"], "codex/ask-then-do-it-1.3.1.zip"
+            config["codex"]["archive"], "codex/ask-then-do-it-1.4.0.zip"
         )
         self.assertEqual(
             config["generic"]["directory"],
-            "generic/ask-then-do-it-generic-1.3.1",
+            "generic/ask-then-do-it-generic-1.4.0",
         )
         self.assertEqual(
             config["generic"]["archive"],
-            "generic/ask-then-do-it-generic-1.3.1.zip",
+            "generic/ask-then-do-it-generic-1.4.0.zip",
         )
         self.assertEqual(
             config["managed_outputs"],
-            ["codex", "generic", "checksums.sha256"],
+            ["codex", "generic", "claude", "checksums.sha256"],
         )
         self.assertNotIn("v2-preservation", config["required_validation_checks"])
 
@@ -164,12 +167,12 @@ class CleanSlateContractTests(unittest.TestCase):
         self.assertEqual(actual_rules, EXPECTED_RULES)
 
     def test_no_historical_distribution_output_remains(self) -> None:
-        dist = ROOT / "dist"
+        dist = current_distribution()
         if not dist.exists():
             return
         self.assertEqual(
             {path.name for path in dist.iterdir()},
-            {"codex", "generic", "checksums.sha256"},
+            {"codex", "generic", "claude", "checksums.sha256"},
         )
 
 

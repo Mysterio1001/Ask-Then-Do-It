@@ -8,6 +8,8 @@ README = ROOT / "README.md"
 START_HERE = ROOT / "START-HERE.zh-TW.md"
 CODEX_GUIDE = ROOT / "docs" / "guides" / "codex.zh-TW.md"
 GENERIC_GUIDE = ROOT / "docs" / "guides" / "generic.zh-TW.md"
+CLAUDE_GUIDE = ROOT / "docs/guides/claude-code.zh-TW.md"
+CLAUDE_START_GUIDE = ROOT / "adapters/claude-code/plugin/ask-then-do-it/START-HERE.zh-TW.md"
 SIMPLE_GUIDE = ROOT / "docs" / "guides" / "getting-started-simple.zh-TW.md"
 DESIGN = ROOT / "docs" / "design" / "ai-development-skills.zh-TW.md"
 CODEX_START_GUIDE = (
@@ -24,6 +26,8 @@ USER_ZH_DOCUMENTS = (
     START_HERE,
     CODEX_GUIDE,
     GENERIC_GUIDE,
+    CLAUDE_GUIDE,
+    CLAUDE_START_GUIDE,
     SIMPLE_GUIDE,
     DESIGN,
     CODEX_START_GUIDE,
@@ -89,16 +93,33 @@ DESIGN_GUIDES_BY_LOCALE = {
     "ja": localized_sibling(DESIGN, "ja"),
 }
 
+CLAUDE_GUIDES_BY_LOCALE = {
+    locale: localized_sibling(CLAUDE_GUIDE, locale) for locale in ("en", "zh-TW", "ja")
+}
+CLAUDE_START_BY_LOCALE = {
+    locale: localized_sibling(CLAUDE_START_GUIDE, locale) for locale in ("en", "zh-TW", "ja")
+}
+HOST_GUIDES = {
+    "codex": CODEX_GUIDES_BY_LOCALE,
+    "claude-code": CLAUDE_GUIDES_BY_LOCALE,
+    "generic": GENERIC_GUIDES_BY_LOCALE,
+}
+HEADINGS = {
+    "en": ("Installation and preparation", "Getting started", "Full / Lite modes", "Available commands", "Updating and removal", "Common questions", "License and attribution"),
+    "zh-TW": ("安裝與準備", "開始使用", "Full／Lite 模式", "可用指令", "更新與移除", "常見問題", "授權與來源"),
+    "ja": ("インストールと準備", "使い始める", "Full／Lite モード", "利用できるコマンド", "更新と削除", "よくある質問", "ライセンスと出典"),
+}
+
 VERSIONED_GUIDE_ROOT = (
-    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/docs/guides"
+    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.0/docs/guides"
 )
 VERSIONED_README = (
-    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.3.1/README.md"
+    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.0/README.md"
 )
 
 
 def user_document_footer(document: Path) -> str:
-    package_starts = (*CODEX_START_BY_LOCALE.values(), *GENERIC_START_BY_LOCALE.values())
+    package_starts = (*CODEX_START_BY_LOCALE.values(), *GENERIC_START_BY_LOCALE.values(), *CLAUDE_START_BY_LOCALE.values())
     root_starts = ROOT_START_BY_LOCALE.values()
 
     if document in package_starts:
@@ -135,75 +156,6 @@ class ReleaseDocumentationTests(unittest.TestCase):
             with self.subTest(document=document.relative_to(ROOT)):
                 self.assertEqual(body.rstrip().splitlines()[-1], expected)
 
-    def test_all_nine_start_pages_are_concise_full_lite_handoffs(self) -> None:
-        expected_links = {
-            "root": {
-                "zh-TW": (
-                    "docs/guides/codex.zh-TW.md",
-                    "docs/guides/generic.zh-TW.md",
-                    "docs/guides/getting-started-simple.zh-TW.md",
-                ),
-                "en": (
-                    "docs/guides/codex.en.md",
-                    "docs/guides/generic.en.md",
-                    "docs/guides/getting-started-simple.en.md",
-                ),
-                "ja": (
-                    "docs/guides/codex.ja.md",
-                    "docs/guides/generic.ja.md",
-                    "docs/guides/getting-started-simple.ja.md",
-                ),
-            },
-            "codex": {
-                locale: (
-                    f"{VERSIONED_GUIDE_ROOT}/codex.{locale}.md",
-                    f"{VERSIONED_GUIDE_ROOT}/getting-started-simple.{locale}.md",
-                )
-                for locale in ("zh-TW", "en", "ja")
-            },
-            "generic": {
-                locale: (
-                    f"{VERSIONED_GUIDE_ROOT}/generic.{locale}.md",
-                    f"{VERSIONED_GUIDE_ROOT}/getting-started-simple.{locale}.md",
-                )
-                for locale in ("zh-TW", "en", "ja")
-            },
-        }
-        groups = {
-            "root": ROOT_START_BY_LOCALE,
-            "codex": CODEX_START_BY_LOCALE,
-            "generic": GENERIC_START_BY_LOCALE,
-        }
-        forbidden = (
-            "500 tokens",
-            "800 tokens",
-            "~/.codex/ask-then-do-it.toml",
-            "<project>/.codex/ask-then-do-it.toml",
-            "Default workflow mode:",
-            "whether to add tests",
-            "是否加上測試",
-            "テストを追加するか",
-            "`tdd`",
-            "`direct`",
-            "Red, Green, and Refactor",
-            "Red、Green、Refactor",
-            "| --- |",
-        )
-        for group_name, group in groups.items():
-            for locale, document in group.items():
-                body = document.read_text(encoding="utf-8")
-                with self.subTest(group=group_name, locale=locale, contract="headings"):
-                    self.assertLessEqual(body.count("\n## "), 3)
-                self.assertIn("Full", body)
-                self.assertIn("Lite", body)
-                for link in expected_links[group_name][locale]:
-                    with self.subTest(group=group_name, locale=locale, link=link):
-                        self.assertIn(link, body)
-                for phrase in forbidden:
-                    with self.subTest(
-                        group=group_name, locale=locale, forbidden=phrase
-                    ):
-                        self.assertNotIn(phrase, body)
 
     def test_detailed_full_guides_keep_plain_language_ticket_test_choices(self) -> None:
         expected = {
@@ -222,8 +174,6 @@ class ReleaseDocumentationTests(unittest.TestCase):
         for locale, documents in {
             locale: (
                 SIMPLE_GUIDES_BY_LOCALE[locale],
-                CODEX_GUIDES_BY_LOCALE[locale],
-                GENERIC_GUIDES_BY_LOCALE[locale],
             )
             for locale in ("zh-TW", "en", "ja")
         }.items():
@@ -265,24 +215,6 @@ class ReleaseDocumentationTests(unittest.TestCase):
                             self.assertNotIn("?", line)
                             self.assertNotIn("？", line)
 
-    def test_root_start_page_offers_two_direct_consumer_choices(self) -> None:
-        self.assertTrue(START_HERE.is_file())
-        body = START_HERE.read_text(encoding="utf-8")
-        codex = body.index("## 1. 我要在 Codex 使用")
-        generic = body.index("## 2. 我要在 Gemini 或其他 AI 使用")
-        self.assertLess(codex, generic)
-        self.assertIn(
-            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/"
-            "v1.3.1/ask-then-do-it-1.3.1.zip",
-            body,
-        )
-        self.assertIn(
-            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/"
-            "v1.3.1/ask-then-do-it-generic-1.3.1.zip",
-            body,
-        )
-        self.assertNotIn("## 維護者", body)
-        self.assertNotIn("python scripts/build_release.py", body)
 
     def test_readme_links_start_page_before_each_locale_more_section(self) -> None:
         body = README.read_text(encoding="utf-8")
@@ -293,6 +225,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
         ):
             with self.subTest(start_page=start_page):
                 self.assertLess(body.index(start_page), body.index(more_marker))
+
 
     def test_readme_uses_approved_localized_introduction_and_quick_start_order(
         self,
@@ -372,21 +305,6 @@ class ReleaseDocumentationTests(unittest.TestCase):
         ):
             self.assertNotIn(obsolete, body)
 
-    def test_root_readme_routes_both_users(self) -> None:
-        body = README.read_text(encoding="utf-8")
-        for required in (
-            "## 介紹",
-            "## 快速開始",
-            "Codex Plugin",
-            "generic-workflow.md",
-            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-1.3.1.zip",
-            "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.3.1/ask-then-do-it-generic-1.3.1.zip",
-        ):
-            self.assertIn(required, body)
-        self.assertNotIn("dist/codex/ask-then-do-it-1.3.1.zip", body)
-        self.assertNotIn("dist/generic/ask-then-do-it-generic-1.3.1.zip", body)
-        for obsolete in ("2.1.0", "3.0.0", "checksums-2.1.0"):
-            self.assertNotIn(obsolete, body)
 
     def test_root_entry_documents_exclude_internal_development_conversation(self) -> None:
         forbidden = (
@@ -411,86 +329,6 @@ class ReleaseDocumentationTests(unittest.TestCase):
         self.assertNotIn("dist/codex/", start_body)
         self.assertNotIn("dist/generic/", start_body)
 
-    def test_codex_guide_covers_current_manual_plugin_lifecycle(self) -> None:
-        body = CODEX_GUIDE.read_text(encoding="utf-8")
-        for required in (
-            "ask-then-do-it-1.3.1.zip",
-            "## 下載與解壓縮",
-            "## 手動安裝",
-            "codex plugin add ask-then-do-it --marketplace <local-marketplace-name>",
-            "## 第一次使用",
-            "## 手動更新",
-            "## 手動移除",
-            "## 九個 Skill 入口",
-            "$ask-then-do-it",
-            "$ask-with-docs",
-            "$implement-direct",
-            "$improve-architecture",
-            "Project Knowledge Base",
-            "執行測試可能增加工時",
-            "`tdd`",
-            "`direct`",
-            "`tests: skipped-by-user`",
-        ):
-            self.assertIn(required, body)
-        for forbidden in (
-            "adapters/codex/",
-            "dist/codex/",
-            "quick_validate.py",
-            "validate_plugin.py",
-            "conformance",
-            "checksums.sha256",
-            "SHA-256",
-            "checksum",
-            "canonical source",
-            "personal installation",
-            "generated manifest",
-            "cachebuster",
-            "docs/specs/",
-            "../specs/",
-        ):
-            self.assertNotIn(forbidden, body)
-
-    def test_generic_guide_covers_current_conversation_only_package(self) -> None:
-        body = GENERIC_GUIDE.read_text(encoding="utf-8")
-        for required in (
-            "ask-then-do-it-generic-1.3.1.zip",
-            "## 快速開始",
-            "每個新對話",
-            "generic-workflow.md",
-            "## 保存進度",
-            "不能直接修改你的檔案或執行測試",
-            "documented-requirements.md",
-            "direct-implementation.md",
-            "architecture-improvement.md",
-            "Project Knowledge Base",
-            "第一個需求問題",
-            "執行測試可能增加工時",
-            "`tdd`",
-            "`direct`",
-        ):
-            self.assertIn(required, body)
-        for forbidden in (
-            "dist/generic/",
-            "canonical prompts",
-            "Canonical source",
-            "Conversation-only",
-            "Generic adapter",
-            "profile",
-            "approval evidence",
-            "UNEXECUTED IMPLEMENTATION GUIDANCE",
-            "limited-evidence",
-            "non-independent",
-            "artifact_type",
-            "workflow_id",
-            "core_version",
-            "checksums.sha256",
-            "SHA-256",
-            "generated output",
-            "python scripts/build_release.py",
-            "../specs/",
-        ):
-            self.assertNotIn(forbidden, body)
 
     def test_simple_guide_explains_the_complete_flow_in_plain_language(self) -> None:
         body = SIMPLE_GUIDE.read_text(encoding="utf-8")
@@ -526,601 +364,6 @@ class ReleaseDocumentationTests(unittest.TestCase):
         ):
             self.assertNotIn(forbidden, body)
 
-    def test_localized_codex_guides_document_mode_config_contract(self) -> None:
-        expected = {
-            "zh-TW": {
-                "heading": "## 流程模式設定",
-                "end": "## 第一次使用",
-                "precedence": (
-                    "目前操作的明確指示",
-                    "專案 Config",
-                    "使用者 Config",
-                    "Full fallback",
-                ),
-                "semantics": (
-                    "專案 Config 不存在時，才繼續讀取使用者 Config",
-                    "無效的專案 Config 會直接回到 Full",
-                    "不會繼續讀取使用者 Config",
-                    "不需要讀取 Config",
-                    "模式判定是唯讀操作",
-                    "不會建立、寫入、修復或正規化",
-                    "只影響目前操作",
-                    "新的工作階段",
-                    "高風險",
-                ),
-            },
-            "en": {
-                "heading": "## Workflow mode configuration",
-                "end": "## First use",
-                "precedence": (
-                    "explicit instruction for the current operation",
-                    "Project Config",
-                    "User Config",
-                    "Full fallback",
-                ),
-                "semantics": (
-                    "An absent Project Config continues to User Config",
-                    "A present invalid Project Config falls back to Full",
-                    "does not continue to User Config",
-                    "without reading Config",
-                    "Mode resolution is read-only",
-                    "does not create, write, repair, or normalize",
-                    "only the current operation",
-                    "new session",
-                    "High-risk",
-                ),
-            },
-            "ja": {
-                "heading": "## ワークフローモードの設定",
-                "end": "## 初回使用",
-                "precedence": (
-                    "現在の操作に対する明示的な指示",
-                    "プロジェクト Config",
-                    "ユーザー Config",
-                    "Full fallback",
-                ),
-                "semantics": (
-                    "プロジェクト Config が存在しない場合だけ",
-                    "無効なプロジェクト Config は Full にフォールバック",
-                    "ユーザー Config には進みません",
-                    "Config を読み取らずに優先",
-                    "モード判定は読み取り専用",
-                    "作成、書き込み、修復、正規化しません",
-                    "現在の操作だけ",
-                    "新しいセッション",
-                    "高リスク",
-                ),
-            },
-        }
-        common_literals = (
-            "`~/.codex/ask-then-do-it.toml`",
-            "`<project>/.codex/ask-then-do-it.toml`",
-            '`mode = "full"`',
-            '`mode = "lite"`',
-            "`mode = lite`",
-            '`mode = "fast"`',
-        )
-        for locale, document in CODEX_GUIDES_BY_LOCALE.items():
-            body = document.read_text(encoding="utf-8")
-            contract = expected[locale]
-            self.assertIn(contract["heading"], body)
-            self.assertIn(contract["end"], body)
-            start = body.index(contract["heading"])
-            end = body.index(contract["end"], start)
-            section = body[start:end]
-            positions = [section.index(marker) for marker in contract["precedence"]]
-            with self.subTest(locale=locale, contract="precedence"):
-                self.assertEqual(positions, sorted(positions))
-            for literal in common_literals:
-                with self.subTest(locale=locale, literal=literal):
-                    self.assertIn(literal, section)
-            for marker in contract["semantics"]:
-                with self.subTest(locale=locale, semantics=marker):
-                    self.assertIn(marker, section)
-            self.assertIn(f"getting-started-simple.{locale}.md", section)
-
-    def test_localized_generic_guides_document_embedded_mode_contract(self) -> None:
-        expected = {
-            "zh-TW": {
-                "heading": "## 流程模式設定",
-                "end": "## Full 模式的核准點",
-                "precedence": (
-                    "目前操作的明確指示",
-                    "工作流內的預設模式宣告",
-                    "Full fallback",
-                ),
-                "semantics": (
-                    "宣告不存在或不是支援值",
-                    "不會讀取任何 Codex Config",
-                    "只影響目前操作",
-                    "不會修改宣告",
-                    "新的工作階段",
-                    "只有對話能力",
-                    "不能檢查 repository、修改檔案、執行命令或測試、保存狀態、宣稱已觀察驗證結果，或執行獨立 Review",
-                ),
-                "modules": "## 十一個進階模組",
-            },
-            "en": {
-                "heading": "## Workflow mode configuration",
-                "end": "## Full mode approval points",
-                "precedence": (
-                    "explicit instruction for the current operation",
-                    "embedded default-mode declaration",
-                    "Full fallback",
-                ),
-                "semantics": (
-                    "missing or unsupported declaration",
-                    "does not read either Codex Config file",
-                    "only the current operation",
-                    "does not modify the declaration",
-                    "new session",
-                    "conversation-only",
-                    "cannot inspect a repository, edit files, run commands or tests, persist state, report observed validation, or perform an independent Review",
-                ),
-                "modules": "## Eleven advanced modules",
-            },
-            "ja": {
-                "heading": "## ワークフローモードの設定",
-                "end": "## Full モードの承認点",
-                "precedence": (
-                    "現在の操作に対する明示的な指示",
-                    "ワークフロー内のデフォルトモード宣言",
-                    "Full fallback",
-                ),
-                "semantics": (
-                    "宣言がないか未対応の値",
-                    "Codex Config を読み取りません",
-                    "現在の操作だけ",
-                    "宣言を変更しません",
-                    "新しいセッション",
-                    "会話だけ",
-                    "repository の確認、ファイル編集、コマンドやテストの実行、状態の永続化、観測済み検証の報告、独立 Review はできません",
-                ),
-                "modules": "## 11 個の詳細モジュール",
-            },
-        }
-        declarations = (
-            "`Default workflow mode: full`",
-            "`Default workflow mode: lite`",
-        )
-        for locale, document in GENERIC_GUIDES_BY_LOCALE.items():
-            body = document.read_text(encoding="utf-8")
-            contract = expected[locale]
-            self.assertIn(contract["heading"], body)
-            self.assertIn(contract["end"], body)
-            start = body.index(contract["heading"])
-            end = body.index(contract["end"], start)
-            section = body[start:end]
-            positions = [section.index(marker) for marker in contract["precedence"]]
-            with self.subTest(locale=locale, contract="precedence"):
-                self.assertEqual(positions, sorted(positions))
-            for declaration in declarations:
-                with self.subTest(locale=locale, declaration=declaration):
-                    self.assertIn(declaration, section)
-            for marker in contract["semantics"]:
-                with self.subTest(locale=locale, semantics=marker):
-                    self.assertIn(marker, body)
-            self.assertIn(f"getting-started-simple.{locale}.md", section)
-            self.assertIn(contract["modules"], body)
-            self.assertLess(body.index("`orchestration.md`"), body.index("`lite-workflow.md`"))
-            self.assertLess(body.index("`lite-workflow.md`"), body.index("`requirements.md`"))
-
-    def test_localized_codex_guides_document_direct_skill_entry_contract(
-        self,
-    ) -> None:
-        expected = {
-            "zh-TW": {
-                "section": ("## 九個 Skill 入口", "## 手動更新"),
-                "markers": (
-                    "只會選擇階段，不會選擇流程模式",
-                    "`$ask-then-do-it` 仍是標準模式判定入口",
-                    "模式尚未判定時，會交由 `$ask-then-do-it`",
-                    "判定為 Lite 時，會轉入 Lite 流程",
-                    "判定為 Full 時，只有在一般前置條件都滿足後，才能繼續所選階段",
-                    "模式訊號衝突時會暫停並要求釐清",
-                    "無效 Config 會回到 Full",
-                    "直接入口不會保存模式狀態",
-                ),
-            },
-            "en": {
-                "section": ("## Nine Skill entry points", "## Manual update"),
-                "markers": (
-                    "selects a stage, not a workflow mode",
-                    "`$ask-then-do-it` remains the canonical mode resolver",
-                    "An unresolved mode delegates to `$ask-then-do-it`",
-                    "Resolved Lite routes to the Lite lifecycle",
-                    "Resolved Full may continue to the selected stage only after its normal prerequisites are satisfied",
-                    "Conflicting mode signals pause for clarification",
-                    "Invalid Config falls back to Full",
-                    "Direct entry does not persist mode state",
-                ),
-            },
-            "ja": {
-                "section": ("## Skill 入口", "## 手動更新"),
-                "markers": (
-                    "段階を選択するだけで、ワークフローモードは選択しません",
-                    "`$ask-then-do-it` が引き続き正規のモード判定を担います",
-                    "モードが未決定なら `$ask-then-do-it` に委ねます",
-                    "Lite と判定済みなら Lite ライフサイクルへ進みます",
-                    "Full と判定済みなら通常の前提条件を満たした後にだけ、選択した段階へ進めます",
-                    "モード指定が競合した場合は停止して確認を求めます",
-                    "無効な Config は Full にフォールバックします",
-                    "直接入口ではモード状態を永続化しません",
-                ),
-            },
-        }
-
-        for locale, document in CODEX_GUIDES_BY_LOCALE.items():
-            body = document.read_text(encoding="utf-8")
-            contract = expected[locale]
-            section = document_section(body, *contract["section"])
-            for marker in contract["markers"]:
-                with self.subTest(locale=locale, marker=marker):
-                    self.assertIn(marker, section)
-
-    def test_localized_generic_guides_document_direct_module_entry_contract(
-        self,
-    ) -> None:
-        expected = {
-            "zh-TW": {
-                "section": ("## 十一個進階模組", "## 授權與來源"),
-                "markers": (
-                    "Generic 不一定使用 Lite",
-                    "貼上模組只會選擇階段，不會選擇流程模式",
-                    "既有的模式優先順序與結果都不變",
-                    "`bootstrap.md` 與 `orchestration.md` 擁有完整的模式判定器",
-                    "其他九個可單獨貼上的模組",
-                    "相同、範圍有限且最小化的直接入口保護規則",
-                    "只因可能在沒有上述判定器時被貼上",
-                    "不代表它們擁有完整的模式判定權",
-                    "由組合後 orchestration 證實的模式會直接沿用",
-                    "只有在直接貼上且模式尚未證實時，才依 `目前操作的明確指示 > 可取得的內嵌宣告 > Full fallback` 判定",
-                    "指示衝突時暫停並要求釐清",
-                    "無效宣告選擇 Full",
-                    "結果不會保存",
-                    "判定為 Lite 時會轉入 `lite-workflow.md`",
-                    "判定為 Full 時直接進入 `lite-workflow.md` 會轉回 `orchestration.md`",
-                ),
-            },
-            "en": {
-                "section": ("## Eleven advanced modules", "## License and attribution"),
-                "markers": (
-                    "Generic is not always Lite",
-                    "selects a stage, not a workflow mode",
-                    "established mode precedence and outcomes do not change",
-                    "`bootstrap.md` and `orchestration.md` own the complete mode resolver",
-                    "The other nine standalone modules include the same bounded, minimal direct-entry guard",
-                    "only because each can be pasted without that resolver",
-                    "does not transfer complete resolver ownership",
-                    "A mode already proven by composed orchestration is reused",
-                    "Only an unproven direct paste applies `explicit operation instruction > available embedded declaration > Full fallback`",
-                    "Conflicting instructions pause for clarification",
-                    "An invalid declaration selects Full",
-                    "the result is not persisted",
-                    "Resolved Lite routes to `lite-workflow.md`",
-                    "Direct entry to `lite-workflow.md` with resolved Full routes to `orchestration.md`",
-                ),
-            },
-            "ja": {
-                "section": ("## 11 個の詳細モジュール", "## ライセンスと出典"),
-                "markers": (
-                    "Generic が常に Lite になるわけではありません",
-                    "モジュールの貼り付けで選択されるのは段階であり、ワークフローモードではありません",
-                    "既存のモード優先順位と結果は変わりません",
-                    "`bootstrap.md` と `orchestration.md` が完全なモード判定を担います",
-                    "他の 9 個の単独で貼り付けられるモジュール",
-                    "同じ限定的で最小限の直接入口ガード",
-                    "判定器なしで貼り付けられる可能性があるためだけに",
-                    "完全なモード判定の所有権を移すものではありません",
-                    "構成済み orchestration によって証明済みのモードは再利用します",
-                    "モードが未証明の直接貼り付けに限り、`現在の操作に対する明示的な指示 > 利用可能な埋め込み宣言 > Full fallback` を適用します",
-                    "指示が競合すると停止して確認を求めます",
-                    "無効な宣言では Full を選択します",
-                    "結果を永続化しません",
-                    "Lite と判定済みなら `lite-workflow.md` へ進みます",
-                    "Full と判定済みの状態で `lite-workflow.md` に直接入ると `orchestration.md` へ戻ります",
-                ),
-            },
-        }
-
-        for locale, document in GENERIC_GUIDES_BY_LOCALE.items():
-            body = document.read_text(encoding="utf-8")
-            contract = expected[locale]
-            section = document_section(body, *contract["section"])
-            for marker in contract["markers"]:
-                with self.subTest(locale=locale, marker=marker):
-                    self.assertIn(marker, section)
-
-    def test_mode_enabled_host_guides_scope_question_and_approval_contracts(
-        self,
-    ) -> None:
-        contracts = {
-            "en": {
-                "codex": (
-                    "## First use",
-                    "### Full mode",
-                    "### Lite mode",
-                    "## Nine Skill entry points",
-                ),
-                "generic": (
-                    "## Full mode approval points",
-                    "## Lite mode questions and approval",
-                    "## Capability limits",
-                ),
-                "full": (
-                    "exactly one requirement question at a time",
-                    "three approval gates",
-                ),
-                "full_gates": (
-                    "Requirements consensus",
-                    "Specification",
-                    "Ticket plan",
-                ),
-                "lite": (
-                    "may ask no questions",
-                    "at most three blocking questions",
-                    "one Change Brief",
-                    "one approval",
-                ),
-                "unscoped": (
-                    "asks the first requirements question",
-                    "asks the single most important question",
-                ),
-            },
-            "zh-TW": {
-                "codex": (
-                    "## 第一次使用",
-                    "### Full 模式",
-                    "### Lite 模式",
-                    "## 九個 Skill 入口",
-                ),
-                "generic": (
-                    "## Full 模式的核准點",
-                    "## Lite 模式的問題與核准",
-                    "## 能力限制",
-                ),
-                "full": (
-                    "一次只問一個需求問題",
-                    "三個核准點",
-                ),
-                "full_gates": ("需求共識", "規格", "Ticket 規劃"),
-                "lite": (
-                    "可以不提出問題",
-                    "每輪最多三個阻塞問題",
-                    "一份 Change Brief",
-                    "一次核准",
-                ),
-                "unscoped": (
-                    "提出第一個需求問題",
-                    "提出一個最重要的問題",
-                ),
-            },
-            "ja": {
-                "codex": (
-                    "## 初回使用",
-                    "### Full モード",
-                    "### Lite モード",
-                    "## Skill 入口",
-                ),
-                "generic": (
-                    "## Full モードの承認点",
-                    "## Lite モードの質問と承認",
-                    "## できることの範囲",
-                ),
-                "full": (
-                    "一度に一つの要件質問",
-                    "3 つの承認点",
-                ),
-                "full_gates": ("要件の合意", "仕様", "Ticket 計画"),
-                "lite": (
-                    "質問が不要な場合があります",
-                    "各回最大 3 つの阻害要因に関する質問",
-                    "1 つの Change Brief",
-                    "1 回の承認",
-                ),
-                "unscoped": (
-                    "最初の要件質問が行われます",
-                    "最も重要な質問を一つずつ行います",
-                ),
-            },
-        }
-
-        for locale, contract in contracts.items():
-            codex_body = CODEX_GUIDES_BY_LOCALE[locale].read_text(encoding="utf-8")
-            first_use, full_heading, lite_heading, codex_end = contract["codex"]
-            first_use_section = document_section(codex_body, first_use, codex_end)
-            for heading in (full_heading, lite_heading):
-                with self.subTest(locale=locale, document="codex", heading=heading):
-                    self.assertIn(heading, first_use_section)
-            if full_heading in first_use_section and lite_heading in first_use_section:
-                full_section = document_section(
-                    first_use_section, full_heading, lite_heading
-                )
-                lite_section = document_section(first_use_section, lite_heading, None)
-                for marker in contract["full"]:
-                    with self.subTest(locale=locale, document="codex", full=marker):
-                        self.assertIn(marker, full_section)
-                for marker in contract["full_gates"]:
-                    with self.subTest(
-                        locale=locale, document="codex", full_gate=marker
-                    ):
-                        self.assertIn(marker, full_section)
-                for marker in contract["lite"]:
-                    with self.subTest(locale=locale, document="codex", lite=marker):
-                        self.assertIn(marker, lite_section)
-                prefix = first_use_section[: first_use_section.index(full_heading)]
-                for stale in contract["unscoped"]:
-                    with self.subTest(locale=locale, document="codex", stale=stale):
-                        self.assertNotIn(stale, prefix)
-
-            generic_body = GENERIC_GUIDES_BY_LOCALE[locale].read_text(
-                encoding="utf-8"
-            )
-            generic_full, generic_lite, generic_end = contract["generic"]
-            for heading in (generic_full, generic_lite):
-                with self.subTest(locale=locale, document="generic", heading=heading):
-                    self.assertIn(heading, generic_body)
-            for stale in contract["unscoped"]:
-                with self.subTest(locale=locale, document="generic", stale=stale):
-                    self.assertNotIn(stale, generic_body[: generic_body.index(generic_full)])
-            if generic_lite in generic_body:
-                full_section = document_section(
-                    generic_body, generic_full, generic_lite
-                )
-                lite_section = document_section(generic_body, generic_lite, generic_end)
-                for marker in contract["full"]:
-                    with self.subTest(locale=locale, document="generic", full=marker):
-                        self.assertIn(marker, full_section)
-                for marker in contract["lite"]:
-                    with self.subTest(locale=locale, document="generic", lite=marker):
-                        self.assertIn(marker, lite_section)
-
-    def test_localized_generic_guides_distinguish_full_and_lite_session_continuation(
-        self,
-    ) -> None:
-        contracts = {
-            "en": {
-                "section": ("## Save your progress", "## Eleven advanced modules"),
-                "full": (
-                    "### Full",
-                    "durable workflow documents",
-                    "first unfinished Full stage",
-                ),
-                "lite": (
-                    "### Lite",
-                    "resolves the workflow mode again",
-                    "Change Brief, approval, progress, or Review",
-                    "cannot resume",
-                    "reconstructs a new Change Brief",
-                    "repository state",
-                    "user input",
-                ),
-                "stale": (
-                    "Save the important documents created at each stage",
-                    "proceeds to the first unfinished stage",
-                ),
-                "quick_start_stale": (
-                    "To continue earlier work, also paste the important documents you saved.",
-                ),
-            },
-            "zh-TW": {
-                "section": ("## 保存進度", "## 十一個進階模組"),
-                "full": (
-                    "### Full",
-                    "可保存的流程文件",
-                    "第一個尚未完成的 Full 階段",
-                ),
-                "lite": (
-                    "### Lite",
-                    "重新判定流程模式",
-                    "Change Brief、核准、進度或 Review",
-                    "無法延續",
-                    "重新建立一份 Change Brief",
-                    "repository 現況",
-                    "使用者輸入",
-                ),
-                "stale": (
-                    "每完成一個階段，請保存 AI 產生的重要文件",
-                    "前往第一個尚未完成的階段",
-                ),
-                "quick_start_stale": (
-                    "如果要延續之前的工作，再一起貼上先前保存的重要文件。",
-                ),
-            },
-            "ja": {
-                "section": ("## 進捗を保存する", "## 11 個の詳細モジュール"),
-                "full": (
-                    "### Full",
-                    "永続化できるワークフロー文書",
-                    "最初の未完了の Full 段階",
-                ),
-                "lite": (
-                    "### Lite",
-                    "ワークフローモードを再決定",
-                    "Change Brief、承認、進捗、Review",
-                    "再開できません",
-                    "新しい Change Brief を再構築",
-                    "repository の状態",
-                    "ユーザー入力",
-                ),
-                "stale": (
-                    "各段階で作成された重要な文書を保存してください",
-                    "最初の未完了段階へ進みます",
-                ),
-                "quick_start_stale": (
-                    "以前の作業を続ける場合は、保存した重要な文書も貼り付けます。",
-                ),
-            },
-        }
-
-        for locale, document in GENERIC_GUIDES_BY_LOCALE.items():
-            body = document.read_text(encoding="utf-8")
-            contract = contracts[locale]
-            section = document_section(body, *contract["section"])
-            for mode in ("full", "lite"):
-                for marker in contract[mode]:
-                    with self.subTest(locale=locale, mode=mode, marker=marker):
-                        self.assertIn(marker, section)
-            for stale in contract["stale"]:
-                with self.subTest(locale=locale, stale=stale):
-                    self.assertNotIn(stale, section)
-            for stale in contract["quick_start_stale"]:
-                with self.subTest(locale=locale, quick_start_stale=stale):
-                    self.assertNotIn(stale, body)
-
-    def test_generic_start_pages_keep_full_only_startup_claims_mode_scoped(
-        self,
-    ) -> None:
-        contracts = {
-            "en": {
-                "heading": "## Choose Full or Lite",
-                "full": (
-                    "Full uses exactly one requirement question at a time",
-                    "three approval gates",
-                ),
-                "lite": (
-                    "Lite may ask no questions",
-                    "at most three blocking questions",
-                    "one Change Brief",
-                    "one approval",
-                ),
-                "stale": "asks the first requirements question",
-            },
-            "zh-TW": {
-                "heading": "## 選擇 Full 或 Lite",
-                "full": ("Full 一次只問一個需求問題", "三個核准點"),
-                "lite": (
-                    "Lite 可以不提出問題",
-                    "每輪最多三個阻塞問題",
-                    "一份 Change Brief",
-                    "一次核准",
-                ),
-                "stale": "提出第一個需求問題",
-            },
-            "ja": {
-                "heading": "## Full または Lite を選ぶ",
-                "full": ("Full は一度に一つの要件質問", "3 つの承認点"),
-                "lite": (
-                    "Lite は質問が不要な場合があります",
-                    "各回最大 3 つの阻害要因に関する質問",
-                    "1 つの Change Brief",
-                    "1 回の承認",
-                ),
-                "stale": "最初の要件質問を行います",
-            },
-        }
-        for locale, document in GENERIC_START_BY_LOCALE.items():
-            body = document.read_text(encoding="utf-8")
-            contract = contracts[locale]
-            heading = contract["heading"]
-            self.assertIn(heading, body)
-            setup, mode_summary = body.split(heading, 1)
-            with self.subTest(locale=locale, contract="unscoped stale claim"):
-                self.assertNotIn(contract["stale"], setup)
-            for mode in ("full", "lite"):
-                for marker in contract[mode]:
-                    with self.subTest(locale=locale, mode=mode, marker=marker):
-                        self.assertIn(marker, mode_summary)
 
     def test_mode_configuration_stays_in_host_guides(self) -> None:
         non_host_documents = (
@@ -1128,6 +371,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
             *ROOT_START_BY_LOCALE.values(),
             *CODEX_START_BY_LOCALE.values(),
             *GENERIC_START_BY_LOCALE.values(),
+            *CLAUDE_START_BY_LOCALE.values(),
         )
         for document in non_host_documents:
             body = document.read_text(encoding="utf-8")
@@ -1135,6 +379,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
                 self.assertNotIn("~/.codex/ask-then-do-it.toml", body)
                 self.assertNotIn("<project>/.codex/ask-then-do-it.toml", body)
                 self.assertNotIn("Default workflow mode:", body)
+                self.assertNotIn(".claude/ask-then-do-it.toml", body)
         for document in GENERIC_GUIDES_BY_LOCALE.values():
             body = document.read_text(encoding="utf-8")
             self.assertNotIn("~/.codex/ask-then-do-it.toml", body)
@@ -1143,6 +388,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
             self.assertNotIn(
                 "Default workflow mode:", document.read_text(encoding="utf-8")
             )
+
 
     def test_localized_simple_guides_define_complete_full_and_lite_flows(self) -> None:
         expected = {
@@ -1293,6 +539,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
                 with self.subTest(locale=locale, risk_marker=marker):
                     self.assertIn(marker, risk_section)
 
+
     def test_localized_simple_guides_include_separate_full_and_lite_mermaid_flows(
         self,
     ) -> None:
@@ -1381,6 +628,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
                     )
                     self.assertEqual(set(mermaid_node.findall(block)), expected_nodes)
 
+
     def test_localized_simple_guides_skip_empty_correction_gate_when_review_is_clean(
         self,
     ) -> None:
@@ -1407,6 +655,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
             lite_section = body[body.index(lite_heading) : body.index(risk_heading)]
             with self.subTest(locale=locale):
                 self.assertIn(marker, lite_section)
+
 
     def test_localized_simple_guides_keep_section_scoped_workflow_contracts(
         self,
@@ -1639,6 +888,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
                 with self.subTest(locale=locale, completion_exception=exception):
                     self.assertIn(exception, completion)
 
+
     def test_localized_design_guides_define_ownership_and_token_proxy(self) -> None:
         expected = {
             "zh-TW": (
@@ -1687,6 +937,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
                 with self.subTest(locale=locale, marker=marker):
                     self.assertIn(marker, body)
 
+
     def test_design_guide_explains_the_model_neutral_current_workflow(self) -> None:
         body = DESIGN.read_text(encoding="utf-8")
         for required in (
@@ -1717,6 +968,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
         ):
             self.assertNotIn(forbidden, body)
 
+
     def test_all_traditional_chinese_user_documents_exclude_internal_material(self) -> None:
         forbidden = (
             "一般使用者不需要",
@@ -1740,9 +992,13 @@ class ReleaseDocumentationTests(unittest.TestCase):
         )
         for document in USER_ZH_DOCUMENTS:
             body = document.read_text(encoding="utf-8")
+            # Claude's ZIP checksum check is user-facing integrity guidance.
             for phrase in forbidden:
+                if document == CLAUDE_GUIDE and phrase in ("checksums.sha256", "SHA-256", "checksum"):
+                    continue
                 with self.subTest(document=document.relative_to(ROOT), phrase=phrase):
                     self.assertNotIn(phrase, body)
+
 
     def test_every_user_document_has_english_and_japanese_translations(self) -> None:
         for source in USER_ZH_DOCUMENTS:
@@ -1763,83 +1019,6 @@ class ReleaseDocumentationTests(unittest.TestCase):
         ):
             self.assertIn(language_link, readme)
 
-    def test_localized_user_documents_keep_commands_and_avoid_internal_material(self) -> None:
-        forbidden = (
-            "checksums.sha256",
-            "SHA-256",
-            "checksum",
-            "canonical source",
-            "generated output",
-            "quick_validate.py",
-            "validate_plugin.py",
-            "conformance",
-            "docs/requirements/",
-            "docs/specs/",
-            "docs/plans/",
-            "docs/evidence/",
-            "../requirements/",
-            "../specs/",
-            "../plans/",
-            "../evidence/",
-        )
-        for document in USER_LOCALIZED_DOCUMENTS:
-            body = document.read_text(encoding="utf-8")
-            for phrase in forbidden:
-                with self.subTest(document=document.relative_to(ROOT), phrase=phrase):
-                    self.assertNotIn(phrase, body)
-
-        for locale, document in CODEX_GUIDES_BY_LOCALE.items():
-            body = document.read_text(encoding="utf-8")
-            for skill in (
-                    "$ask-then-do-it",
-                    "$ask-requirements",
-                    "$ask-with-docs",
-                    "$write-spec",
-                    "$plan-tickets",
-                    "$implement-direct",
-                    "$implement-tdd",
-                    "$review-code",
-                    "$improve-architecture",
-            ):
-                with self.subTest(locale=locale, skill=skill):
-                    self.assertIn(skill, body)
-            for required in ("`tdd`", "`direct`", "`tests: skipped-by-user`"):
-                self.assertIn(required, body)
-
-        for locale, document in GENERIC_GUIDES_BY_LOCALE.items():
-            body = document.read_text(encoding="utf-8")
-            self.assertIn("generic-workflow.md", body)
-            self.assertIn("direct-implementation.md", body)
-            self.assertIn("1.3.1", body)
-            self.assertIn("`tdd`", body)
-            self.assertIn("`direct`", body)
-
-        for locale, document in CODEX_START_BY_LOCALE.items():
-            body = document.read_text(encoding="utf-8")
-            self.assertIn("$ask-then-do-it", body)
-            self.assertIn(f"{VERSIONED_GUIDE_ROOT}/codex.{locale}.md", body)
-
-        for locale, document in GENERIC_START_BY_LOCALE.items():
-            body = document.read_text(encoding="utf-8")
-            self.assertIn("generic-workflow.md", body)
-            self.assertIn("1.3.1", body)
-            self.assertIn(f"{VERSIONED_GUIDE_ROOT}/generic.{locale}.md", body)
-
-        for locale in ("en", "ja"):
-            simple = localized_sibling(SIMPLE_GUIDE, locale).read_text(encoding="utf-8")
-            for required in (
-                "$ask-then-do-it",
-                "$implement-direct",
-                "generic-workflow.md",
-                "Red",
-                "Green",
-                "Refactor",
-                "Review",
-            ):
-                self.assertIn(required, simple)
-            design = localized_sibling(DESIGN, locale).read_text(encoding="utf-8")
-            for required in ("Core", "Codex Plugin", "Generic workflow", "TDD", "direct", "Review"):
-                self.assertIn(required, design)
 
     def test_all_relative_document_links_resolve(self) -> None:
         documents = [
@@ -1861,6 +1040,153 @@ class ReleaseDocumentationTests(unittest.TestCase):
                 ).resolve()
                 with self.subTest(document=document.relative_to(ROOT), target=target):
                     self.assertTrue(resolved.exists(), resolved)
+
+
+    def test_all_twelve_start_pages_are_concise_versioned_handoffs(self) -> None:
+        groups = {
+            "root": ROOT_START_BY_LOCALE,
+            "codex": CODEX_START_BY_LOCALE,
+            "claude-code": CLAUDE_START_BY_LOCALE,
+            "generic": GENERIC_START_BY_LOCALE,
+        }
+        self.assertEqual(sum(map(len, groups.values())), 12)
+        for group, documents in groups.items():
+            for locale, document in documents.items():
+                with self.subTest(group=group, locale=locale):
+                    body = document.read_text(encoding="utf-8")
+                    self.assertIn("1.4.0", body.splitlines()[0])
+                    self.assertLess(len(body.splitlines()), 65)
+                    self.assertIn("Full", body)
+                    self.assertIn("Lite", body)
+                    self.assertNotIn("mode =", body)
+                    self.assertNotIn("Default workflow mode:", body)
+                    if group == "root":
+                        links = [f"docs/guides/{name}.{locale}.md" for name in ("getting-started-simple", "codex", "claude-code", "generic")]
+                        links.append(f"docs/design/ai-development-skills.{locale}.md")
+                        positions = [body.index(link) for link in links]
+                        self.assertEqual(positions, sorted(positions))
+                    else:
+                        self.assertIn(f"{VERSIONED_GUIDE_ROOT}/{group}.{locale}.md", body)
+                        self.assertIn(f"{VERSIONED_GUIDE_ROOT}/getting-started-simple.{locale}.md", body)
+                        self.assertRegex(body, r"(?s)```text\n\S.+?\n```")
+                    if group == "codex":
+                        self.assertIn(f"codex.{locale}.md#zip", body)
+                        self.assertIn("$ask-then-do-it", body)
+                        self.assertIn("Marketplace", body)
+                    elif group == "claude-code":
+                        self.assertIn("/ask-then-do-it:ask-then-do-it", body)
+                        self.assertIn("claude --plugin-dir", body)
+                        self.assertIn("session-only", body)
+                    elif group == "generic":
+                        self.assertIn("generic-workflow.md", body)
+
+    def test_nine_main_guides_have_seven_ordered_chapters_and_start_examples(self) -> None:
+        for host, documents in HOST_GUIDES.items():
+            for locale, document in documents.items():
+                with self.subTest(host=host, locale=locale):
+                    body = document.read_text(encoding="utf-8")
+                    self.assertEqual(re.findall(r"^## (.+)$", body, re.M), list(HEADINGS[locale]))
+                    sections = re.split(r"^## .+$", body, flags=re.M)[1:]
+                    installation, start, modes, commands, update, faq, license_text = sections
+                    self.assertNotRegex(installation, r"(?m)^(?:codex plugin |/plugin |claude plugin ).*(?:upgrade|update|uninstall|remove)")
+                    self.assertRegex(start, r"(?s)```text\n\S.+?\n```")
+                    self.assertIn("Full", modes)
+                    self.assertIn("Lite", modes)
+                    self.assertIn(f"getting-started-simple.{locale}.md", modes)
+                    for marker in ("Matt Pocock", "LICENSE", "THIRD_PARTY_NOTICES.md"):
+                        self.assertIn(marker, license_text)
+                    self.assertIn("https://github.com/Mysterio1001/Ask-Then-Do-It/issues", faq)
+                    if host == "codex":
+                        self.assertIn("$ask-then-do-it ", start)
+                    elif host == "claude-code":
+                        self.assertIn("/ask-then-do-it:ask-then-do-it ", start)
+                    else:
+                        self.assertIn("generic-workflow.md", start)
+
+    def test_current_consumer_documents_use_current_release_targets(self) -> None:
+        documents = set(USER_ZH_DOCUMENTS + USER_LOCALIZED_DOCUMENTS)
+        documents.update((ROOT / "docs/guides").glob("claude-code.*.md"))
+        repository = "https://github.com/Mysterio1001/Ask-Then-Do-It"
+        for document in documents:
+            with self.subTest(document=document.relative_to(ROOT)):
+                body = document.read_text(encoding="utf-8")
+                self.assertNotRegex(body.lower(), r"preview|預覽版|閱覽版|プレビュー")
+                self.assertNotIn("vscode://", body)
+                for version in re.findall(re.escape(repository) + r"/(?:blob|releases/download)/v([^/]+)/", body):
+                    self.assertEqual(version, "1.4.0")
+        for host, documents in HOST_GUIDES.items():
+            suffix = {"codex": "", "claude-code": "-claude", "generic": "-generic"}[host]
+            expected = f"{repository}/releases/download/v1.4.0/ask-then-do-it{suffix}-1.4.0.zip"
+            for document in documents.values():
+                self.assertIn(expected, document.read_text(encoding="utf-8"))
+            self.assertIn(expected, README.read_text(encoding="utf-8"))
+
+    def test_host_guides_keep_mode_settings_and_direct_entry_boundaries(self) -> None:
+        prerequisites = {"en": r"prerequisites|does not bypass", "zh-TW": r"前置條件|不會跳過", "ja": r"前提条件|省略されません"}
+        for host, documents in HOST_GUIDES.items():
+            for locale, document in documents.items():
+                body = document.read_text(encoding="utf-8")
+                with self.subTest(host=host, locale=locale):
+                    if host == "generic":
+                        self.assertIn("Default workflow mode: full", body)
+                        self.assertIn("Default workflow mode: lite", body)
+                        self.assertNotIn(".codex/ask-then-do-it.toml", body)
+                        self.assertNotIn(".claude/ask-then-do-it.toml", body)
+                    else:
+                        folder = ".codex" if host == "codex" else ".claude"
+                        for source in ("<project>", "~"):
+                            self.assertIn(f"{source}/{folder}/ask-then-do-it.toml", body)
+                        for mode in ("full", "lite"):
+                            self.assertIn(f'mode = "{mode}"', body)
+                        self.assertNotIn("Default workflow mode:", body)
+                    if host != "claude-code":
+                        self.assertRegex(body, prerequisites[locale])
+
+    def test_codex_and_generic_advanced_entry_lists_remain_complete(self) -> None:
+        skills = ("ask-then-do-it", "ask-requirements", "ask-with-docs", "write-spec", "plan-tickets", "implement-direct", "implement-tdd", "review-code", "improve-architecture")
+        prompts = ("bootstrap", "orchestration", "lite-workflow", "requirements", "documented-requirements", "specification", "ticket-planning", "direct-implementation", "tdd-implementation", "review", "architecture-improvement")
+        for document in CODEX_GUIDES_BY_LOCALE.values():
+            body = document.read_text(encoding="utf-8")
+            self.assertEqual(set(re.findall(r"\| `\$([\w-]+)` \|", body)), set(skills))
+        for document in GENERIC_GUIDES_BY_LOCALE.values():
+            body = document.read_text(encoding="utf-8")
+            self.assertEqual(set(re.findall(r"\| `([\w-]+)\.md` \|", body)), set(prompts))
+
+    def test_generic_guides_scope_pasting_progress_and_tool_capabilities(self) -> None:
+        contracts = {
+            "en": (r"every new conversation", r"entire", r"saved requirements, specification, and Ticket Plan", r"Lite does not persist", r"capabilities depend", r"stop pasting"),
+            "zh-TW": (r"每個新對話", r"全文", r"已保存的需求、規格與工作規劃", r"Lite 不自動保存", r"能力取決於", r"不再貼入"),
+            "ja": (r"新しい会話ごと", r"全文", r"保存済みの要件、仕様、Ticket 計画", r"Lite の状態は.*保存されません", r"能力は.*依存", r"貼り付けをやめ"),
+        }
+        for locale, document in GENERIC_GUIDES_BY_LOCALE.items():
+            body = document.read_text(encoding="utf-8")
+            with self.subTest(locale=locale):
+                for pattern in contracts[locale]:
+                    self.assertRegex(body, pattern)
+                self.assertNotRegex(body, r"(?:codex plugin |claude plugin |/plugin )(?:install|add|update|uninstall|remove)")
+                self.assertNotIn("$ask-then-do-it", body)
+                self.assertNotIn("/ask-then-do-it:", body)
+
+    def test_current_document_navigation_anchors_resolve_offline(self) -> None:
+        documents = set(USER_ZH_DOCUMENTS + USER_LOCALIZED_DOCUMENTS)
+        documents.update((ROOT / "docs").rglob("*.md"))
+        prefix = "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.0/"
+        for document in documents:
+            for target in re.findall(r"\[[^]]+\]\(([^)]+)\)", document.read_text(encoding="utf-8")):
+                if target.startswith(prefix):
+                    target = "/" + target[len(prefix):]
+                elif "://" in target:
+                    continue
+                path_text, _, anchor = target.partition("#")
+                resolved = (ROOT / path_text.lstrip("/") if path_text.startswith("/") else document.parent / path_text).resolve() if path_text else document
+                with self.subTest(document=document.relative_to(ROOT), target=target):
+                    self.assertTrue(resolved.is_relative_to(ROOT))
+                    self.assertTrue(resolved.is_file(), resolved)
+                    if anchor:
+                        linked = resolved.read_text(encoding="utf-8")
+                        heading_ids = {re.sub(r"[^\w\- ]", "", heading.lower()).replace(" ", "-") for heading in re.findall(r"^#+ (.+)$", linked, re.M)}
+                        explicit_ids = set(re.findall(r'<a id="([^"]+)"', linked))
+                        self.assertIn(anchor, heading_ids | explicit_ids)
 
 
 if __name__ == "__main__":

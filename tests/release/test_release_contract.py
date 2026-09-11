@@ -1,3 +1,5 @@
+from tests.release.built_fixture import current_distribution
+
 import json
 import hashlib
 import shutil
@@ -24,6 +26,8 @@ REQUIRED_VALIDATION_CHECKS = [
     "sha256-verification",
     "removed-artifact-scan",
     "release-architecture-diagnosis",
+    "claude-plugin-validation", "claude-conformance", "claude-package-inventory",
+    "claude-behavior", "claude-context", "claude-live-smoke",
 ]
 
 
@@ -59,7 +63,7 @@ def top_level_scalar(path: Path, key: str) -> str:
 
 class ReleaseContractTests(unittest.TestCase):
     def test_unittest_discovery_includes_every_test_package(self) -> None:
-        for package in ("codex", "conformance", "generic", "release"):
+        for package in ("codex", "conformance", "generic", "release", "claude"):
             marker = ROOT / "tests" / package / "__init__.py"
             with self.subTest(package=package):
                 self.assertTrue(
@@ -83,24 +87,25 @@ class ReleaseContractTests(unittest.TestCase):
     def test_current_release_identity_and_validation_gate_are_declared(self) -> None:
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
         self.assertEqual(config["schema_version"], 2)
-        self.assertEqual(config["release_version"], "1.3.1")
-        self.assertEqual(config["core_version"], "1.3.1")
+        self.assertEqual(config["release_version"], "1.4.0")
+        self.assertEqual(config["core_version"], "1.4.0")
         self.assertEqual(
             config["required_validation_checks"], REQUIRED_VALIDATION_CHECKS
         )
 
-    def test_current_distribution_has_exactly_two_verified_archives(self) -> None:
-        checksums = (ROOT / "dist" / "checksums.sha256").read_text(
+    def test_current_distribution_has_exactly_three_versioned_archives(self) -> None:
+        checksums = (current_distribution() / "checksums.sha256").read_text(
             encoding="ascii"
         ).splitlines()
         expected = {
-            "codex/ask-then-do-it-1.3.1.zip",
-            "generic/ask-then-do-it-generic-1.3.1.zip",
+            "codex/ask-then-do-it-1.4.0.zip",
+            "generic/ask-then-do-it-generic-1.4.0.zip",
+            "claude/ask-then-do-it-claude-1.4.0.zip",
         }
         self.assertEqual({line.split("  ", 1)[1] for line in checksums}, expected)
         for line in checksums:
             digest, relative = line.split("  ", 1)
-            archive = ROOT / "dist" / relative
+            archive = current_distribution() / relative
             with self.subTest(archive=relative):
                 self.assertTrue(archive.is_file())
                 self.assertEqual(hashlib.sha256(archive.read_bytes()).hexdigest(), digest)
@@ -118,6 +123,7 @@ class ReleaseContractTests(unittest.TestCase):
         declarations = (
             ROOT / "core" / "rules" / "rules.yaml",
             ROOT / "adapters" / "codex" / "conformance.yaml",
+            ROOT / "adapters" / "claude-code" / "conformance.yaml",
             ROOT / "adapters" / "generic-prompts" / "manifest.yaml",
         )
         for path in declarations:

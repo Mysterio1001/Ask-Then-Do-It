@@ -29,7 +29,9 @@ class AskThenDoItIdentityTests(unittest.TestCase):
 
         self.assertTrue(readme.startswith("# Ask Then Do It"))
         self.assertIn("Ask Then Do It", start_here)
-        self.assertIn("先問清楚，再開始做", start_here)
+        self.assertIn("1.4.0", start_here)
+        for platform in ("codex", "claude-code", "generic"):
+            self.assertIn(f"docs/guides/{platform}.zh-TW.md", start_here)
 
     def test_human_design_explanation_uses_current_identity_and_artifacts(self) -> None:
         design = DESIGN.read_text(encoding="utf-8")

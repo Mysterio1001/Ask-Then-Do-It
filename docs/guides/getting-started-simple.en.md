@@ -5,6 +5,7 @@ Ask Then Do It offers two workflows: `Full` and `Lite`. Full is for work that ne
 Both modes clarify scope, obtain user authority, preserve existing changes, and report verification honestly before claiming completion. Lite is smaller than Full; it is not permission to skip risk checks or validation.
 
 ## Mode precedence
+Choose how you want to use the workflow. Use Full for a documented process or Lite for a clearly scoped change. [Codex](codex.en.md) · [Claude Code](claude-code.en.md) · [Generic](generic.en.md)。
 
 At the start of each operation, Codex resolves the mode in this order:
 
