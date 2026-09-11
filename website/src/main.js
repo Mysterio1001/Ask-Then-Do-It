@@ -113,7 +113,7 @@ document.querySelector("#app").innerHTML = `
     <div class="flight-deck-heading mono"><span class="flight-label"><span class="status-dot"></span>${text("journey.label")}</span><span class="scroll-cue">${icon("arrow-down")}${text("journey.scroll")}</span><div class="flight-controls"><span id="progress-value">00%</span><button id="pause-motion" class="icon-button" type="button" aria-pressed="false" data-i18n-aria="common.pause">${icon("pause")}<span class="tooltip" data-i18n="common.pause"></span></button></div></div>
     <nav class="journey-nav" aria-label="Orbits"><div class="route-line"><div id="route-progress"></div></div>${journeyStops.map((stop, i) => `<a href="#${stop.id}" class="journey-stop ${i === 0 ? "is-current" : ""}" data-stop="${i}" ${i === 0 ? 'aria-current="step"' : ""}><span class="route-dot"></span><span class="stop-heading mono"><span class="stop-number">${stop.number}</span><span>${stop.name}</span>${icon("arrow-up-right")}</span>${text(`stages.${i}.tag`, "span", "stop-subtitle")}</a>`).join("")}</nav>
     <footer class="site-footer mono">
-      <span class="footer-developer">${text("footer.developer")}<strong>交給我科技工作室</strong><span>Handle by me Tech Studio 2026</span></span>
+      <span class="footer-developer">${text("footer.developer")}<strong>交給我科技工作室</strong><span>Handle by Me Tech Studio © 2026</span></span>
       <a class="footer-contact" href="mailto:contact@handlebyme.com">${text("footer.contact")}<span>contact@handlebyme.com</span></a>
     </footer>
   </div>
