@@ -18,6 +18,18 @@
 | 正式 1.4.0 完整驗收／對外發布 | 未證明完成 | 來源升版與離線 ZIP 不是完整 release；不因指南的下載 URL 存在就推論遠端資產存在 |
 | 正式 1.4.1 完整驗收／對外發布 | 完整驗收未完成；提交與發布已授權 | 新 ZIP、checksum 與本機驗證已重新產生，尚缺下列 live 與正式整合驗證；外部發布結果以後續 tag、Release 與公開附件比對記錄為準。舊版 Review 仍是歷史證據 |
 
+## 文件生命週期整理
+
+2026-09-16 已完成一個代表性 Full workflow migration：Codex skill runtime
+slimming 的三份 provisional drafts 現由一份 [Decision Packet](drafts/codex-skill-runtime-slimming/decision-packet.md)
+承接。三個舊路徑只保留 metadata-only pointers；[lifecycle manifest](drafts/codex-skill-runtime-slimming/lifecycle-manifest.json)
+與 [source manifest](drafts/codex-skill-runtime-slimming/migration/source-manifest.json) 保留原始 bytes、artifact IDs、SHA-256 與 rollback
+資訊。所有 packet sections 仍為 `Draft`，原始 `Pending` approval、unresolved／deferred 狀態未被提升。
+
+本次 migration validator 已在 bundled Python 執行成功；它只驗證，不自動刪除或修復檔案。這次整理沒有新增正式 Knowledge Base fact，沒有改變
+Full／Lite routing、approval gates、evidence semantics、test-choice 或 release 行為。Generic／Claude adoption、archive retention
+policy 與 live model evidence 仍是 deferred／environment-limited 項目。
+
 ## 必須接續的驗證
 
 | 次序 | 工作與完成條件 | 依據／相依 |

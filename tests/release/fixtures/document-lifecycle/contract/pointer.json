@@ -1,0 +1,16 @@
+{
+  "artifact_type": "Document Pointer",
+  "artifact_id": "workflow-document-lifecycle-contract:legacy-pointer",
+  "workflow_id": "workflow-document-lifecycle-contract",
+  "core_version": "1.4.1",
+  "status": "Superseded",
+  "inputs": ["workflow-document-lifecycle-contract:decision-packet"],
+  "assumptions": [],
+  "deferred": [],
+  "handoff": "Canonical packet",
+  "approval": null,
+  "target_artifact_id": "workflow-document-lifecycle-contract:decision-packet",
+  "canonical_path": "docs/project/drafts/workflow-document-lifecycle-contract/decision-packet.md",
+  "replacement_reason": "Three repeated draft files now have one packet owner.",
+  "history_link": "docs/project/drafts/codex-skill-runtime-slimming-working-notes.md"
+}

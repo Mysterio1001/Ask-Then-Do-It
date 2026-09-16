@@ -40,6 +40,11 @@ USER_FOOTER_DOCUMENTS = tuple(
 )
 
 
+def is_historical_archive(document: Path) -> bool:
+    """Historical migration backups preserve source bytes, not active links."""
+    return "migration" in document.parts and "backup" in document.parts
+
+
 def localized_sibling(document: Path, locale: str) -> Path:
     return document.with_name(document.name.replace(".zh-TW.md", f".{locale}.md"))
 
@@ -1029,6 +1034,8 @@ class ReleaseDocumentationTests(unittest.TestCase):
         ]
         pattern = re.compile(r"\[[^]]+\]\(([^)]+)\)")
         for document in documents:
+            if is_historical_archive(document):
+                continue
             for target in pattern.findall(document.read_text(encoding="utf-8")):
                 if "://" in target or target.startswith("#"):
                     continue
@@ -1172,6 +1179,8 @@ class ReleaseDocumentationTests(unittest.TestCase):
         documents.update((ROOT / "docs").rglob("*.md"))
         prefix = "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.1/"
         for document in documents:
+            if is_historical_archive(document):
+                continue
             for target in re.findall(r"\[[^]]+\]\(([^)]+)\)", document.read_text(encoding="utf-8")):
                 if target.startswith(prefix):
                     target = "/" + target[len(prefix):]

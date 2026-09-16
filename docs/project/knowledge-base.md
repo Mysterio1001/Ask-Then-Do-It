@@ -79,6 +79,12 @@ Codex catalog 位於 `.agents/plugins/marketplace.json`，Claude 位於 `.claude
 
 新增其他 adapters、universal installer／registry、Claude 非 user scopes、Desktop／web/cloud、unattended updates、private fork 分發、Community Marketplace 與 signing/provenance 方案均待後續決策。官方 bare aliases 是否顯示與 exact invocation 仍按實測記錄，不作多一個受支援公開入口的承諾。
 
+## Document lifecycle consolidation
+
+- 本次 Codex skill runtime slimming 的三份 Full workflow 草稿已收斂為一份 [Decision Packet](drafts/codex-skill-runtime-slimming/decision-packet.md)。Packet 與三個 section 仍是 `Draft`；原本的 `Pending` approval、unresolved decisions 與 deferred scope 沒有被提升或改寫。
+- 舊檔名現在只保留 metadata-only pointer；原始 bytes、stable IDs 與 SHA-256 由 [source manifest](drafts/codex-skill-runtime-slimming/migration/source-manifest.json) 指向 migration backup，驗證索引位於 [lifecycle manifest](drafts/codex-skill-runtime-slimming/lifecycle-manifest.json)。這些是歷史／復原資料，不是新的正式需求核准。
+- 此次整理沒有新增 durable project fact，也沒有改變 Full／Lite、approval、evidence 或 release 契約。後續若要核准 packet 內容，仍須依既有 requirement 與 Knowledge Base gates 另行核准。
+
 ## Artifact links
 
 - [工作流程規格](../specs/workflow.md)、[Claude adapter 規格](../specs/claude-code-adapter.md)：承接既有需求與規格。

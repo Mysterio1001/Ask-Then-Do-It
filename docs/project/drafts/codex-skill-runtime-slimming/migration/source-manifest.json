@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "workflow_id": "codex-skill-runtime-slimming-2026-09-15",
+  "core_version": "1.4.1",
+  "sources": [
+    {
+      "source_path": "docs/project/drafts/codex-skill-runtime-slimming-working-notes.md",
+      "backup_path": "docs/project/drafts/codex-skill-runtime-slimming/migration/backup/working-notes.md",
+      "source_artifact_id": "codex-skill-runtime-slimming-working-notes",
+      "target_artifact_id": "codex-skill-runtime-slimming-decision-packet",
+      "target_section_id": "codex-skill-runtime-slimming-working-notes",
+      "original_sha256": "B3C55F684F0F294BA081B5FC9AEB97A301D9874E270E38A8EBD455549073E2B8",
+      "source_status_before": "Draft",
+      "target_status_after": "Draft",
+      "source_disposition": "pointer",
+      "source_exists_after": true
+    },
+    {
+      "source_path": "docs/project/drafts/codex-skill-runtime-slimming-requirement-decision-record.md",
+      "backup_path": "docs/project/drafts/codex-skill-runtime-slimming/migration/backup/requirement-decision-record.md",
+      "source_artifact_id": "codex-skill-runtime-slimming-rdr",
+      "target_artifact_id": "codex-skill-runtime-slimming-decision-packet",
+      "target_section_id": "codex-skill-runtime-slimming-rdr",
+      "original_sha256": "5EC68F90E48575630EE16F887D15C8C18842524627A11187E2770DAB9ED185F6",
+      "source_status_before": "Draft",
+      "target_status_after": "Draft",
+      "source_disposition": "pointer",
+      "source_exists_after": true
+    },
+    {
+      "source_path": "docs/project/drafts/codex-skill-runtime-slimming-knowledge-base-change-summary.md",
+      "backup_path": "docs/project/drafts/codex-skill-runtime-slimming/migration/backup/knowledge-base-change-summary.md",
+      "source_artifact_id": "codex-skill-runtime-slimming-kb-change-summary",
+      "target_artifact_id": "codex-skill-runtime-slimming-decision-packet",
+      "target_section_id": "codex-skill-runtime-slimming-kb-change-summary",
+      "original_sha256": "391FEBA5E7C16D1EBD2C6AA7FAFD1F027AF3A1A16E05709832D59EF0545BA0BD",
+      "source_status_before": "Draft",
+      "target_status_after": "Draft",
+      "source_disposition": "pointer",
+      "source_exists_after": true
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "artifact_type": "Decision Packet",
+  "artifact_id": "workflow-document-lifecycle-no-change:decision-packet",
+  "workflow_id": "workflow-document-lifecycle-no-change",
+  "core_version": "1.4.1",
+  "status": "Draft",
+  "inputs": ["approved-ticket-plan"],
+  "assumptions": [],
+  "deferred": [],
+  "handoff": "Implementation planning",
+  "approval": null,
+  "knowledge_change": {
+    "summary_required": false,
+    "reason": "The approved artifact changes no durable project facts."
+  },
+  "sections": [
+    {
+      "artifact_type": "Draft Working Notes",
+      "artifact_id": "workflow-document-lifecycle-no-change:working-notes",
+      "workflow_id": "workflow-document-lifecycle-no-change",
+      "core_version": "1.4.1",
+      "status": "Draft",
+      "inputs": ["approved-ticket-plan"],
+      "assumptions": [],
+      "deferred": [],
+      "handoff": "Implementation planning",
+      "approval": null
+    },
+    {
+      "artifact_type": "Requirement Decision Record",
+      "artifact_id": "workflow-document-lifecycle-no-change:requirement-decision-record",
+      "workflow_id": "workflow-document-lifecycle-no-change",
+      "core_version": "1.4.1",
+      "status": "Draft",
+      "inputs": ["approved-ticket-plan"],
+      "assumptions": [],
+      "deferred": [],
+      "handoff": "Implementation planning",
+      "approval": null
+    }
+  ]
+}

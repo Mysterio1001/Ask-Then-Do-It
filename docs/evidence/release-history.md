@@ -89,7 +89,8 @@ b9b27fafddd80f60b4e2818f3d61757146973d41bee345a65d00ef1b18e99af0  generic/ask-th
 | claude-code-adapter-1.4.0 的 requirement／spec／plan／研究 | [Claude 規格](../specs/claude-code-adapter.md)、[狀態](../project/status.md)、知識庫 |
 | documentation-and-version-alignment-1.4.0 | 發布手冊、狀態及保留的整合 Review；原三 Ticket 的 tdd／direct 選擇仍可追溯 |
 | github-release-publication-1.0.0、claude-preview-publication-1.4.0-preview.1 | 發布手冊、歷史摘要與 preview receipt |
-| docs/project/drafts 的 working-notes／kb-change-summary | 知識庫與狀態；只採用有正式依據的事實，不把研究 proposal 當正式要求 |
+| Codex skill runtime slimming lifecycle migration (2026-09-16) | [Decision Packet](../project/drafts/codex-skill-runtime-slimming/decision-packet.md)、[lifecycle manifest](../project/drafts/codex-skill-runtime-slimming/lifecycle-manifest.json)、[source manifest](../project/drafts/codex-skill-runtime-slimming/migration/source-manifest.json)；原三份草稿仍為 Draft/Pending，未視為新的核准 |
+| docs/project/drafts 的既有 working-notes／kb-change-summary | 知識庫與狀態；只採用有正式依據的事實，不把研究 proposal 當正式要求 |
 | docs/claude_sys/behavior-verification.md | [驗證手冊](../maintainer/validation.md#claude-behavior-證據)的操作／transcript 格式 |
 | docs/evidence 的逐 Ticket、Review、correction、architecture 紀錄 | 本頁、驗證手冊、狀態與保留的七份關鍵 Review／receipt |
 | claude-code-reference.en／zh-TW／ja | 各自同語言 [Claude 指南](../guides/claude-code.zh-TW.md#advanced-reference)收合區塊 |

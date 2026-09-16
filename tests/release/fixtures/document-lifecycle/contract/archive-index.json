@@ -1,0 +1,25 @@
+{
+  "artifact_type": "Archive Index",
+  "artifact_id": "workflow-document-lifecycle-contract:archive-index",
+  "workflow_id": "workflow-document-lifecycle-contract",
+  "core_version": "1.4.1",
+  "status": "Approved",
+  "inputs": ["workflow-document-lifecycle-contract:decision-packet"],
+  "assumptions": [],
+  "deferred": [],
+  "handoff": "Maintenance",
+  "approval": {
+    "approved_by": "maintainer",
+    "approved_at": "2026-09-16",
+    "evidence": "workflow-document-lifecycle-contract:approval"
+  },
+  "entries": [
+    {
+      "target_artifact_id": "workflow-document-lifecycle-contract:decision-packet",
+      "canonical_path": "docs/project/drafts/workflow-document-lifecycle-contract/decision-packet.md",
+      "status": "Superseded",
+      "replacement_reason": "Historical packet retained for traceability.",
+      "history_link": "docs/project/drafts/codex-skill-runtime-slimming-working-notes.md"
+    }
+  ]
+}

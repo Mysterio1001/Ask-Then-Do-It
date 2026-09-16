@@ -1,0 +1,42 @@
+{
+  "states": [
+    {
+      "artifact_id": "workflow-document-lifecycle-contract:state-draft",
+      "status": "Draft",
+      "approval": null
+    },
+    {
+      "artifact_id": "workflow-document-lifecycle-contract:state-approved",
+      "status": "Approved",
+      "approval": {
+        "approved_by": "maintainer",
+        "approved_at": "2026-09-16",
+        "evidence": "explicit-user-approval"
+      }
+    },
+    {
+      "artifact_id": "workflow-document-lifecycle-contract:state-superseded",
+      "status": "Superseded",
+      "approval": {
+        "approved_by": "maintainer",
+        "approved_at": "2026-09-16",
+        "evidence": "replacement-record"
+      }
+    },
+    {
+      "artifact_id": "workflow-document-lifecycle-contract:state-unverified",
+      "status": "unverified",
+      "approval": null
+    },
+    {
+      "artifact_id": "workflow-document-lifecycle-contract:state-skipped",
+      "status": "skipped",
+      "approval": null
+    },
+    {
+      "artifact_id": "workflow-document-lifecycle-contract:state-blocked",
+      "status": "blocked",
+      "approval": null
+    }
+  ]
+}

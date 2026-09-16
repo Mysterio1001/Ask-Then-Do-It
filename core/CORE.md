@@ -35,6 +35,7 @@ This directory is the normative, host-neutral contract for an AI-assisted softwa
 - [Direct Implementation Evidence](artifacts/direct-implementation-evidence.md)
 - [Review Report](artifacts/review-report.md)
 - [Architecture Improvement Report](artifacts/architecture-improvement-report.md)
+- [Document Lifecycle Contract](artifacts/document-lifecycle.md)
 - [Adapter manifest contract](adapters/manifest-contract.md)
 - [Mandatory rule catalog](rules/rules.yaml)
 - [Architecture and Refactoring Lenses](references/architecture-refactoring-lenses.md)

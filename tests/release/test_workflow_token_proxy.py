@@ -142,7 +142,7 @@ class WorkflowTokenProxyTests(unittest.TestCase):
                 report["codex"]["difference_proxy_tokens"],
                 gate["reduction_basis_points"],
             ),
-            (14771, 5480, 9291, 6290),
+            (14890, 5480, 9410, 6319),
         )
 
     def test_output_is_deterministic_and_discloses_algorithm_and_fixture(self) -> None:

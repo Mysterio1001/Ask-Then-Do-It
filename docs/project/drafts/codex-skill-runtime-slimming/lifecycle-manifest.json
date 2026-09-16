@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "canonical": [
+    {
+      "artifact_type": "Decision Packet",
+      "artifact_id": "codex-skill-runtime-slimming-decision-packet",
+      "workflow_id": "codex-skill-runtime-slimming-2026-09-15",
+      "core_version": "1.4.1",
+      "status": "Draft",
+      "canonical_key": "codex-skill-runtime-slimming:decision-packet",
+      "path": "docs/project/drafts/codex-skill-runtime-slimming/decision-packet.md",
+      "inputs": ["codex-skill-runtime-slimming-source-drafts"],
+      "assumptions": ["The first version remains behavior-equivalent."],
+      "deferred": ["Cross-model live evaluation", "Other adapters", "Release and publication"],
+      "handoff": "Requirement and Knowledge Base approval",
+      "approval": ""
+    }
+  ],
+  "pointers": [
+    {
+      "artifact_type": "Document Pointer",
+      "artifact_id": "codex-skill-runtime-slimming-working-notes-pointer",
+      "workflow_id": "codex-skill-runtime-slimming-2026-09-15",
+      "core_version": "1.4.1",
+      "status": "Draft",
+      "path": "docs/project/drafts/codex-skill-runtime-slimming-working-notes.md",
+      "target_artifact_id": "codex-skill-runtime-slimming-decision-packet",
+      "canonical_path": "docs/project/drafts/codex-skill-runtime-slimming/decision-packet.md",
+      "replacement_reason": "The three repeated workflow drafts now have one Decision Packet owner.",
+      "history_link": "docs/project/drafts/codex-skill-runtime-slimming/migration/backup/working-notes.md",
+      "inputs": ["codex-skill-runtime-slimming-decision-packet"],
+      "assumptions": ["The original bytes remain in the migration backup."],
+      "deferred": [],
+      "handoff": "Canonical Decision Packet",
+      "approval": ""
+    },
+    {
+      "artifact_type": "Document Pointer",
+      "artifact_id": "codex-skill-runtime-slimming-rdr-pointer",
+      "workflow_id": "codex-skill-runtime-slimming-2026-09-15",
+      "core_version": "1.4.1",
+      "status": "Draft",
+      "path": "docs/project/drafts/codex-skill-runtime-slimming-requirement-decision-record.md",
+      "target_artifact_id": "codex-skill-runtime-slimming-decision-packet",
+      "canonical_path": "docs/project/drafts/codex-skill-runtime-slimming/decision-packet.md",
+      "replacement_reason": "The three repeated workflow drafts now have one Decision Packet owner.",
+      "history_link": "docs/project/drafts/codex-skill-runtime-slimming/migration/backup/requirement-decision-record.md",
+      "inputs": ["codex-skill-runtime-slimming-decision-packet"],
+      "assumptions": ["The original bytes remain in the migration backup."],
+      "deferred": [],
+      "handoff": "Canonical Decision Packet",
+      "approval": ""
+    },
+    {
+      "artifact_type": "Document Pointer",
+      "artifact_id": "codex-skill-runtime-slimming-kb-change-summary-pointer",
+      "workflow_id": "codex-skill-runtime-slimming-2026-09-15",
+      "core_version": "1.4.1",
+      "status": "Draft",
+      "path": "docs/project/drafts/codex-skill-runtime-slimming-knowledge-base-change-summary.md",
+      "target_artifact_id": "codex-skill-runtime-slimming-decision-packet",
+      "canonical_path": "docs/project/drafts/codex-skill-runtime-slimming/decision-packet.md",
+      "replacement_reason": "The three repeated workflow drafts now have one Decision Packet owner.",
+      "history_link": "docs/project/drafts/codex-skill-runtime-slimming/migration/backup/knowledge-base-change-summary.md",
+      "inputs": ["codex-skill-runtime-slimming-decision-packet"],
+      "assumptions": ["The original bytes remain in the migration backup."],
+      "deferred": [],
+      "handoff": "Canonical Decision Packet",
+      "approval": ""
+    }
+  ],
+  "approved_artifacts": [],
+  "historical_archive_paths": [
+    "docs/project/drafts/codex-skill-runtime-slimming/migration/backup/working-notes.md",
+    "docs/project/drafts/codex-skill-runtime-slimming/migration/backup/requirement-decision-record.md",
+    "docs/project/drafts/codex-skill-runtime-slimming/migration/backup/knowledge-base-change-summary.md"
+  ],
+  "migration": {
+    "migration_id": "codex-skill-runtime-slimming-migration-2026-09-16",
+    "workflow_id": "codex-skill-runtime-slimming-2026-09-15",
+    "core_version": "1.4.1",
+    "status": "completed",
+    "source_manifest": "docs/project/drafts/codex-skill-runtime-slimming/migration/source-manifest.json",
+    "source_manifest_sha256": "27F4C152440B1A3630AF7924355EC4ABAFABF375246B2DB3C6C309F2994DF8E7",
+    "backup_root": "docs/project/drafts/codex-skill-runtime-slimming/migration/backup",
+    "staging_root": "docs/project/drafts/codex-skill-runtime-slimming/migration/staging",
+    "recovery": {
+      "rollback_available": true,
+      "primary_error": null,
+      "recovery_errors": []
+    }
+  }
+}

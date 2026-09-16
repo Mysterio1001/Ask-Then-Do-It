@@ -38,7 +38,9 @@ Label each entry:
 - `confirmed` for an answer explicitly confirmed during interrogation.
 - `unresolved` for missing or conflicting evidence.
 
-A confirmed working note must not become formal project knowledge before the Requirement Decision Record and disclosed knowledge changes are explicitly approved (`KB-DRAFT-001`). When persistence is useful and tools are available, use repository conventions or `docs/project/drafts/<workflow-id>-working-notes.md`.
+A confirmed working note must not become formal project knowledge before the Requirement Decision Record and disclosed knowledge changes are explicitly approved (`KB-DRAFT-001`). When persistence is useful, keep notes in the Decision Packet's Working Notes section; do not create a standalone copy.
+
+For a Full operation needing durable documentation, use one Decision Packet per workflow ID at `docs/project/drafts/<workflow-id>/decision-packet.md` with Draft Working Notes, Requirement Decision Record, and any Knowledge Base Change Summary. Sections keep separate stable `artifact_id` and `status`; `summary_required: false` omits the summary. After approval, link the canonical Specification and canonical Knowledge Base at `docs/project/knowledge-base.md`; downstream stages use stable IDs instead of copying content. Lite MUST NOT create a Decision Packet.
 
 ## Ask exactly one question
 
@@ -54,11 +56,11 @@ Prioritize the unresolved decision with the greatest impact and uncertainty. Tra
 
 ## Prepare the formal artifacts
 
-When high-impact decisions are confirmed, intentionally deferred with ownership, or proven irrelevant, prepare both artifacts as Draft.
+When high-impact decisions are confirmed, intentionally deferred with ownership, or proven irrelevant, prepare the Decision Packet and applicable sections as Draft.
 
-The Requirement Decision Record must include its portable envelope and the confirmed problem, outcomes, users, behavior, boundaries, failures, contracts, constraints, acceptance criteria, assumptions, and deferrals.
+The Requirement Decision Record section must include its portable envelope and the confirmed problem, outcomes, users, behavior, boundaries, failures, contracts, constraints, acceptance criteria, assumptions, and deferrals.
 
-The proposed Project Knowledge Base must use `docs/project/knowledge-base.md` and contain:
+The canonical Project Knowledge Base, when updated after approval, must use `docs/project/knowledge-base.md` and contain:
 
 1. Glossary.
 2. Architecture map.
@@ -86,4 +88,4 @@ Do not begin Specification authoring or implementation from this skill. If the u
 
 ## Downgrade honestly
 
-With only `conversation` capability, use only artifacts the user supplies. Emit complete Markdown for the Requirement Decision Record, Draft Working Notes, Knowledge Base, and change summary. State that the user owns cross-session persistence and must save and re-supply them. Never claim repository inspection, file writes, durable state, commands, tests, or independent review without real capability and evidence.
+With only `conversation` capability, use only user-supplied artifacts. Emit one complete user-managed Decision Packet and state that the user owns persistence. Never claim repository inspection, file writes, durable state, commands, tests, or independent review without evidence.

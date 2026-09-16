@@ -1,0 +1,54 @@
+{
+  "artifact_type": "Decision Packet",
+  "artifact_id": "workflow-document-lifecycle-contract:decision-packet",
+  "workflow_id": "workflow-document-lifecycle-contract",
+  "core_version": "1.4.1",
+  "status": "Draft",
+  "inputs": ["approved-workflow-document-lifecycle-spec"],
+  "assumptions": ["Markdown is the human-readable packet format."],
+  "deferred": ["Archive retention duration."],
+  "handoff": "Requirement interrogation",
+  "approval": null,
+  "knowledge_change": {
+    "summary_required": true,
+    "summary_artifact_id": "workflow-document-lifecycle-contract:knowledge-base-change-summary"
+  },
+  "sections": [
+    {
+      "artifact_type": "Draft Working Notes",
+      "artifact_id": "workflow-document-lifecycle-contract:working-notes",
+      "workflow_id": "workflow-document-lifecycle-contract",
+      "core_version": "1.4.1",
+      "status": "Draft",
+      "inputs": ["repository-audit"],
+      "assumptions": [],
+      "deferred": ["Archive retention duration."],
+      "handoff": "Requirement interrogation",
+      "approval": null
+    },
+    {
+      "artifact_type": "Requirement Decision Record",
+      "artifact_id": "workflow-document-lifecycle-contract:requirement-decision-record",
+      "workflow_id": "workflow-document-lifecycle-contract",
+      "core_version": "1.4.1",
+      "status": "Draft",
+      "inputs": ["repository-audit"],
+      "assumptions": [],
+      "deferred": ["Archive retention duration."],
+      "handoff": "Specification authoring",
+      "approval": null
+    },
+    {
+      "artifact_type": "Knowledge Base Change Summary",
+      "artifact_id": "workflow-document-lifecycle-contract:knowledge-base-change-summary",
+      "workflow_id": "workflow-document-lifecycle-contract",
+      "core_version": "1.4.1",
+      "status": "Draft",
+      "inputs": ["repository-audit"],
+      "assumptions": [],
+      "deferred": ["Archive retention duration."],
+      "handoff": "Project knowledge approval",
+      "approval": null
+    }
+  ]
+}
