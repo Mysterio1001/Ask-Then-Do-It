@@ -10,6 +10,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from release_validation_contract import REQUIRED_VALIDATION_CHECKS
+
 
 class EvidenceError(RuntimeError):
     """A release evidence gate was not satisfied."""
@@ -19,7 +21,11 @@ class DuplicateJsonKeyError(ValueError):
     """A JSON object contains an ambiguous duplicate member."""
 
 
-MANDATORY_VALIDATION_CHECKS = {"workflow-token-proxy"}
+FORBIDDEN_REQUIRED_VALIDATION_CHECKS = {
+    "claude-behavior",
+    "claude-context",
+    "claude-live-smoke",
+}
 ARTIFACT_TITLE = re.compile(r"^#[ \t]+\S.*$")
 ENVELOPE_FIELD = re.compile(r"^[A-Za-z][A-Za-z0-9 _-]*:[^\r\n]*$")
 SETEXT_UNDERLINE = re.compile(r"^ {0,3}(?:=+|-+)[ \t]*$")
@@ -85,11 +91,18 @@ def validate(
     required = config.get("required_validation_checks")
     if not isinstance(version, str) or not isinstance(required, list) or not required:
         raise EvidenceError("Release configuration lacks the evidence gate contract")
-    missing_mandatory = sorted(MANDATORY_VALIDATION_CHECKS.difference(required))
-    if missing_mandatory:
+    if tuple(required) != REQUIRED_VALIDATION_CHECKS:
         raise EvidenceError(
-            f"Release configuration lacks mandatory validation checks: "
-            f"{missing_mandatory}"
+            "Release configuration required_validation_checks must equal the "
+            "canonical ordered release gate"
+        )
+    forbidden_required = sorted(
+        FORBIDDEN_REQUIRED_VALIDATION_CHECKS.intersection(required)
+    )
+    if forbidden_required:
+        raise EvidenceError(
+            "Optional Claude live qualification checks cannot be required: "
+            f"{forbidden_required}"
         )
     if ledger.get("release_version") != version:
         raise EvidenceError("Validation ledger release_version does not match release")

@@ -1,6 +1,6 @@
 # Claude Code adapter 規格
 
-適用來源：1.4.1。這是現行行為要求的彙整，不是實測通過聲明。當前已驗證範圍與缺口見[工作狀態](../project/status.md)，操作方法見[Claude 使用說明](../guides/claude-code.zh-TW.md)及[驗證手冊](../maintainer/validation.md)。跨平台共同流程以[工作流程規格](workflow.md)與 [Core](../../core/CORE.md)為準。
+適用來源：1.4.2。這是現行行為要求的彙整，不是實測通過聲明。當前已驗證範圍與缺口見[工作狀態](../project/status.md)，操作方法見[Claude 使用說明](../guides/claude-code.zh-TW.md)及[驗證手冊](../maintainer/validation.md)。跨平台共同流程以[工作流程規格](workflow.md)與 [Core](../../core/CORE.md)為準。
 
 原始規格的行為章節保留在下方，移除重複的目標／情境敘述、施工交接與歷史版本切換指示。原始要求和核准時間可由[來源索引](../evidence/release-history.md#document-sources)追溯。前期可行性研究中的 95%／98% 通過率、其他命名及自訂 doctor 等方案均未採用，不能覆蓋本規格。
 
@@ -21,7 +21,7 @@
 
 歷史 Approved artifacts 的原始 bytes／核准證據保存在清理快照，參見[來源定位](../evidence/release-history.md#archive)。從工作目錄移除舊文件不等於改寫原始證據。新的摘要也不自動成為新行為的 Approved Specification。
 
-2026-09-10 的版本對齊決策允許先完成來源與離線三套件 ZIP；正式驗收仍需要 Claude host、behavior、context、live-smoke 證據。封裝成功不能當成已實測或已發布。使用／維護文件的現行組織由本次核准的整理計畫接續。
+2026-09-19 核准的 1.4.2 發布政策現由 [release config](../../release/release.json) 與[發布手冊](../maintainer/releasing.md)保存為長期 authority，並已取代「Claude host、behavior、context、live-smoke 是正式發布 hard gate」的舊政策。正式 required release contract 固定為 16 項 deterministic checks；Claude live qualification 保留為另行授權的選配程序，未執行時須標示 `not run`／`unverified`，不得宣稱 live passed。封裝成功仍不能當成已實測或已發布。
 
 ## 2. Claude catalog 與 Plugin manifest
 
@@ -29,10 +29,10 @@ Repository root MUST 有 `.claude-plugin/marketplace.json`。它 MUST 使用 Cla
 
 該 entry MUST 使用：
 
-- `name: ask-then-do-it`、`displayName: Ask Then Do It`、`version: 1.4.1`；
+- `name: ask-then-do-it`、`displayName: Ask Then Do It`、`version: 1.4.2`；
 - 與現有產品一致的 independent-project description、author、repository、homepage、MIT license、Developer Tools category 與 discovery tags；
 - `strict: true` 與 `defaultEnabled: true`；
-- `git-subdir` source，URL 是 `https://github.com/Mysterio1001/Ask-Then-Do-It.git`，path 是 `adapters/claude-code/plugin/ask-then-do-it`，ref 是 `v1.4.1`；
+- `git-subdir` source，URL 是 `https://github.com/Mysterio1001/Ask-Then-Do-It.git`，path 是 `adapters/claude-code/plugin/ask-then-do-it`，ref 是 `v1.4.2`；
 - 不含 Codex-only `policy`、Codex `interface` 或指向 Codex source 的欄位。
 
 Canonical Plugin manifest MUST 位於 `adapters/claude-code/plugin/ask-then-do-it/.claude-plugin/plugin.json`，authored fields 恰為：`name`、`displayName`、`version`、`description`、`author`、`homepage`、`repository`、`license`、`keywords`、`defaultEnabled`。Name、display name、version、author、repository、license、description 與 catalog MUST 一致；`defaultEnabled` MUST 是 `true`。
@@ -183,7 +183,7 @@ Session files last updated超過 30 days MAY 在成功的 SessionStart 後清理
 
 ## 10. Package 與 deterministic release inventory
 
-Canonical Claude source、expanded package `dist/claude/ask-then-do-it/` 與 ZIP root `ask-then-do-it/` MUST 有相同 runtime relative paths。Claude archive MUST 是 `dist/claude/ask-then-do-it-claude-1.4.1.zip`。
+Canonical Claude source、expanded package `dist/claude/ask-then-do-it/` 與 ZIP root `ask-then-do-it/` MUST 有相同 runtime relative paths。Claude archive MUST 是 `dist/claude/ask-then-do-it-claude-1.4.2.zip`。
 
 Claude expanded package與ZIP MUST 恰含下列 authored runtime/legal inventory，不得含 catalog、test fixture、source evidence、local state或machine path：
 
@@ -201,17 +201,17 @@ Claude expanded package與ZIP MUST 恰含下列 authored runtime/legal inventory
 
 Marketplace-installed runtime payload與Claude package runtime payload MUST 從同一 canonical source衍生並通過 relative-path/content equivalence；release builder依既有policy加入的兩個legal files必須可追溯。Expanded package與ZIP extraction MUST exact inventory and byte-equivalent。
 
-`release/release.json` MUST 宣告 Claude family、archive、source、inventory與Claude-required checks；`managed_outputs` MUST 是 `codex`、`generic`、`claude`、`checksums.sha256`。Release MUST 產生三個 expanded families、三個 archives與每個archive恰一筆SHA-256。Checksum ordering MUST deterministic且由release config package order固定。
+`release/release.json` MUST 宣告 Claude family、archive、source、inventory與三個 Claude-required static/package checks：`claude-plugin-validation`、`claude-conformance`、`claude-package-inventory`。完整 required ledger MUST 恰為 [release config](../../release/release.json) 定義的 16 項；`claude-behavior`、`claude-context`、`claude-live-smoke` MUST NOT 出現在 required list。`managed_outputs` MUST 是 `codex`、`generic`、`claude`、`checksums.sha256`。Release MUST 產生三個 expanded families、三個 archives與每個archive恰一筆SHA-256。Checksum ordering MUST deterministic且由release config package order固定。
 
 現有complete staging validation、unmanaged collision protection、managed replacement、Windows `WinError 5` bounded retry、rollback、incomplete-recovery preservation、two-build byte reproducibility、deterministic ZIP metadata、ZIP equivalence、SHA-256、removed-artifact scan及evidence validation MUST 不退化。
 
 Codex／Generic除current version、Claude cross-entry docs與三-family release coordination所需變更外，observable behavior、package relative inventory、runtime dependency boundary與provider config MUST 不變。Node.js MUST 只出現在Claude consumer prerequisites／package tests，不得成為Codex或Generic runtime dependency。
 
-## 11. Conformance 與 fresh-session behavior evidence
+## 11. Conformance 與選配 fresh-session behavior qualification
 
-Claude MUST 維持獨立 `adapters/claude-code/conformance.yaml` 與 provider-specific validator/tests。Manifest MUST 使用 `adapter_id: claude-code`、`adapter_version: 1.4.1`、`target: claude-code-plugin`、`core_version: 1.4.1`，宣告 cumulative `conversation`、`tools`、`multi_agent`，為每個 capability提供非空evidence，並列出target Core全部30個mandatory rule IDs。
+Claude MUST 維持獨立 `adapters/claude-code/conformance.yaml` 與 provider-specific validator/tests。Manifest MUST 使用 `adapter_id: claude-code`、`adapter_version: 1.4.2`、`target: claude-code-plugin`、`core_version: 1.4.2`，宣告 cumulative `conversation`、`tools`、`multi_agent`，為每個 capability提供非空evidence，並列出target Core全部30個mandatory rule IDs。
 
-General與Claude 5 profiles MUST 各自對以下固定behavior scenario inventory取得100% pass；任何skip、partial或profile-specific exemption都算fail：
+若要宣稱 Claude behavior `live-verified`，General與Claude 5 profiles MUST 各自對以下固定behavior scenario inventory取得100% pass；任何skip、partial或profile-specific exemption都算該 live qualification fail：
 
 1. `CAP-CONVERSATION`：conversation-only claim與safe handoff。
 2. `CAP-TOOLS`：repository persistence/commands只在tools可用時宣告。
@@ -246,11 +246,11 @@ General與Claude 5 profiles MUST 各自對以下固定behavior scenario inventor
 
 另 MUST 以相同 supported Claude model、effort、tools、repository fixture及isolated fresh transcript對兩 profiles 執行十二個 paired cases：requirements、documented requirements、Specification、Ticket Planning、TDD、direct、Full Review、architecture diagnosis、normal Lite、high-risk Lite、model routing/switch及safe lifecycle guidance。Harness MAY 直接選profile作test-only comparison，但不得新增consumer command或改active model。每一 case MUST 對預先固定的observable mandatory outcomes逐項pass；風格不同不算fail，缺gate、錯誤write、虛構evidence或失敗邊界不同都算fail。
 
-Behavior/conformance gate MUST 先於context reduction。若任何profile behavior case fail，release blocked且不得計算context結果來抵銷。
+選配 behavior qualification MUST 先於選配 context qualification。若任何 profile behavior case fail，live qualification blocked，且不得計算 context 結果來抵銷；單純 `not run`／`unverified` 不阻擋 required release。若已執行的實測揭露重大 correctness、安全、隱私或資料損失問題，該已知 finding 仍由一般 Review gate 判定是否阻擋發布。
 
-## 12. Claude 5 loaded-context proxy
+## 12. 選配 Claude 5 loaded-context qualification
 
-Context fixture MUST 固定十個 scenarios：documented requirements、Specification、Ticket Planning、TDD implementation、direct implementation、Full Review、architecture diagnosis、normal Lite、high-risk Lite及model-switch continuation。每個scenario都以automatic entry與deterministicroute fixture分別產生general/optimized path，並使用相同user task、capability與stage outcome。
+若要宣稱實際 loaded-context reduction，Context fixture MUST 固定十個 scenarios：documented requirements、Specification、Ticket Planning、TDD implementation、direct implementation、Full Review、architecture diagnosis、normal Lite、high-risk Lite及model-switch continuation。每個scenario都以automatic entry與deterministicroute fixture分別產生general/optimized path，並使用相同user task、capability與stage outcome。
 
 每個scenario MUST 有 `stage-ready` checkpoint：route已完成且執行該stage所需Plugin instructions已載入，但尚未讀task-specific repository source或必要tool output。Full Review另有 `reviewer-ready` checkpoint：read-only reviewer agent prompt已載入且尚未加入task-specific diff/evidence。每個scenario的每個checkpoint都必須獨立達到至少50% reduction；不得以平均值、另一checkpoint或另一scenario補償。
 
@@ -272,28 +272,28 @@ Claude Plugin/ZIP的三個START-HERE MUST簡短並連到same-version detailed gu
 
 三語內容 MUST semantic-equivalent，並清楚區分：Claude model／Claude Code／Node versions；known unsupported／valid unknown／router failure；automatic／explicit `-5`；compatibility target／live-verified；persistent Marketplace／session-only ZIP。Built-in `/doctor` 只能列為optional Claude Code installation/config health check，不得宣稱會轉換、最佳化或驗證Ask Then Do It Skills。
 
-## 14. Platform compatibility 與 live smoke
+## 14. Platform compatibility 與選配 live smoke
 
 Compatibility contract涵蓋Windows、macOS、Linux上的local Claude Code terminal CLI、VS Code extension與JetBrains plugin。Automated tests MUST覆蓋path separator/space、Node exec form、四種hook JSON/event sources、hook-derived session key、`ready`／`pending`／`indeterminate` transitions、atomic state、classification、cross-session isolation、failure behavior與package extraction。Official feature-availability evidence MUST證明每個surface支援本規格依賴的local Plugin、Skill、Agent與hooks；surface 差異必須記錄於[驗證手冊](../maintainer/validation.md)及相應原始證據。
 
 這是compatibility target，不是九組live claim。Release evidence MUST列出每個真正live-verified的exact OS、surface、Claude Code version、Node version、active canonical model與日期；其他組合只能標compatibility target。
 
-至少一個clean real Claude Code environment MUST 完成：
+若要宣稱 clean-environment live-qualified，至少一個 clean real Claude Code environment MUST 完成：
 
 1. Isolated test source 的user-scoped Marketplace add、qualified install、status與enabled確認。
 2. Plugin details與恰好兩個public Skill components discovery；兩個namespaced forms可用，internal stage modules不形成額外Skill components。Host-provided bare aliases只記錄observed狀態，不作存在或不存在保證。
 3. 以該環境實際可用supported model驗證automatic與explicit route；拿不到的model branches不得冒充live。
 4. 真實model switch、同operation profile stability、Post hook commit後的next-permitted-entry reroute，以及general→Claude 5與Claude 5→general連續invocation的authority precedence；若觀察到host race，evidence明確標示best-effort window。
 5. 兩個同時／先後sessions不cross-contaminate，且至少驗證resume或compact lifecycle。
-6. 從isolated、test-only、明確標示「非正式release」的older Claude candidate更新到exact `1.4.1` candidate；不得冒充`1.3.1`，因`1.3.1`沒有Claude Adapter。
+6. 從isolated、test-only、明確標示「非正式release」的older Claude candidate更新到exact `1.4.2` candidate；不得冒充`1.3.1`，因`1.3.1`沒有Claude Adapter。
 7. Normal remove、default data deletion disclosure，以及reinstall或recovery。
 8. Exact release ZIP透過`claude --plugin-dir <path>`啟動，兩commands可用，bare `claude plugin list`不被誤稱為persistent install。
 
-完整route／failure matrix MUST另以deterministic injected `SessionStart`／`PreModelSwitch`／`PostModelSwitch`／`UserPromptExpansion` fixtures測試並標`simulated`。Exact Claude Code `2.1.251` binary MUST另證明strict validation接受`UserPromptExpansion`、兩個namespaced commands都觸發預期identity、`additionalContext`route envelope可見，以及Node unavailable／nonzero／exit 2／timeout的expansion結果；任一不符即停止並返回Requirement／Specification revision。External publication未獲准前，live smoke MAY用isolated local git/Marketplace fixture與candidate bytes，但 MUST明示GitHub public transport未驗證。沒有任何clean real Claude Code smoke時，local release completion MUST blocked。
+完整 route／failure matrix MUST 另以 deterministic injected `SessionStart`／`PreModelSwitch`／`PostModelSwitch`／`UserPromptExpansion` fixtures 測試並標 `simulated`；這屬 required static assurance，不得冒充 live observation。欲宣稱 exact-host／live-qualified 時，Exact Claude Code `2.1.251` binary MUST 另證明 strict validation 接受 `UserPromptExpansion`、兩個 namespaced commands都觸發預期 identity、`additionalContext` route envelope 可見，以及 Node unavailable／nonzero／exit 2／timeout 的 expansion 結果。External publication未獲准前，選配 live smoke MAY用isolated local git/Marketplace fixture與candidate bytes，但 MUST明示GitHub public transport未驗證。沒有 clean real Claude Code smoke 時，live qualification 保持 `not run`／`unverified`，不阻擋 required local release completion。
 
 ## 15. Publication boundary
 
-Local completion只包括source、packages、ZIP、checksums、automated/live validation、Review、architecture diagnosis與Completed release evidence。Evidence MUST逐項分開observed、simulated、unavailable與not authorized。
+Required local completion只包括source、packages、ZIP、checksums、16 項 required validation、Review、architecture diagnosis與Completed release evidence。Optional live qualification 必須在 required ledger 外獨立揭露；Evidence MUST逐項分開observed、simulated、unavailable、`not run`與not authorized，沒有真實證據不得宣稱 `live-verified`。
 
 本Specification核准、Ticket/implementation、local smoke或candidate完成都不授權tag、push、GitHub Release、asset upload、public Marketplace activation、Community Marketplace submission或announcement。每個external mutation需要後續明確核准與執行結果。
 

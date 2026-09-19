@@ -14,7 +14,7 @@ SCRIPT = ROOT / "scripts" / "measure_workflow_token_proxy.py"
 FIXTURE_ROOT = (
     ROOT / "tests" / "release" / "fixtures" / "workflow-token-proxy"
 )
-FIXTURE = FIXTURE_ROOT / "benchmark.json"
+FIXTURE = FIXTURE_ROOT / "benchmark-current.json"
 EXPECTED_CATEGORIES = [
     "selected-instructions",
     "questions",
@@ -26,11 +26,18 @@ EXPECTED_CATEGORIES = [
 EXPECTED_INSTRUCTIONS = {
     "full": [
         "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md",
+        "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/full-routing.md",
         "adapters/codex/plugin/ask-then-do-it/skills/ask-with-docs/SKILL.md",
+        "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/artifact-contract.md",
         "adapters/codex/plugin/ask-then-do-it/skills/write-spec/SKILL.md",
+        "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/artifact-contract.md",
         "adapters/codex/plugin/ask-then-do-it/skills/plan-tickets/SKILL.md",
+        "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/artifact-contract.md",
         "adapters/codex/plugin/ask-then-do-it/skills/implement-tdd/SKILL.md",
+        "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/artifact-contract.md",
         "adapters/codex/plugin/ask-then-do-it/skills/review-code/SKILL.md",
+        "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/architecture-refactoring-lenses.md",
+        "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/artifact-contract.md",
     ],
     "lite": [
         "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md",
@@ -142,7 +149,7 @@ class WorkflowTokenProxyTests(unittest.TestCase):
                 report["codex"]["difference_proxy_tokens"],
                 gate["reduction_basis_points"],
             ),
-            (14890, 5480, 9410, 6319),
+            (17240, 3846, 13394, 7769),
         )
 
     def test_output_is_deterministic_and_discloses_algorithm_and_fixture(self) -> None:
@@ -172,11 +179,18 @@ class WorkflowTokenProxyTests(unittest.TestCase):
         expected_ids = {
             "full": {
                 "full-orchestrator",
+                "full-routing-reference",
                 "full-documented-requirements",
+                "full-documented-requirements-artifact-contract",
                 "full-write-spec",
+                "full-write-spec-artifact-contract",
                 "full-plan-tickets",
+                "full-plan-tickets-artifact-contract",
                 "full-implement-tdd",
+                "full-implement-tdd-artifact-contract",
                 "full-review-code",
+                "full-review-lens-contract",
+                "full-review-artifact-contract",
                 "full-questions",
                 "full-scope-and-planning",
                 "full-handoffs",

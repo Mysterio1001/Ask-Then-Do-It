@@ -202,7 +202,7 @@ class ClaudeRouterContractTests(unittest.TestCase):
     def test_exact_mapping_and_complete_route_table(self) -> None:
         mapping = json.loads(MAPPING.read_text(encoding="utf-8"))
         self.assertEqual(mapping["schema_version"], 1)
-        self.assertEqual(mapping["release_version"], "1.4.1")
+        self.assertEqual(mapping["release_version"], "1.4.2")
         self.assertEqual(mapping["evidence_checked_on"], "2026-09-07")
         self.assertEqual(mapping["lookup_mode"], "exact")
         self.assertEqual(mapping["unknown_classification"], "unknown")
@@ -259,7 +259,7 @@ class ClaudeRouterContractTests(unittest.TestCase):
                     )
                     self.assertEqual(routed.returncode, 0, routed.stderr)
                     envelope = route_envelope(routed)
-                    self.assertEqual(envelope["version"], "1.4.1")
+                    self.assertEqual(envelope["version"], "1.4.2")
                     self.assertEqual(
                         set(envelope),
                         {
@@ -294,7 +294,7 @@ class ClaudeRouterContractTests(unittest.TestCase):
                         plugin_data,
                     )
                     envelope = route_envelope(routed)
-                    self.assertEqual(envelope["version"], "1.4.1")
+                    self.assertEqual(envelope["version"], "1.4.2")
                     self.assertEqual(envelope["routing_status"], "failure")
                     self.assertEqual(envelope["model_classification"], "unsupported")
                     self.assertEqual(envelope["disclosure_code"], "unsupported-model")
@@ -364,7 +364,7 @@ class ClaudeRouterContractTests(unittest.TestCase):
         ):
             with self.subTest(entry=entry):
                 self.assertIn('`plugin` must equal `ask-then-do-it`', body)
-                self.assertIn('`version` must equal `1.4.1`', body)
+                self.assertIn('`version` must equal `1.4.2`', body)
                 self.assertIn(f'`entry` must equal `{entry}`', body)
                 self.assertIn("ready envelope", body)
                 self.assertIn("failure envelope", body)

@@ -2,7 +2,7 @@
 
 Use the Codex Plugin to guide requirements, implementation, and Review. Start with `$ask-then-do-it`.
 
-These are the 1.4.1 installation/download targets. If remote artifacts are unavailable, wait for publication.
+These are the 1.4.2 installation/download targets. If remote artifacts are unavailable, wait for publication.
 
 ## Installation and preparation
 
@@ -17,7 +17,7 @@ codex plugin add ask-then-do-it@ask-then-do-it
 <details>
 <summary>ZIP fallback</summary>
 
-[Download ask-then-do-it-1.4.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.1/ask-then-do-it-1.4.1.zip)
+[Download ask-then-do-it-1.4.2.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-1.4.2.zip)
 
 Keep the complete `ask-then-do-it/` folder, not only `skills/`. Place it in `plugins/ask-then-do-it/` of an existing editable local Marketplace whose entry points there, then run:
 

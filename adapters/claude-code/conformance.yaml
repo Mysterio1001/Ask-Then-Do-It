@@ -1,7 +1,7 @@
 adapter_id: claude-code
-adapter_version: 1.4.1
+adapter_version: 1.4.2
 target: claude-code-plugin
-core_version: 1.4.1
+core_version: 1.4.2
 capabilities:
 - conversation
 - tools

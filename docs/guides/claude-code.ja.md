@@ -2,7 +2,7 @@
 
 一つの Claude Code Plugin に、一般 Claude と Claude 5 のワークフロープロファイルが含まれます。
 
-以下は 1.4.1 のインストール／ダウンロード先です。遠隔側で利用できない場合は公開を待ってください。
+以下は 1.4.2 のインストール／ダウンロード先です。遠隔側で利用できない場合は公開を待ってください。
 
 ## インストールと準備
 
@@ -21,7 +21,7 @@ Claude model **4.6+**、Claude Code **2.1.251+** が必要です。モデルの�
 
 ダウンロード後、Release の checksums ファイルで SHA-256 を確認できます。
 
-[ダウンロード ask-then-do-it-claude-1.4.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.1/ask-then-do-it-claude-1.4.1.zip)
+[ダウンロード ask-then-do-it-claude-1.4.2.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-claude-1.4.2.zip)
 
 完全な Plugin をダウンロードして展開します。ターミナルから起動するたびに次を指定します。
 

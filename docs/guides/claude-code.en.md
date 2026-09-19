@@ -2,7 +2,7 @@
 
 One Claude Code Plugin provides both general Claude and Claude 5 workflow profiles.
 
-These are the 1.4.1 installation/download targets. If remote artifacts are unavailable, wait for publication.
+These are the 1.4.2 installation/download targets. If remote artifacts are unavailable, wait for publication.
 
 ## Installation and preparation
 
@@ -21,7 +21,7 @@ This version supports user scope; the first-install commands below use the defau
 
 After downloading, compare SHA-256 with the Release checksums file.
 
-[Download ask-then-do-it-claude-1.4.1.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.1/ask-then-do-it-claude-1.4.1.zip)
+[Download ask-then-do-it-claude-1.4.2.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-claude-1.4.2.zip)
 
 Download and extract the complete Plugin. Add this flag each time you launch from a terminal:
 

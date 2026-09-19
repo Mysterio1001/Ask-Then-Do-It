@@ -1,4 +1,4 @@
-# Ask Then Do It 1.4.1
+# Ask Then Do It 1.4.2
 
 Choose how you want to use the workflow. Use Full for a documented process or Lite for a clearly scoped change.
 

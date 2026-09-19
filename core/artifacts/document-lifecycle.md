@@ -1,6 +1,6 @@
 # Document Lifecycle Artifact Contract
 
-Core version: `1.4.1`
+Core version: `1.4.2`
 
 This is the repository-local contract for Full-workflow document ownership and
 consolidation. It defines the semantic shape of a Decision Packet, compatibility

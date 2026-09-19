@@ -1,9 +1,9 @@
 # Generic Direct Implementation Prompt
 
 Prompt ID: `generic.direct-implementation`
-Prompt version: `1.4.1`
+Prompt version: `1.4.2`
 Required capability: `conversation`
-Core version: `1.4.1`
+Core version: `1.4.2`
 
 ## Required inputs
 

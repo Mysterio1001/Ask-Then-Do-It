@@ -13,11 +13,11 @@ Match user-facing communication and generated artifacts to the user's language w
 
 ## Resolve the top-level mode before this stage
 
-Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before any stage behavior, require `$ask-then-do-it` to have proven the current-operation mode; never persist or reuse mode.
+Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before stage behavior, require a current-operation mode proof from `$ask-then-do-it`; never persist or reuse mode.
 
-- No proof: stop and delegate to `$ask-then-do-it`. The canonical resolver handles an explicit `lite` instruction and Config `lite`; conflicting explicit modes pause for clarification; invalid Config fails closed to Full; an absent source reaches Full fallback.
-- Proven `lite`: stop this Full stage and route through `$ask-then-do-it` to the canonical Lite workflow.
-- Proven `full`: continue subject to every existing prerequisite and gate.
+- Missing proof: stop and delegate to `$ask-then-do-it`.
+- Proven `lite`: stop this Full stage and route to the Lite workflow.
+- Proven `full`: continue with this stage's prerequisites and gates.
 
 ## Check prerequisites
 
@@ -30,9 +30,9 @@ Direct selection of this Skill chooses this Full-workflow stage, not top-level `
 
 Follow the repository's existing documentation convention. If none exists, use `docs/specs/<feature-name>.md` with a short lowercase hyphenated feature name. Update the relevant existing spec instead of creating a duplicate.
 
-## Use the portable artifact envelope
+## Use the portable artifact contract
 
-Include or unambiguously convey `artifact_type` as Specification, a stable `artifact_id`, shared `workflow_id`, `core_version` `1.4.1`, `status`, upstream `inputs`, `assumptions`, `deferred` decisions, the next-stage `handoff`, and `approval` evidence. Preserve these values when revising an existing artifact.
+Before creating or emitting a Specification, read the [portable artifact contract](../ask-then-do-it/references/artifact-contract.md) completely. Use it for the common envelope, `approval` evidence, and status transition; preserve those values when revising an existing artifact. If it is missing or unreadable, stop before artifact creation and leave the handoff pending.
 
 ## Write the behavioral contract
 

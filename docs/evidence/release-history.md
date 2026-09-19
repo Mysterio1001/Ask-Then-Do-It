@@ -1,6 +1,6 @@
 # 發布歷史與原始文件索引
 
-這是歷史結果摘要，不是新 release 的 Completed evidence。每次發布仍需使用當時的 source、config、raw verification 與 candidate hashes；不把舊 passed checks 套用到 1.4.0。現況見[狀態文件](../project/status.md)。
+這是歷史結果摘要，不是新 release 的 Completed evidence。每次發布仍需使用當時的 source、config、raw verification 與 candidate hashes；不把任何舊 passed checks 套用到目前的 release candidate。現況見[狀態文件](../project/status.md)。
 
 ## 已有發布紀錄
 
@@ -14,6 +14,7 @@
 | 1.3.1 | 明確 Pillow 開發依賴、Windows bounded retry／rollback／recovery preservation | [原 ledger](ask-then-do-it-release-1.3.1.json) |
 | 1.4.0-preview.1 | Claude 單平台離線 candidate 的歷史公開發布 | [2026-09-09 發布收據](claude-preview-publication-1.4.0-preview.1-receipt.md) |
 | 1.4.0 | 三平台來源與文件對齊、離線建置整合 | [整合 Review](documentation-and-version-alignment-1.4.0-ticket-3-review.md)；完整 Claude／release gates 尚未完成 |
+| 1.4.1 | 歷史 stable `v1.4.1` tag／GitHub Release，四個 assets | 2026-09-18 preflight 查得 tag object `b4c91a3ea623c0931f8459ce3f46b638f4cfdc2e`、commit `ebf465c54f44a4c2d1a8e17692161c0d5d38f72e`、Release ID `386983777`；一次性 preflight 文件已於 1.4.2 提交前瘦身移除，此觀察不證明當時完整 Claude live gates 通過 |
 
 六份 JSON ledger 保留原始 bytes。早期 Markdown 中的 local completion 不自動證明當時或目前遠端已發布。Preview 收據記錄當時 GitHub API／下載比對，不能當成正式 1.4.0 發布證據；本次整理沒有重新查核遠端。
 
@@ -92,7 +93,7 @@ b9b27fafddd80f60b4e2818f3d61757146973d41bee345a65d00ef1b18e99af0  generic/ask-th
 | Codex skill runtime slimming lifecycle migration (2026-09-16) | [Decision Packet](../project/drafts/codex-skill-runtime-slimming/decision-packet.md)、[lifecycle manifest](../project/drafts/codex-skill-runtime-slimming/lifecycle-manifest.json)、[source manifest](../project/drafts/codex-skill-runtime-slimming/migration/source-manifest.json)；原三份草稿仍為 Draft/Pending，未視為新的核准 |
 | docs/project/drafts 的既有 working-notes／kb-change-summary | 知識庫與狀態；只採用有正式依據的事實，不把研究 proposal 當正式要求 |
 | docs/claude_sys/behavior-verification.md | [驗證手冊](../maintainer/validation.md#claude-behavior-證據)的操作／transcript 格式 |
-| docs/evidence 的逐 Ticket、Review、correction、architecture 紀錄 | 本頁、驗證手冊、狀態與保留的七份關鍵 Review／receipt |
+| docs/evidence 的逐 Ticket、Review、correction、architecture 紀錄 | 本頁、驗證手冊、狀態與保留的 Claude 關鍵 Review／receipt；1.4.2 與 Codex slimming 的一次性逐 Ticket 報告已於 2026-09-20 清理，只保留 release ledger／摘要與必要 baseline |
 | claude-code-reference.en／zh-TW／ja | 各自同語言 [Claude 指南](../guides/claude-code.zh-TW.md#advanced-reference)收合區塊 |
 
 原始 artifact ID、approval 日期、上游引用、raw command／result 與舊 hash 沒有重寫：可按原路徑從快照恢復。保留 Review 的導航若改指新摘要，會附歷史導航說明；摘要不冒充該次 reviewer 當時讀過的文件。

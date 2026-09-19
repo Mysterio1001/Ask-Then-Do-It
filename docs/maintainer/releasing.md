@@ -1,6 +1,6 @@
 # 維護與發布手冊
 
-適用來源版本：1.4.1。此手冊承接指令安裝 1.2.0、Windows 發布可靠性 1.3.1、文件／版本統一 1.4.0 與歷次發布計畫；它描述維護操作，不宣稱正式 1.4.1 已發布。當前進度見[狀態](../project/status.md)，歷史依據見[發布紀錄](../evidence/release-history.md)。
+適用來源版本：1.4.2。此手冊承接指令安裝 1.2.0、Windows 發布可靠性 1.3.1、文件／版本統一 1.4.0 與歷次發布經驗；它描述可重複使用的維護操作，不宣稱正式 1.4.2 已發布。當前進度見[狀態](../project/status.md)，歷史依據見[發布紀錄](../evidence/release-history.md)。
 
 ## 開發環境
 
@@ -29,6 +29,8 @@ python -m unittest discover -s tests -v
 
 歷史 release versions、原始證據 hashes、Claude Code／Node／模型最低版本及資料 schema 不隨套件版本盲目改寫。Consumer payload 必須自足，不新增對 repository 維護文件的執行依賴。
 
+提交前只暫存這次核准的 exact paths，禁止 `git add -A`。逐項檢查 `git status --short`、`git diff --cached --name-status`、`git diff --cached --check` 與 staged diff；`.claude-offline/`、`dist/`、cache、credentials、transcripts 和其他本機產物不得進入 commit。`.gitattributes` 必須明確涵蓋 package-consumed text／binary，不能依賴本機 `core.autocrlf` 或 builder 臨時改寫換行。
+
 文件責任：初學者指南擁有完整 Full／Lite 使用流程；平台指南擁有安裝、Config、更新、移除與排錯；Claude 進階資訊收在同語言指南的收合區塊。九份平台主指南保留七個章節與三語等價內容。README 保持三語布局、快速開始只放首次安裝、更新獨立收合、更多說明維持初學者→Codex→Claude→Generic→設計。
 
 ## Catalog 與安裝契約
@@ -41,22 +43,24 @@ Codex 公開操作為 `codex plugin marketplace add Mysterio1001/Ask-Then-Do-It`
 
 Codex 圖示沿用透明紅色海馬問號與 `#C8262A`；尺寸、透明度、PNG integrity 由既有 assets tests 驗證。保留 [LICENSE](../../LICENSE) 與 [THIRD_PARTY_NOTICES](../../THIRD_PARTY_NOTICES.md) 的來源歸屬。
 
-## 隔離建置與可重現性
+## Exact commit 隔離建置與可重現性
 
-先選兩個全新、在 repository 內且與來源分離的輸出位置。`--allow-test-output-root` 只允許明確的測試輸出；不要以來源目錄或個人資料目錄作 output。
+先在既有 `dev` 以精準路徑完成 commit，再以 `git rev-parse HEAD` 固定 release commit。從該 commit 建立兩個全新的 detached clean checkouts；不得從 dirty 主工作樹或不同 commit 各建一次後宣稱可重現。Windows 使用 repository 外的短系統暫存路徑以降低 `MAX_PATH` 風險，其他平台也使用全新的 temporary roots。
+
+在兩個 checkout 分別執行相同 builder，輸出到各自全新的目錄。`--allow-test-output-root` 只允許明確的隔離輸出；不要以來源目錄、個人資料目錄或既有 `dist/` 作 candidate authority。
 
 ```text
-python scripts/build_release.py --allow-test-output-root --output-root .claude-offline/candidate-a
-python scripts/build_release.py --allow-test-output-root --output-root .claude-offline/candidate-b
+python scripts/build_release.py --allow-test-output-root --output-root <candidate-a>
+python scripts/build_release.py --allow-test-output-root --output-root <candidate-b>
 ```
 
-比對兩棵輸出樹相對清單與每個檔案 bytes，包含展開檔、ZIP、checksum。僅兩個 ZIP 大小相同或 checksum 檔文字相同不構成完整可重現性。測試共用 [built_fixture.py](../../tests/release/built_fixture.py) 在隔離目錄建新 candidate，不把根目錄舊 `dist/` 當成目前來源結果。
+確認兩個 checkout 的 `HEAD` 都等於固定 commit 且工作樹乾淨，再比對兩棵輸出樹的相對清單與每個檔案 bytes，包含展開檔、ZIP 與 checksum。僅 ZIP 大小相同或 checksum 文字相同不構成完整可重現性。測試共用 [built_fixture.py](../../tests/release/built_fixture.py) 在隔離目錄建新 candidate，不把根目錄舊 `dist/` 當成目前來源結果。
 
 | 平台 | 展開目錄 | ZIP（相對 output root） |
 | --- | --- | --- |
-| Codex | `codex/ask-then-do-it` | `codex/ask-then-do-it-1.4.1.zip` |
-| Generic | `generic/ask-then-do-it-generic-1.4.1` | `generic/ask-then-do-it-generic-1.4.1.zip` |
-| Claude | `claude/ask-then-do-it` | `claude/ask-then-do-it-claude-1.4.1.zip` |
+| Codex | `codex/ask-then-do-it` | `codex/ask-then-do-it-1.4.2.zip` |
+| Generic | `generic/ask-then-do-it-generic-1.4.2` | `generic/ask-then-do-it-generic-1.4.2.zip` |
+| Claude | `claude/ask-then-do-it` | `claude/ask-then-do-it-claude-1.4.2.zip` |
 
 三平台 inventory 必須符合來源與 release config。展開內容與 ZIP 相對清單／bytes 相同，ZIP metadata 固定，拒絕重複成員、路徑逃逸、symlink、未知檔案與非預期目錄。每個 archive 在 `checksums.sha256` 恰有一筆 SHA-256，順序穩定；catalogs、tests、維護 evidence、local state 與機器路徑不得進 consumer payload。
 
@@ -64,7 +68,7 @@ Generic builder 依固定 module 順序組合 `SKILL.md`，維持可上傳至 Cl
 
 Generic ZIP 保留單一套件資料夾，入口位於 `ask-then-do-it-generic-<version>/SKILL.md`，不是 ZIP 最外層。檔案從 YAML frontmatter 開始，包含 `name` 與 `description`；這個資料夾封裝方式與 [Anthropic 的 Skill packager](https://github.com/anthropics/skills/blob/main/skills/skill-creator/scripts/package_skill.py) 一致。ZIP inventory 與 frontmatter 通過僅代表本機格式驗證，不代表 Claude Desktop 已完成安全掃描、成功匯入或觸發。
 
-Generic-only 本機候選包請使用獨立且已忽略的輸出目錄，例如 `python scripts/build_release.py --package generic --allow-test-output-root --output-root ticket-generic-build-candidate`。不要手動混入既有 `dist/`，否則多版本目錄與額外 checksum 會破壞 managed output inventory。本次已核准將專案、Core 與三平台套件統一升至 1.4.1，release config、各平台與 Marketplace 必須同步；不能以新 bytes 覆蓋已發布的同版資產。
+Generic-only 本機候選包請使用獨立且已忽略的輸出目錄，例如 `python scripts/build_release.py --package generic --allow-test-output-root --output-root ticket-generic-build-candidate`。不要手動混入既有 `dist/`，否則多版本目錄與額外 checksum 會破壞 managed output inventory。本次已核准將專案、Core 與三平台套件統一升至 1.4.2，release config、各平台與 Marketplace 必須同步；不能以新 bytes 覆蓋已發布的同版資產。
 
 ## 更新既有輸出與失敗復原
 
@@ -80,17 +84,25 @@ Generic-only 本機候選包請使用獨立且已忽略的輸出目錄，例如 
 
 以上由 release transaction／safety tests 保護，文件清理不改動實作。
 
-## 驗證與正式完成
+## 驗證、提交與正式完成
 
-先依[驗證手冊](validation.md)執行適用檢查，再將實際結果寫入 candidate 專屬 ledger。`release/release.json` 的 required checks 涵蓋 automated tests、workflow token proxy、Codex Skill／Plugin、三 adapter conformance、三 package inventory、reproducibility、ZIP equivalence、SHA-256、removed-artifact scan、architecture diagnosis，以及 Claude Plugin、behavior、context、live-smoke。
+先依[驗證手冊](validation.md)執行適用檢查，再將實際結果寫入 candidate 專屬 ledger。`release/release.json` 的 required ledger 固定為 16 項：automated tests、workflow token proxy、Codex Skill／Plugin validation、Codex／Generic／Claude conformance、Codex／Generic／Claude package inventory、reproducible build、ZIP equivalence、SHA-256、removed-artifact scan、release architecture diagnosis，以及 Claude Plugin validation。`claude-behavior`、`claude-context`、`claude-live-smoke` 是 ledger 外的選配 live qualification，不能升格為 required check。
 
 ```text
 python scripts/validate_release_evidence.py --config release/release.json --ledger <candidate-ledger.json> --evidence <candidate-evidence.md>
 ```
 
-該工具驗證 evidence／ledger 的結構、版本、check 完整性與狀態，不會替維護者執行或認證每個命令。只填 passed 不是真實證據；保留命令、exit code、raw output、candidate hashes 及必要人工判讀。
+該工具驗證 evidence／ledger 的結構、版本、check 完整性與狀態，不會替維護者執行或認證每個命令。只填 `passed` 不是真實證據；保留實際命令、exit code、raw output、exact commit、兩次 candidate hashes、三個 ZIP 與 `checksums.sha256`。若清理或提交改變任何 package input，舊 source-selection、binding 或 staging manifest 不得冒充最終 commit 的有效證明；以 exact commit clean checkouts 的新結果為準。
 
-來源 1.4.1 與離線 ZIP 可以先完成，缺少 Claude 實測時仍不得宣稱正式 release gate 或完整 local candidate 驗收通過。不得為省步驟把 behavior、context、live-smoke 的 unverified 改成 passed；也不新增「缺實測就禁止任何離線 ZIP」的限制。
+發布寫入順序固定如下：
+
+1. 精準暫存並檢查 staged paths／diff，在既有 `dev` 建立 commit；不建立新 branch。
+2. 從 exact commit 建兩個 clean checkouts，完成兩次相同建置、逐檔比對、archive SHA-256 與 required evidence gate。
+3. `fetch` 後確認遠端 `dev` 沒有競態，再以 non-force push 推送 `dev`；若無法 fast-forward 就停止。
+4. 確認遠端沒有 `v1.4.2` tag／Release 衝突，再建立唯一 annotated tag、stable GitHub Release，並上傳三個 ZIP 與 `checksums.sha256`。
+5. 從公開 Release 下載 assets，重算 SHA-256 並核對 tag commit；公開驗證完成後才記錄發布成功。
+
+16 項 required checks、candidate／byte proof、Review 及後續 Git／公開驗證全部通過時，Claude live qualification 的 `not run`／`unverified` 本身不阻擋正式 release。不得把未執行的 behavior、context、live-smoke 改成 passed 或宣稱 `live-verified`；若選配實測已揭露重大 correctness、安全、隱私或資料損失問題，該已知 finding 仍交由一般 Review gate 判定。沒有另行明確授權時，不提示或啟動 Claude 登入、OAuth、模型呼叫、session export 或 transcript 審閱。
 
 ## 對外發布與歷史保存
 
@@ -98,6 +110,6 @@ python scripts/validate_release_evidence.py --config release/release.json --ledg
 
 不要改寫已發布 tag 或把新文件升版套到舊 ledger。歷史原始文件可在已核准清理後移出工作目錄，但 bytes、hash 與定位必須能找回；保存方式見[歷史來源](../evidence/release-history.md#archive)。
 
-固定 `--preview-claude` 入口仍只適用 `1.4.0-preview.1` 的來源。它不能用目前 1.4.1 source 建立 preview；若要重現，使用相應歷史 source 和隔離 output。這次升版沒有退役此功能或移除其安全測試。
+固定 `--preview-claude` 入口仍只適用 `1.4.0-preview.1` 的來源。它不能用目前 1.4.2 source 建立 preview；若要重現，使用相應歷史 source 和隔離 output。這次升版沒有退役此功能或移除其安全測試。
 
 [回到 README](../../README.md)

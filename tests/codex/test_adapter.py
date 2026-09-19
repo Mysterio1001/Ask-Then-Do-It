@@ -3,14 +3,37 @@ import sys
 import unittest
 from pathlib import Path
 
-import yaml
-
-
 ROOT = Path(__file__).resolve().parents[2]
+SCRIPTS = ROOT / "scripts"
+if str(SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS))
+
+import validate_codex_contract as contract
+
+
 ADAPTER = ROOT / "adapters" / "codex"
 SKILLS = ADAPTER / "plugin" / "ask-then-do-it" / "skills"
 CATALOG = ROOT / "core" / "rules" / "rules.yaml"
 MANIFEST = ADAPTER / "conformance.yaml"
+
+LENS_REFERENCE = (
+    SKILLS / "ask-then-do-it" / "references" / "architecture-refactoring-lenses.md"
+)
+LENS_LINK = "../ask-then-do-it/references/architecture-refactoring-lenses.md"
+CORE_LENSES = (
+    "Duplicated Code or Policy",
+    "Long Function",
+    "Large Module or Class",
+    "Long Parameter List",
+    "Data Clumps",
+    "Primitive Obsession",
+    "Feature Envy",
+    "Divergent Change",
+    "Shotgun Surgery",
+    "Message Chains",
+    "Leaky Abstraction",
+    "Shallow Module",
+)
 
 EXPECTED_SKILLS = {
     "ask-then-do-it",
@@ -25,10 +48,96 @@ EXPECTED_SKILLS = {
 }
 
 
+def _parse_yaml_block(lines: list[tuple[int, str]], index: int, indent: int):
+    """Parse the small block-style YAML subset used by adapter test fixtures."""
+    if index >= len(lines) or lines[index][0] < indent:
+        return {}, index
+    if lines[index][0] != indent:
+        raise AssertionError("invalid YAML indentation")
+
+    is_list = lines[index][1].startswith("- ")
+    value = [] if is_list else {}
+    while index < len(lines) and lines[index][0] == indent:
+        content = lines[index][1]
+        if is_list:
+            if not content.startswith("- "):
+                raise AssertionError("mixed YAML block types")
+            item = content[2:].strip()
+            index += 1
+            if not item:
+                if index >= len(lines) or lines[index][0] <= indent:
+                    raise AssertionError("empty YAML list item")
+                child, index = _parse_yaml_block(lines, index, lines[index][0])
+                value.append(child)
+                continue
+            if ":" not in item:
+                value.append(_parse_yaml_scalar(item))
+                continue
+
+            key, raw = item.split(":", 1)
+            entry = {key.strip(): _parse_yaml_value(raw.strip())}
+            if not raw.strip() and index < len(lines) and lines[index][0] > indent:
+                child, index = _parse_yaml_block(lines, index, lines[index][0])
+                entry[key.strip()] = child
+            if index < len(lines) and lines[index][0] > indent:
+                continuation, index = _parse_yaml_block(lines, index, lines[index][0])
+                if not isinstance(continuation, dict):
+                    raise AssertionError("YAML list mapping continuation must be a mapping")
+                entry.update(continuation)
+            value.append(entry)
+            continue
+
+        if content.startswith("- ") or ":" not in content:
+            raise AssertionError("invalid YAML mapping entry")
+        key, raw = content.split(":", 1)
+        key = key.strip()
+        raw = raw.strip()
+        index += 1
+        if raw:
+            value[key] = _parse_yaml_value(raw)
+        elif index < len(lines) and lines[index][0] > indent:
+            child, index = _parse_yaml_block(lines, index, lines[index][0])
+            value[key] = child
+        else:
+            value[key] = {}
+    return value, index
+
+
+def _parse_yaml_value(raw: str):
+    if raw == "[]":
+        return []
+    if raw == "{}":
+        return {}
+    if raw == "true":
+        return True
+    if raw == "false":
+        return False
+    return _parse_yaml_scalar(raw)
+
+
+def _parse_yaml_scalar(raw: str) -> str:
+    diagnostics: list[contract.Diagnostic] = []
+    value = contract.parse_yaml_scalar(
+        raw,
+        field="test YAML scalar",
+        path=Path("test fixture"),
+        diagnostics=diagnostics,
+    )
+    if diagnostics or value is None:
+        rendered = "; ".join(item.render() for item in diagnostics)
+        raise AssertionError(f"invalid YAML scalar: {rendered}")
+    return value
+
+
 def load_yaml(path: Path) -> dict:
-    with path.open(encoding="utf-8") as handle:
-        value = yaml.safe_load(handle)
-    if not isinstance(value, dict):
+    lines = []
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        if not raw_line.strip() or raw_line.lstrip().startswith("#"):
+            continue
+        indent = len(raw_line) - len(raw_line.lstrip(" "))
+        lines.append((indent, raw_line[indent:]))
+    value, index = _parse_yaml_block(lines, 0, lines[0][0] if lines else 0)
+    if index != len(lines) or not isinstance(value, dict):
         raise AssertionError(f"expected a YAML mapping in {path}")
     return value
 
@@ -141,7 +250,7 @@ class CodexAdapterTests(unittest.TestCase):
         skill = SKILLS / "ask-with-docs"
         text = (skill / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("name: ask-with-docs", text)
-        self.assertIn("core_version` `1.4.1`", text)
+        self.assertIn("core_version` `1.4.2`", text)
         self.assertIn("exactly one question", text)
         self.assertIn("Draft Working Notes", text)
         for state in ("`proposed`", "`confirmed`", "`unresolved`"):
@@ -179,7 +288,7 @@ class CodexAdapterTests(unittest.TestCase):
         self.assertIn("downgrade", text.lower())
 
     def test_orchestrator_routes_modes_and_honors_direct_selection(self) -> None:
-        text = (SKILLS / "ask-then-do-it" / "SKILL.md").read_text(
+        text = (SKILLS / "ask-then-do-it" / "references" / "full-routing.md").read_text(
             encoding="utf-8"
         )
         self.assertIn("## Honor explicit user control", text)
@@ -217,7 +326,19 @@ class CodexAdapterTests(unittest.TestCase):
             "review-code": "Review Report",
             "improve-architecture": "Architecture Improvement Report",
         }
-        envelope_fields = (
+        contract_target = "../ask-then-do-it/references/artifact-contract.md"
+        for skill_id, artifact_type in producers.items():
+            text = (SKILLS / skill_id / "SKILL.md").read_text(encoding="utf-8")
+            with self.subTest(skill=skill_id):
+                self.assertIn(artifact_type, text)
+                self.assertIn("](" + contract_target + ")", text)
+                self.assertIn("read", text.lower())
+                self.assertIn("before", text.lower())
+
+        contract = (SKILLS / "ask-then-do-it" / "references" / "artifact-contract.md")
+        self.assertTrue(contract.is_file())
+        contract_text = contract.read_text(encoding="utf-8")
+        for field in (
             "`artifact_type`",
             "`artifact_id`",
             "`workflow_id`",
@@ -227,13 +348,23 @@ class CodexAdapterTests(unittest.TestCase):
             "`assumptions`",
             "`deferred`",
             "`handoff`",
+        ):
+            self.assertIn(field, contract_text)
+        for phrase in (
+            "Draft",
+            "Approved",
+            "approval evidence",
+            "If the contract cannot be read",
+            "stop",
+        ):
+            self.assertIn(phrase, contract_text)
+        self.assertRegex(
+            contract_text,
+            r"same\s+`workflow_id`\s+as\s+upstream",
         )
-        for skill_id, artifact_type in producers.items():
-            text = (SKILLS / skill_id / "SKILL.md").read_text(encoding="utf-8")
-            with self.subTest(skill=skill_id):
-                self.assertIn(artifact_type, text)
-                for field in envelope_fields:
-                    self.assertIn(field, text)
+        self.assertRegex(contract_text, r"`core_version`.*`1\.4\.2`")
+        self.assertRegex(contract_text, r"upstream.*in\s+`inputs`")
+        self.assertRegex(contract_text, r"next.*in\s+`handoff`")
 
         for skill_id in (
             "ask-requirements",
@@ -341,7 +472,9 @@ class CodexAdapterTests(unittest.TestCase):
         self.assertEqual(interface.get("display_name"), "Implement Direct")
         self.assertIn("$implement-direct", interface.get("default_prompt", ""))
 
-        orchestrator = (SKILLS / "ask-then-do-it" / "SKILL.md").read_text(
+        orchestrator = (
+            SKILLS / "ask-then-do-it" / "references" / "full-routing.md"
+        ).read_text(
             encoding="utf-8"
         )
         self.assertIn("Approved `tdd` Ticket", orchestrator)
@@ -368,28 +501,49 @@ class CodexAdapterTests(unittest.TestCase):
         )
         self.assertIn("plan-selected implementation", architecture)
 
+    def test_full_consumers_use_one_canonical_lens_contract(self) -> None:
+        self.assertTrue(LENS_REFERENCE.is_file())
+        contract = LENS_REFERENCE.read_text(encoding="utf-8")
+        positions = [contract.index(lens) for lens in CORE_LENSES]
+        self.assertEqual(positions, sorted(positions))
+        self.assertEqual(contract.count("**"), len(CORE_LENSES) * 2)
+        for outcome in (
+            "`finding`",
+            "`no-finding`",
+            "`not-applicable`",
+            "`unverified`",
+        ):
+            self.assertIn(outcome, contract)
+
+        review = (SKILLS / "review-code" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        architecture = (SKILLS / "improve-architecture" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        for consumer in (review, architecture):
+            self.assertIn(f"]({LENS_LINK})", consumer)
+            self.assertIn("read", consumer.lower())
+            self.assertIn("before", consumer.lower())
+            for lens in CORE_LENSES:
+                self.assertNotIn(lens, consumer)
+
+        lite = (SKILLS / "ask-then-do-it" / "references" / "lite-workflow.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn(LENS_LINK, lite)
+        for lens in CORE_LENSES:
+            self.assertNotIn(lens, lite)
+
     def test_review_code_applies_all_twelve_lenses_with_evidence(self) -> None:
         review = (SKILLS / "review-code" / "SKILL.md").read_text(
             encoding="utf-8"
         )
-        for lens in (
-            "Duplicated Code or Policy",
-            "Long Function",
-            "Large Module or Class",
-            "Long Parameter List",
-            "Data Clumps",
-            "Primitive Obsession",
-            "Feature Envy",
-            "Divergent Change",
-            "Shotgun Surgery",
-            "Message Chains",
-            "Leaky Abstraction",
-            "Shallow Module",
-        ):
-            self.assertIn(lens, review)
-        for outcome in ("`finding`", "`no-finding`", "`not-applicable`", "`unverified`"):
-            self.assertIn(outcome, review)
+        self.assertIn("canonical", review.lower())
         self.assertIn("all twelve", review)
+        contract = LENS_REFERENCE.read_text(encoding="utf-8")
+        for outcome in ("`finding`", "`no-finding`", "`not-applicable`", "`unverified`"):
+            self.assertIn(outcome, contract)
         self.assertIn("must not replace", review.lower())
         self.assertIn("trigger, impact, evidence", review)
         self.assertIn("missing evidence", review)

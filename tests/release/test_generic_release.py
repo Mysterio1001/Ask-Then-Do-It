@@ -67,7 +67,7 @@ def read_generated_manifest(path: Path) -> dict[str, object]:
 
 class GenericReleaseTests(unittest.TestCase):
     def test_built_workflow_allows_only_default_mode_declaration_edits(self) -> None:
-        combined = (current_distribution() / "generic/ask-then-do-it-generic-1.4.1/SKILL.md").read_text(encoding="utf-8")
+        combined = (current_distribution() / "generic/ask-then-do-it-generic-1.4.2/SKILL.md").read_text(encoding="utf-8")
         declaration = "Default workflow mode: full"
 
         self.assertIn(MODE_EDIT_PERMISSION, combined)
@@ -78,8 +78,8 @@ class GenericReleaseTests(unittest.TestCase):
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
         generic = config["generic"]
         self.assertEqual(generic["source"], "adapters/generic-prompts")
-        self.assertEqual(generic["directory"], "generic/ask-then-do-it-generic-1.4.1")
-        self.assertEqual(generic["archive"], "generic/ask-then-do-it-generic-1.4.1.zip")
+        self.assertEqual(generic["directory"], "generic/ask-then-do-it-generic-1.4.2")
+        self.assertEqual(generic["archive"], "generic/ask-then-do-it-generic-1.4.2.zip")
         self.assertEqual(generic["entrypoint"], "SKILL.md")
         self.assertEqual(
             generic["start_guide"],
@@ -89,7 +89,7 @@ class GenericReleaseTests(unittest.TestCase):
         self.assertFalse((SOURCE / "SKILL.md").exists())
 
     def test_built_skill_has_parseable_required_frontmatter(self) -> None:
-        skill = current_distribution() / "generic/ask-then-do-it-generic-1.4.1/SKILL.md"
+        skill = current_distribution() / "generic/ask-then-do-it-generic-1.4.2/SKILL.md"
         content = skill.read_bytes().decode("utf-8")
         self.assertTrue(content.startswith("---\n"))
         _, frontmatter, body = content.split("---\n", 2)
@@ -140,8 +140,8 @@ class GenericReleaseTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
 
-            package = output_root / "generic" / "ask-then-do-it-generic-1.4.1"
-            archive = output_root / "generic" / "ask-then-do-it-generic-1.4.1.zip"
+            package = output_root / "generic" / "ask-then-do-it-generic-1.4.2"
+            archive = output_root / "generic" / "ask-then-do-it-generic-1.4.2.zip"
             checksums = output_root / "checksums.sha256"
             actual_files = {
                 path.relative_to(package).as_posix()
@@ -214,8 +214,8 @@ class GenericReleaseTests(unittest.TestCase):
 
             manifest = read_generated_manifest(package / "manifest.yaml")
             self.assertEqual(manifest["package_id"], "ask-then-do-it")
-            self.assertEqual(manifest["release_version"], "1.4.1")
-            self.assertEqual(manifest["core_version"], "1.4.1")
+            self.assertEqual(manifest["release_version"], "1.4.2")
+            self.assertEqual(manifest["core_version"], "1.4.2")
             self.assertEqual(manifest["adapter_id"], "generic-prompts")
             self.assertEqual(manifest["entrypoint"], "SKILL.md")
             self.assertEqual(manifest["capabilities"], ["conversation"])
@@ -224,16 +224,16 @@ class GenericReleaseTests(unittest.TestCase):
             with zipfile.ZipFile(archive) as bundle:
                 self.assertEqual(
                     bundle.namelist(),
-                    sorted(f"ask-then-do-it-generic-1.4.1/{name}" for name in expected_files),
+                    sorted(f"ask-then-do-it-generic-1.4.2/{name}" for name in expected_files),
                 )
                 for relative in expected_files:
                     self.assertEqual(
-                        bundle.read(f"ask-then-do-it-generic-1.4.1/{relative}"),
+                        bundle.read(f"ask-then-do-it-generic-1.4.2/{relative}"),
                         (package / relative).read_bytes(),
                     )
             self.assertEqual(
                 checksums.read_text(encoding="ascii"),
-                f"{sha256(archive)}  generic/ask-then-do-it-generic-1.4.1.zip\n",
+                f"{sha256(archive)}  generic/ask-then-do-it-generic-1.4.2.zip\n",
             )
 
 

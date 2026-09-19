@@ -11,11 +11,15 @@ Turn ambiguous intent into approved requirements while building a reusable proje
 
 ## Resolve the top-level mode before this stage
 
-Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before any stage behavior, require `$ask-then-do-it` to have proven the current-operation mode; never persist or reuse mode.
+Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before stage behavior, require a current-operation mode proof from `$ask-then-do-it`; never persist or reuse mode.
 
-- No proof: stop and delegate to `$ask-then-do-it`. The canonical resolver handles an explicit `lite` instruction and Config `lite`; conflicting explicit modes pause for clarification; invalid Config fails closed to Full; an absent source reaches Full fallback.
-- Proven `lite`: stop this Full stage and route through `$ask-then-do-it` to the canonical Lite workflow.
-- Proven `full`: continue subject to every existing prerequisite and gate.
+- Missing proof: stop and delegate to `$ask-then-do-it`.
+- Proven `lite`: stop this Full stage and route to the Lite workflow.
+- Proven `full`: continue with this stage's prerequisites and gates.
+
+## Use the portable artifact contract
+
+Before creating or emitting a workflow artifact, read the [portable artifact contract](../ask-then-do-it/references/artifact-contract.md) completely. If it is missing or unreadable, stop before artifact creation and leave the handoff pending.
 
 ## Use approved evidence
 
@@ -30,7 +34,7 @@ Do not ask for facts that available evidence already answers. Do not edit produc
 
 ## Keep provisional notes
 
-Maintain Draft Working Notes with `status` fixed to `Draft`. Include `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.4.1`, `status`, `inputs`, `assumptions`, `deferred`, `handoff`, and pending `approval`.
+Maintain Draft Working Notes with `status` fixed to `Draft`; use the portable artifact contract for the shared envelope (including `core_version` `1.4.2`) and pending `approval`.
 
 Label each entry:
 
@@ -58,7 +62,7 @@ Prioritize the unresolved decision with the greatest impact and uncertainty. Tra
 
 When high-impact decisions are confirmed, intentionally deferred with ownership, or proven irrelevant, prepare the Decision Packet and applicable sections as Draft.
 
-The Requirement Decision Record section must include its portable envelope and the confirmed problem, outcomes, users, behavior, boundaries, failures, contracts, constraints, acceptance criteria, assumptions, and deferrals.
+The Requirement Decision Record section must include the shared envelope from the portable artifact contract and the confirmed problem, outcomes, users, behavior, boundaries, failures, contracts, constraints, acceptance criteria, assumptions, and deferrals.
 
 The canonical Project Knowledge Base, when updated after approval, must use `docs/project/knowledge-base.md` and contain:
 

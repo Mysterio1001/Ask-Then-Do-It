@@ -1,9 +1,9 @@
 # Generic Lite Workflow Prompt
 
 Prompt ID: `generic.lite-workflow`
-Prompt version: `1.4.1`
+Prompt version: `1.4.2`
 Required capability: `conversation`
-Core version: `1.4.1`
+Core version: `1.4.2`
 
 ## Required inputs
 

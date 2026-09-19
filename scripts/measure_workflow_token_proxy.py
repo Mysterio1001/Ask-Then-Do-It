@@ -23,7 +23,7 @@ DEFAULT_FIXTURE = (
     / "release"
     / "fixtures"
     / "workflow-token-proxy"
-    / "benchmark.json"
+    / "benchmark-current.json"
 )
 RELEASE_CONFIG = ROOT / "release" / "release.json"
 EXPECTED_GENERIC_SOURCE = "adapters/generic-prompts"
@@ -88,9 +88,21 @@ EXPECTED_EVENT_CONTRACTS = {
             None,
         ),
         (
+            "full-routing-reference",
+            "selected-instructions",
+            "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/full-routing.md",
+            None,
+        ),
+        (
             "full-documented-requirements",
             "selected-instructions",
             "adapters/codex/plugin/ask-then-do-it/skills/ask-with-docs/SKILL.md",
+            None,
+        ),
+        (
+            "full-documented-requirements-artifact-contract",
+            "selected-instructions",
+            "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/artifact-contract.md",
             None,
         ),
         (
@@ -100,9 +112,21 @@ EXPECTED_EVENT_CONTRACTS = {
             None,
         ),
         (
+            "full-write-spec-artifact-contract",
+            "selected-instructions",
+            "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/artifact-contract.md",
+            None,
+        ),
+        (
             "full-plan-tickets",
             "selected-instructions",
             "adapters/codex/plugin/ask-then-do-it/skills/plan-tickets/SKILL.md",
+            None,
+        ),
+        (
+            "full-plan-tickets-artifact-contract",
+            "selected-instructions",
+            "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/artifact-contract.md",
             None,
         ),
         (
@@ -112,9 +136,27 @@ EXPECTED_EVENT_CONTRACTS = {
             None,
         ),
         (
+            "full-implement-tdd-artifact-contract",
+            "selected-instructions",
+            "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/artifact-contract.md",
+            None,
+        ),
+        (
             "full-review-code",
             "selected-instructions",
             "adapters/codex/plugin/ask-then-do-it/skills/review-code/SKILL.md",
+            None,
+        ),
+        (
+            "full-review-lens-contract",
+            "selected-instructions",
+            "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/architecture-refactoring-lenses.md",
+            None,
+        ),
+        (
+            "full-review-artifact-contract",
+            "selected-instructions",
+            "adapters/codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/artifact-contract.md",
             None,
         ),
         (

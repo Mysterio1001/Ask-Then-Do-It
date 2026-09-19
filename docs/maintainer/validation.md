@@ -1,6 +1,6 @@
 # 驗證手冊
 
-適用來源版本：1.4.1。此文件集合既有工具操作、Claude 實測程序及重要回歸測試對照；來源／已知缺口見[工作狀態](../project/status.md)。**離線測試、來源 integrity、simulated hook 結果與真實 Claude 行為是不同證據。** 不以其中一項代替全部驗收。
+適用來源版本：1.4.2。此文件集合既有工具操作、選配 Claude 實測程序及重要回歸測試對照；來源／已知缺口見[工作狀態](../project/status.md)。**離線測試、來源 integrity、simulated hook 結果與真實 Claude 行為是不同證據。** Required release 驗收使用 16 項 deterministic checks；真實 Claude 行為只支援另行授權的 live-qualified 宣稱，未執行時保持 `not run`／`unverified`，不冒充也不阻擋 required release completion。
 
 ## 開發環境與一般檢查
 
@@ -37,15 +37,17 @@ python scripts/validate_claude_model_evidence.py --mapping adapters/claude-code/
 
 Plugin Skills 是 Markdown 產品指令；source-contract／reviewed-instructions fixtures 可拒絕漂移或語意反轉，但固定文字一致不代表模型已遵循指令。更新 prompt 需重做相關觀測，不能只更新預期字串宣布通過。
 
-## 指定 Claude host 驗證
+Release source 的最終 authority 是準備發布的 exact Git commit。先檢查精準 staged paths 與 diff；commit 後在兩個全新 detached clean checkouts 執行相同 builder，核對兩邊 `HEAD`、clean status、完整輸出清單、逐檔 bytes、三個 ZIP 與 `checksums.sha256`。Dirty 工作樹的舊 source manifest、binding、staging manifest 或 fixture 結果不能替代這項 exact-commit 證明。
 
-最低 Claude Code 2.1.251 的 exact executable 需驗證來源／hash、兩次 native `claude plugin validate <plugin-or-repository> --strict` 皆 exit 0 且無 warning、兩個 namespaced entries 的 command identity、UserPromptExpansion additionalContext、bare alias 的觀察，以及 Node missing／nonzero／exit 2／timeout 的 expansion 結果。驗證 version floor 不能只拿新版 binary 代替。
+## 選配的指定 Claude host qualification
+
+欲宣稱 exact-host／live-qualified 時，最低 Claude Code 2.1.251 的 exact executable 需驗證來源／hash、兩次 native `claude plugin validate <plugin-or-repository> --strict` 皆 exit 0 且無 warning、兩個 namespaced entries 的 command identity、UserPromptExpansion additionalContext、bare alias 的觀察，以及 Node missing／nonzero／exit 2／timeout 的 expansion 結果。驗證 version floor 不能只拿新版 binary 代替。這套程序不在 16 項 required ledger；沒有另行明確授權時不得要求登入或啟動實測。
 
 ```text
 python scripts/validate_claude_host_contract.py --ledger <host-ledger.json> --evidence-root <raw-host-evidence-directory>
 ```
 
-參考 [host fixture](../../tests/claude/fixtures/host-contract/contract.json) 與 [host preflight tests](../../tests/claude/test_host_contract_preflight.py)。實測需隔離 session/config、停用自動更新並保留 exact binary provenance。Fixture marker 只供測試，不是 consumer Plugin。若 host 實際契約不符，回到規格修正，不悄悄提高最低版本或把 simulated 結果當真實結果。
+參考 [host fixture](../../tests/claude/fixtures/host-contract/contract.json) 與 [host preflight tests](../../tests/claude/test_host_contract_preflight.py)。若另行授權實測，需隔離 session/config、停用自動更新並保留 exact binary provenance。Fixture marker 只供測試，不是 consumer Plugin。若 host 實際契約不符，回到規格修正，不悄悄提高最低版本或把 simulated 結果當真實結果。
 
 ## Claude behavior 證據
 
@@ -72,7 +74,7 @@ the fixture identity. Keep this evidence output separate from that directory.
 The staged conformance fixture maps all 30 Core rules and cumulative
 conversation/tools/multi_agent capabilities. Its `staged-unverified` status is
 intentional. It is a test recipe, not the current canonical conformance
-declaration. Current 1.4.1 declarations already exist; do not overwrite them
+declaration. Current 1.4.2 declarations already exist; do not overwrite them
 with staged-unverified fixture data.
 
 ### 執行實測
@@ -201,8 +203,9 @@ provenance declarations, concrete outcome citations and required execution
 records. It cannot authenticate a human/export, judge the correctness of a
 semantic assessment, prove an omitted action never occurred, or prove that a
 tool output was not fabricated. Human provenance and semantic review remain
-essential. It also does not satisfy Ticket 3 host validation, formal context,
-package, final live smoke or overall release gates.
+essential. It also does not satisfy the other optional exact-host, context,
+package or final live-smoke qualification claims. These live claims are separate
+from the 16-check required release ledger.
 
 ### 合成資料與離線工具測試
 
@@ -210,26 +213,26 @@ package, final live smoke or overall release gates.
 validator tests. All records, response markers and review provenance are labeled
 synthetic; it invokes neither Claude nor commands. Its separate
 `validate_synthetic_evidence` API / `check-synthetic` CLI exercise the same
-structural checks but never return an actual release pass. The normal `validate`
+structural checks but never return an actual live-qualification pass. The normal `validate`
 command rejects those fixtures. The checked-in catalog and source-derived
 expected outcomes are authored recipes, never raw execution evidence.
 
-## Claude loaded-context 量測
+## 選配的 Claude loaded-context qualification
 
-先完成兩 profiles 各 30 scenarios、12 paired cases 與雙向 authority（共 86 runs）的實際 behavior evidence，再準備 context capture：
+欲宣稱真實 context reduction 時，先完成兩 profiles 各 30 scenarios、12 paired cases 與雙向 authority（共 86 runs）的實際 behavior evidence，再準備 context capture：
 
 ```text
 python scripts/measure_claude_context.py --prepare <new-capture.json>
 python scripts/measure_claude_context.py --fixture <observed-capture.json> --behavior-evidence <directory>/behavior-evidence.json --json
 ```
 
-十個固定 scenarios 的每個 stage-ready checkpoint，及 Full Review 的 reviewer-ready，各自需達到 `optimized * 100 <= general * 50`。不取平均抵銷失敗。計數保存 actual load order、每次注入的重複文字、raw hashes、NFC／whitespace normalization 後 bytes、`ceil(bytes / 4)` proxy 與來源；reviewer prompt 也計入。`--synthetic` 只提供診斷，不是 release pass。完整 counted／excluded material 定義見 [Claude 規格](../specs/claude-code-adapter.md)。
+十個固定 scenarios 的每個 stage-ready checkpoint，及 Full Review 的 reviewer-ready，各自需達到 `optimized * 100 <= general * 50`。不取平均抵銷失敗。計數保存 actual load order、每次注入的重複文字、raw hashes、NFC／whitespace normalization 後 bytes、`ceil(bytes / 4)` proxy 與來源；reviewer prompt 也計入。`--synthetic` 只提供診斷，不是 live-qualification pass。完整 counted／excluded material 定義見 [Claude 規格](../specs/claude-code-adapter.md)。
 
-## 真實使用流程與發布驗收
+## 選配的真實使用流程與 live qualification
 
-至少一個乾淨真實本機環境須記錄 exact OS／surface／Claude Code／Node／canonical model／日期，完成 Marketplace add/install、兩入口、可用模型 route、model switch、session isolation、resume 或 compact、test-only older candidate update、remove、reinstall/recovery、release ZIP 的 session-only 載入。Unavailable branches 另用明示 simulated events 測試，不能冒充九組 OS／IDE 全部通過。
+欲宣稱 clean-environment live-qualified 時，至少一個乾淨真實本機環境須記錄 exact OS／surface／Claude Code／Node／canonical model／日期，完成 Marketplace add/install、兩入口、可用模型 route、model switch、session isolation、resume 或 compact、test-only older candidate update、remove、reinstall/recovery、release ZIP 的 session-only 載入。Unavailable branches 另用明示 simulated events 測試，不能冒充九組 OS／IDE 全部通過。未另行授權或未執行時記為 `not run`／`unverified`。
 
-正式 release ledger 的完整性與三套件建置程序見[發布手冊](releasing.md)。真實 transcripts 的語意、人工作業與外部來源真偽不能只靠 JSON schema／hash 自動證明。
+正式 release 的 16-check required ledger、精準提交與 exact-commit 兩次建置程序見[發布手冊](releasing.md)。Optional live qualification 存放於 required ledger 之外的獨立 disclosure；真實 transcripts 的語意、人工作業與外部來源真偽不能只靠 JSON schema／hash 自動證明。
 
 ## 重要修正與回歸測試對照
 
@@ -241,9 +244,9 @@ python scripts/measure_claude_context.py --fixture <observed-capture.json> --beh
 | Model mapping exact IDs、來源日期／URL／path、bool 冒充 integer、snapshot trace 漂移 | [model evidence](../../tests/claude/test_model_classification_evidence.py) |
 | Node gate、bounded/fatal UTF-8 input、state/envelope union、不能把 state failure 當 unknown | [router contract](../../tests/claude/test_router_contract.py)、[schema validation](../../tests/claude/test_router_schema_validation.py) |
 | cross-session、unsafe paths／symlink、lock ownership、最後重試與 stale-lock recovery、atomic state | [state](../../tests/claude/test_router_state.py)、[security](../../tests/claude/test_router_security.py)、[Review regressions](../../tests/claude/test_router_review_regressions.py) |
-| 同一 operation profile authority、按需載入、Direct／Architecture prerequisites、指令缺失或反轉 | [General](../../tests/claude/test_general_profile.py)、[Claude 5](../../tests/claude/test_claude5_profile.py)，另需真實 behavior observations |
+| 同一 operation profile authority、按需載入、Direct／Architecture prerequisites、指令缺失或反轉 | [General](../../tests/claude/test_general_profile.py)、[Claude 5](../../tests/claude/test_claude5_profile.py)；只有 live-qualified 宣稱另需真實 behavior observations |
 | synthetic evidence 冒充 actual、引用跨度、fresh session、paired inputs、執行階段證據 | [behavior evidence](../../tests/claude/test_behavior_evidence.py)、[context proxy](../../tests/claude/test_context_proxy.py) |
-| incomplete／duplicate checks、錯誤 Completed、unverified Claude gates | [release evidence](../../tests/release/test_release_evidence.py) |
+| incomplete／duplicate required checks、錯誤 Completed、把 optional Claude live IDs 升格為 required | [release evidence](../../tests/release/test_release_evidence.py) |
 | Windows transient error、替換失敗、復原再失敗與保留 backup、二套件升級三套件 | [transaction](../../tests/release/test_release_transaction.py)、[safety](../../tests/release/test_release_safety.py) |
 | ZIP duplicate／traversal／metadata、source parity、舊 preview 邊界 | [release contract](../../tests/release/test_release_contract.py)、[preview tests](../../tests/claude/test_release_preview.py) |
 | same-version guide URL、三語命令、relative links、必需限制 | [release documentation](../../tests/release/test_documentation.py)、[Claude documentation](../../tests/claude/test_documentation.py) |

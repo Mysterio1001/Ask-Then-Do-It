@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "mapping_path": "adapters/claude-code/plugin/ask-then-do-it/config/model-classifications.json",
-  "mapping_sha256": "3579af83bf14d4aa0af3b45791254b0579aadb3e427d6c39b7d395210a2f823b",
+  "mapping_sha256": "a9ad82a6c5370179f8637a8d7ae5ccf4b556f0c0b2e31dc98c9b4392c1a0fee7",
   "checked_on": "2026-09-07",
   "sources": {
     "models-overview": {

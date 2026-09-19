@@ -13,11 +13,11 @@ Match user-facing communication and generated artifacts to the user's language w
 
 ## Resolve the top-level mode before this stage
 
-Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before any stage behavior, require `$ask-then-do-it` to have proven the current-operation mode; never persist or reuse mode.
+Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before stage behavior, require a current-operation mode proof from `$ask-then-do-it`; never persist or reuse mode.
 
-- No proof: stop and delegate to `$ask-then-do-it`. The canonical resolver handles an explicit `lite` instruction and Config `lite`; conflicting explicit modes pause for clarification; invalid Config fails closed to Full; an absent source reaches Full fallback.
-- Proven `lite`: stop this Full stage and route through `$ask-then-do-it` to the canonical Lite workflow.
-- Proven `full`: continue subject to every existing prerequisite and gate.
+- Missing proof: stop and delegate to `$ask-then-do-it`.
+- Proven `lite`: stop this Full stage and route to the Lite workflow.
+- Proven `full`: continue with this stage's prerequisites and gates.
 
 ## Verify readiness
 
@@ -44,9 +44,13 @@ If an artifact is missing, Draft, contradictory, no longer feasible, or does not
 - Inspect the final diff for scope drift, unintended generated files, and unrelated edits.
 - Record behavioral tests and untested paths as unavailable evidence, not as passing checks.
 
+## Use the portable artifact contract
+
+Before creating or emitting Direct Implementation Evidence, read the [portable artifact contract](../ask-then-do-it/references/artifact-contract.md) completely. If it is missing or unreadable, stop before artifact creation and leave the handoff pending.
+
 ## Report direct evidence
 
-Emit Direct Implementation Evidence only for work actually performed with the `tools` profile. Include or unambiguously convey `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.4.1`, evidence `status`, upstream `inputs`, `assumptions`, `deferred` work, and reviewer `handoff`.
+Emit Direct Implementation Evidence only for work actually performed with the `tools` profile. Use the portable artifact contract for the common envelope and preserve the evidence boundary below.
 
 Record the Ticket outcome, changed files or ownership areas, raw non-test commands and results, final-diff inspection, the exact disclosure `tests: skipped-by-user`, unavailable behavioral evidence, external test constraints or delivery blocks, incomplete checks, and residual risks. Do not use Red, Green, passing-test, test-verified, or TDD-complete claims.
 

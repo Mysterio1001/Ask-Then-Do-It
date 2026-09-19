@@ -1,5 +1,25 @@
 # Claude source and evidence use stable bytes across operating systems.
-adapters/claude-code/** text eol=lf
-.claude-plugin/** text eol=lf
+adapters/claude-code/** text eol=lf -filter -working-tree-encoding -ident
+.claude-plugin/** text eol=lf -filter -working-tree-encoding -ident
 tests/claude/fixtures/** text eol=lf
 tests/release/fixtures/claude-context-proxy/** text eol=lf
+
+# Codex runtime measurements use stable source bytes across operating systems.
+adapters/codex/plugin/ask-then-do-it/** text eol=lf -filter -working-tree-encoding -ident
+adapters/codex/plugin/ask-then-do-it/assets/icon.png -text -eol -filter -working-tree-encoding -ident
+adapters/codex/plugin/ask-then-do-it/assets/logo.png -text -eol -filter -working-tree-encoding -ident
+
+# Release package inputs and composition authorities have repository-owned bytes.
+.gitattributes text eol=lf -filter -working-tree-encoding -ident
+.agents/plugins/marketplace.json text eol=lf -filter -working-tree-encoding -ident
+LICENSE text eol=lf -filter -working-tree-encoding -ident
+THIRD_PARTY_NOTICES.md text eol=lf -filter -working-tree-encoding -ident
+adapters/codex/conformance.yaml text eol=lf -filter -working-tree-encoding -ident
+adapters/codex/rule-mapping.yaml text eol=lf -filter -working-tree-encoding -ident
+adapters/generic-prompts/** text eol=lf -filter -working-tree-encoding -ident
+core/rules/rules.yaml text eol=lf -filter -working-tree-encoding -ident
+release/generic/** text eol=lf -filter -working-tree-encoding -ident
+release/release.json text eol=lf -filter -working-tree-encoding -ident
+scripts/build_release.py text eol=lf -filter -working-tree-encoding -ident
+scripts/validate_claude_package.py text eol=lf -filter -working-tree-encoding -ident
+scripts/validate_marketplace.py text eol=lf -filter -working-tree-encoding -ident

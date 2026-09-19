@@ -1,4 +1,4 @@
-core_version: 1.4.1
+core_version: 1.4.2
 rules:
   CAP-DECLARE-001:
     - file: conformance.yaml
@@ -11,7 +11,7 @@ rules:
     - file: plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md
       section: Declare capabilities
       implementation: Forbids claims of repository actions, evidence, persistence, or independence beyond the declared runtime profile.
-    - file: plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/references/full-routing.md
       section: Finish
       implementation: Forbids completion claims while verification or blocking review work remains.
     - file: plugin/ask-then-do-it/skills/review-code/SKILL.md
@@ -106,7 +106,7 @@ rules:
       section: Create an independent view
       implementation: Supplies approved artifacts, selected mode, final diff, surrounding code, available test changes, raw results, and skipped-test disclosure without implementer conclusions.
   ART-STATE-001:
-    - file: plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/references/full-routing.md
       section: Enforce the gates
       implementation: Preserves separate Draft and Approved states and requires artifact state to agree with conversation approval.
     - file: plugin/ask-then-do-it/skills/ask-requirements/SKILL.md
@@ -121,7 +121,7 @@ rules:
   ADAPTER-COVERAGE-001:
     - file: conformance.yaml
       section: implemented_rules
-      implementation: Enumerates every mandatory rule in core version 1.4.1 for deterministic shared validation.
+      implementation: Enumerates every mandatory rule in core version 1.4.2 for deterministic shared validation.
     - file: rule-mapping.yaml
       section: rules
       implementation: Resolves each mandatory rule to its concrete Codex adapter implementation.
@@ -138,9 +138,15 @@ rules:
       section: Approve the record and knowledge together
       implementation: Displays additions, modifications, and removals and binds approval to only the disclosed knowledge changes.
   REVIEW-LENSES-001:
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/references/architecture-refactoring-lenses.md
+      section: Core lens contract
+      implementation: Defines the single ordered twelve-lens contract and closed evidence outcomes consumed by Full Review and Architecture diagnosis.
     - file: plugin/ask-then-do-it/skills/review-code/SKILL.md
       section: Apply the twelve lenses
-      implementation: Applies every core lens to the change scope and requires evidence or a justified result for each one.
+      implementation: Reads the canonical lens contract before applying every lens to the change scope and preserves Review-specific scope and handoff.
+    - file: plugin/ask-then-do-it/skills/improve-architecture/SKILL.md
+      section: Apply all twelve lenses
+      implementation: Reads the canonical lens contract before applying every lens to the declared diagnostic scope and preserves architecture-specific deletion and report behavior.
   ARCH-DIAG-001:
     - file: plugin/ask-then-do-it/skills/improve-architecture/SKILL.md
       section: Declare scope and capability
@@ -158,10 +164,10 @@ rules:
       section: Enforce report state and handoff
       implementation: Routes accepted proposals through Specification, vertical Ticket Plan, and the plan-selected TDD or direct implementation path.
   ROUTE-USER-001:
-    - file: plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/references/full-routing.md
       section: Honor explicit user control
       implementation: Gives direct module, requirement-mode, and Approved Ticket implementation-mode selection precedence over automatic routing while preserving gates.
   ROUTE-DOCS-001:
-    - file: plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md
+    - file: plugin/ask-then-do-it/skills/ask-then-do-it/references/full-routing.md
       section: Choose the requirement mode
       implementation: Selects documented interrogation from the three approved conditions and states a brief reason.

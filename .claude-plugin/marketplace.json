@@ -9,7 +9,7 @@
     {
       "name": "ask-then-do-it",
       "displayName": "Ask Then Do It",
-      "version": "1.4.1",
+      "version": "1.4.2",
       "description": "An independent gated AI development workflow from requirement discovery through evidence-based review and architecture diagnosis. This project is not affiliated with or endorsed by Matt Pocock.",
       "author": {
         "name": "Ian Wu, Handle by me Tech Studio"
@@ -34,7 +34,7 @@
         "source": "git-subdir",
         "url": "https://github.com/Mysterio1001/Ask-Then-Do-It.git",
         "path": "adapters/claude-code/plugin/ask-then-do-it",
-        "ref": "v1.4.1"
+        "ref": "v1.4.2"
       }
     }
   ]

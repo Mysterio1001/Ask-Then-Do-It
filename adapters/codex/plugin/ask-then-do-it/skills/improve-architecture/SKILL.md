@@ -11,11 +11,11 @@ Assess architecture without changing it. Keep this skill diagnostic-only by defa
 
 ## Resolve the top-level mode before this stage
 
-Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before any stage behavior, require `$ask-then-do-it` to have proven the current-operation mode; never persist or reuse mode.
+Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before stage behavior, require a current-operation mode proof from `$ask-then-do-it`; never persist or reuse mode.
 
-- No proof: stop and delegate to `$ask-then-do-it`. The canonical resolver handles an explicit `lite` instruction and Config `lite`; conflicting explicit modes pause for clarification; invalid Config fails closed to Full; an absent source reaches Full fallback.
-- Proven `lite`: stop this Full stage and route through `$ask-then-do-it` to the canonical Lite workflow.
-- Proven `full`: continue subject to every existing prerequisite and gate.
+- Missing proof: stop and delegate to `$ask-then-do-it`.
+- Proven `lite`: stop this Full stage and route to the Lite workflow.
+- Proven `full`: continue with this stage's prerequisites and gates.
 
 ## Declare scope and capability
 
@@ -35,22 +35,7 @@ Trace inbound and outbound dependencies, public contracts, ownership, reasons to
 
 ## Apply all twelve lenses
 
-Evaluate the declared scope using this fixed core set:
-
-1. Duplicated Code or Policy.
-2. Long Function.
-3. Large Module or Class.
-4. Long Parameter List.
-5. Data Clumps.
-6. Primitive Obsession.
-7. Feature Envy.
-8. Divergent Change.
-9. Shotgun Surgery.
-10. Message Chains.
-11. Leaky Abstraction.
-12. Shallow Module.
-
-For every lens, record evidence and one result: `finding`, `no-finding`, `not-applicable`, or `unverified`. Give a reason for `not-applicable` and identify missing evidence for `unverified`. Project-specific lenses may be added but cannot replace or skip the core set.
+Read the [canonical architecture and refactoring lens contract](../ask-then-do-it/references/architecture-refactoring-lenses.md) completely immediately before the lens pass. If it is missing or unreadable, stop and do not claim a completed twelve-lens pass. Evaluate the declared scope using every lens in that contract's fixed order, recording one contract outcome with evidence for each. Preserve this stage's diagnostic scope, dependency tracing, simulated deletion, report state, and accepted-proposal handoff; project-specific lenses may follow but cannot replace or skip the core set.
 
 ## Simulate deletion safely
 
@@ -66,9 +51,13 @@ An actual deletion experiment requires explicit user authorization, proven `tool
 
 If any gate is absent, continue only with simulation. When all gates are proven, record the isolated environment, deleted scope, raw commands or checks, raw outcomes, and restoration or disposal result.
 
+## Use the portable artifact contract
+
+Before creating or emitting an Architecture Improvement Report, read the [portable artifact contract](../ask-then-do-it/references/artifact-contract.md) completely. If it is missing or unreadable, stop before artifact creation and leave the handoff pending.
+
 ## Emit the architecture report
 
-Emit an Architecture Improvement Report with `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.4.1`, `status`, `inputs`, `assumptions`, `deferred`, `handoff`, and `approval` evidence when accepted.
+Emit an Architecture Improvement Report using the portable artifact contract for the common envelope. Preserve the diagnostic state, `approval` evidence when accepted, and the stage-specific sections below.
 
 Include every section:
 

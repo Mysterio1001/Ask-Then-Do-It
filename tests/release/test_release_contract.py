@@ -27,8 +27,10 @@ REQUIRED_VALIDATION_CHECKS = [
     "removed-artifact-scan",
     "release-architecture-diagnosis",
     "claude-plugin-validation", "claude-conformance", "claude-package-inventory",
-    "claude-behavior", "claude-context", "claude-live-smoke",
 ]
+CLAUDE_LIVE_QUALIFICATION_CHECKS = {
+    "claude-behavior", "claude-context", "claude-live-smoke",
+}
 
 
 def run_builder(
@@ -87,10 +89,15 @@ class ReleaseContractTests(unittest.TestCase):
     def test_current_release_identity_and_validation_gate_are_declared(self) -> None:
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
         self.assertEqual(config["schema_version"], 2)
-        self.assertEqual(config["release_version"], "1.4.1")
-        self.assertEqual(config["core_version"], "1.4.1")
+        self.assertEqual(config["release_version"], "1.4.2")
+        self.assertEqual(config["core_version"], "1.4.2")
         self.assertEqual(
             config["required_validation_checks"], REQUIRED_VALIDATION_CHECKS
+        )
+        self.assertTrue(
+            CLAUDE_LIVE_QUALIFICATION_CHECKS.isdisjoint(
+                config["required_validation_checks"]
+            )
         )
 
     def test_current_distribution_has_exactly_three_versioned_archives(self) -> None:
@@ -98,9 +105,9 @@ class ReleaseContractTests(unittest.TestCase):
             encoding="ascii"
         ).splitlines()
         expected = {
-            "codex/ask-then-do-it-1.4.1.zip",
-            "generic/ask-then-do-it-generic-1.4.1.zip",
-            "claude/ask-then-do-it-claude-1.4.1.zip",
+            "codex/ask-then-do-it-1.4.2.zip",
+            "generic/ask-then-do-it-generic-1.4.2.zip",
+            "claude/ask-then-do-it-claude-1.4.2.zip",
         }
         self.assertEqual({line.split("  ", 1)[1] for line in checksums}, expected)
         for line in checksums:

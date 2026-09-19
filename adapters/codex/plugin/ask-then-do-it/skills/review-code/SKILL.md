@@ -13,11 +13,11 @@ Match user-facing communication and generated artifacts to the user's language w
 
 ## Resolve the top-level mode before this stage
 
-Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before any stage behavior, require `$ask-then-do-it` to have proven the current-operation mode; never persist or reuse mode.
+Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before stage behavior, require a current-operation mode proof from `$ask-then-do-it`; never persist or reuse mode.
 
-- No proof: stop and delegate to `$ask-then-do-it`. The canonical resolver handles an explicit `lite` instruction and Config `lite`; conflicting explicit modes pause for clarification; invalid Config fails closed to Full; an absent source reaches Full fallback.
-- Proven `lite`: stop this Full stage and route through `$ask-then-do-it` to the canonical Lite workflow.
-- Proven `full`: continue subject to every existing prerequisite and gate.
+- Missing proof: stop and delegate to `$ask-then-do-it`.
+- Proven `lite`: stop this Full stage and route to the Lite workflow.
+- Proven `full`: continue with this stage's prerequisites and gates.
 
 ## Create an independent view
 
@@ -53,30 +53,15 @@ Never use a stronger label than the available evidence and runtime isolation can
 2. Trace correctness, state transitions, failure paths, compatibility, and regressions.
 3. Examine trust boundaries, authorization, validation, secrets, privacy, and destructive behavior.
 4. Evaluate whether available tests would fail for likely defects and identify important untested paths without running tests declined by an Approved `direct` mode.
-5. Apply all twelve Architecture and Refactoring Lenses to the changed code and its relevant impact area (`REVIEW-LENSES-001`).
+5. Apply all twelve Architecture and Refactoring Lenses to the changed code and its relevant impact area (`REVIEW-LENSES-001`). Read the [canonical architecture and refactoring lens contract](../ask-then-do-it/references/architecture-refactoring-lenses.md) completely immediately before the lens pass. If it is missing or unreadable, stop and do not claim a completed twelve-lens pass.
 
 Ignore purely stylistic preferences unless they create a material maintenance, correctness, or repository-convention problem.
 
 ## Apply the twelve lenses
 
-Use this fixed core order:
+After reading the canonical contract, apply every lens in its fixed order. Record exactly one contract outcome per lens with evidence, while keeping this Review focused on the changed code and relevant impact area; do not imply a system-wide architecture diagnosis. Project-specific lenses may follow but must not replace, rename incompatibly, or silently skip a core lens. Preserve this stage's change-focused scope, independence labels, severity, finding validation, and systemic handoff.
 
-1. **Duplicated Code or Policy**: equivalent behavior or rules maintained in multiple places.
-2. **Long Function**: size or mixed responsibilities obstruct understanding, testing, or change.
-3. **Large Module or Class**: one unit owns too many responsibilities or reasons to change.
-4. **Long Parameter List**: an interface exposes unstable coordination or missing concepts.
-5. **Data Clumps**: related values repeatedly travel together without a coherent abstraction.
-6. **Primitive Obsession**: domain meaning relies on unconstrained primitive values.
-7. **Feature Envy**: behavior depends more on another unit's data or responsibilities than its own.
-8. **Divergent Change**: one unit changes repeatedly for unrelated reasons.
-9. **Shotgun Surgery**: one behavior change requires edits across many locations.
-10. **Message Chains**: navigation or call chains expose internal structure and amplify coupling.
-11. **Leaky Abstraction**: callers must understand or compensate for hidden implementation details.
-12. **Shallow Module**: interface complexity is not justified by the functionality it hides.
-
-For every lens, record evidence and exactly one outcome: `finding`, `no-finding`, `not-applicable`, or `unverified`. A finding must include trigger, impact, evidence, and location when available. A `not-applicable` result needs a scope-specific reason. An `unverified` result must identify missing evidence. Never turn missing evidence into `no-finding`.
-
-Project-specific lenses may follow the core set but must not replace, rename incompatibly, or silently skip a core lens. This pass remains focused on the change; do not imply a system-wide architecture diagnosis.
+For any `finding`, include its trigger, impact, evidence, and tightest location when available. Treat missing evidence as missing evidence, not as `no-finding`.
 
 ## Route systemic findings
 
@@ -93,7 +78,13 @@ For every proposed finding:
 - Point to the tightest relevant file and line location.
 - Assign severity: `P0` catastrophic, `P1` urgent, `P2` normal, or `P3` minor.
 
+Each finding must state its trigger, impact, and evidence; do not report a concern without those three anchors.
+
 Do not report speculation as fact. State uncertainty and the missing evidence when verification is impossible.
+
+## Use the portable artifact contract
+
+Before creating or emitting a Review Report, read the [portable artifact contract](../ask-then-do-it/references/artifact-contract.md) completely. If it is missing or unreadable, stop before artifact creation and leave the handoff pending.
 
 ## Report findings first
 
@@ -107,4 +98,4 @@ After findings, state:
 
 If no actionable findings exist, say so explicitly and still identify residual risks or verification gaps. Do not modify code unless the user separately asks for fixes.
 
-Emit a Review Report that includes or unambiguously conveys `artifact_type`, stable `artifact_id`, shared `workflow_id`, `core_version` `1.4.1`, review `status`, reviewed `inputs`, `assumptions`, `deferred` checks, and the next `handoff`. Preserve the stated Review label, evidence unavailable, residual risks, untested areas, and completion assessment in the artifact.
+Emit a Review Report using the portable artifact contract for the common envelope. Preserve the stated Review label, evidence unavailable, residual risks, untested areas, and completion assessment in the artifact.

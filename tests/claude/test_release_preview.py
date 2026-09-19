@@ -218,14 +218,13 @@ class ClaudeReleasePreviewTests(unittest.TestCase):
         config["claude"]["inventory"] = sorted(RUNTIME | LEGAL)
         config["required_validation_checks"] = [
             "claude-plugin-validation", "claude-conformance", "claude-package-inventory",
-            "claude-behavior", "claude-context", "claude-live-smoke",
         ]
         with self.assertRaisesRegex(self.builder.BuildError, "canonical declaration"):
             self.builder.validate_claude_config(config)
         declaration = self.root / "adapters/claude-code/conformance.yaml"
         declaration.write_text("adapter_id: claude-code\ntarget: claude-code-plugin\nadapter_version: 1.4.1\ncore_version: 1.4.1\n")
         self.builder.validate_claude_config(config)
-        config["required_validation_checks"].remove("claude-live-smoke")
+        config["required_validation_checks"].remove("claude-package-inventory")
         with self.assertRaisesRegex(self.builder.BuildError, "validation checks"):
             self.builder.validate_claude_config(config)
 

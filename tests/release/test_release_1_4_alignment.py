@@ -19,11 +19,41 @@ class ReleaseAlignmentTests(unittest.TestCase):
 
     def test_current_config_loads_three_version_matched_families(self):
         config = self.builder.load_config(ROOT / 'release/release.json')
-        self.assertEqual(config['release_version'], '1.4.1')
-        self.assertEqual(config['core_version'], '1.4.1')
+        self.assertEqual(config['release_version'], '1.4.2')
+        self.assertEqual(config['core_version'], '1.4.2')
         self.assertEqual(set(config['managed_outputs']), {'codex', 'generic', 'claude', 'checksums.sha256'})
         for family in ('codex', 'generic', 'claude'):
-            self.assertTrue(config[family]['archive'].endswith('-1.4.1.zip'))
+            self.assertTrue(config[family]['archive'].endswith('-1.4.2.zip'))
+
+    def test_provider_catalogs_pin_the_same_current_release_tag(self):
+        codex_catalog = json.loads(
+            (ROOT / '.agents/plugins/marketplace.json').read_text(encoding='utf-8')
+        )
+        claude_catalog = json.loads(
+            (ROOT / '.claude-plugin/marketplace.json').read_text(encoding='utf-8')
+        )
+        self.assertEqual(codex_catalog['plugins'][0]['source']['ref'], 'v1.4.2')
+        self.assertEqual(claude_catalog['plugins'][0]['source']['ref'], 'v1.4.2')
+        self.assertEqual(claude_catalog['plugins'][0]['version'], '1.4.2')
+
+    def test_historical_slimming_artifacts_keep_their_original_core_version(self):
+        for relative in (
+            'docs/specs/codex-skill-runtime-slimming.md',
+            'docs/plans/codex-skill-runtime-slimming.md',
+        ):
+            with self.subTest(path=relative):
+                self.assertIn('Core version: `1.4.1`', (ROOT / relative).read_text(encoding='utf-8'))
+        for relative in (
+            'docs/project/drafts/codex-skill-runtime-slimming/lifecycle-manifest.json',
+            'docs/project/drafts/codex-skill-runtime-slimming/migration/source-manifest.json',
+        ):
+            with self.subTest(path=relative):
+                value = json.loads((ROOT / relative).read_text(encoding='utf-8'))
+                recorded_version = (
+                    value['core_version'] if 'core_version' in value
+                    else value['canonical'][0]['core_version']
+                )
+                self.assertEqual(recorded_version, '1.4.1')
 
     def test_readme_downloads_and_adapter_manifests_match_release_version(self):
         version = self.config['release_version']
@@ -55,13 +85,44 @@ class ReleaseAlignmentTests(unittest.TestCase):
                 self.assertEqual(manifest['adapter_version'], version)
                 self.assertEqual(manifest['core_version'], self.config['core_version'])
 
-    def test_claude_required_checks_cannot_be_omitted(self):
+    def test_claude_static_checks_cannot_be_omitted(self):
         self.assertIn('claude', self.config)
-        for check in ('claude-plugin-validation', 'claude-conformance', 'claude-package-inventory', 'claude-behavior', 'claude-context', 'claude-live-smoke'):
+        static_checks = (
+            'claude-plugin-validation',
+            'claude-conformance',
+            'claude-package-inventory',
+        )
+        live_checks = ('claude-behavior', 'claude-context', 'claude-live-smoke')
+        baseline = copy.deepcopy(self.config)
+        baseline['required_validation_checks'] = [
+            check
+            for check in baseline['required_validation_checks']
+            if check not in live_checks
+        ]
+        self.builder.validate_claude_config(baseline)
+        for check in static_checks:
             with self.subTest(check=check):
-                config = copy.deepcopy(self.config)
+                config = copy.deepcopy(baseline)
                 config['required_validation_checks'].remove(check)
                 with self.assertRaises(self.builder.BuildError):
+                    self.builder.validate_claude_config(config)
+
+    def test_claude_live_checks_cannot_be_required(self):
+        live_checks = ('claude-behavior', 'claude-context', 'claude-live-smoke')
+        baseline = copy.deepcopy(self.config)
+        baseline['required_validation_checks'] = [
+            check
+            for check in baseline['required_validation_checks']
+            if check not in live_checks
+        ]
+        for check in live_checks:
+            with self.subTest(check=check):
+                config = copy.deepcopy(baseline)
+                config['required_validation_checks'].append(check)
+                with self.assertRaisesRegex(
+                    self.builder.BuildError,
+                    '[Oo]ptional Claude live qualification checks',
+                ):
                     self.builder.validate_claude_config(config)
 
     def test_claude_wrong_version_cannot_be_accepted(self):

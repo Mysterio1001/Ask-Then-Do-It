@@ -20,7 +20,7 @@ from pathlib import Path, PurePosixPath
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "adapters/claude-code/plugin/ask-then-do-it"
 # Require captures from the current release-owned runtime.
-RUNTIME_VERSION = "1.4.1"
+RUNTIME_VERSION = "1.4.2"
 SCENARIOS = {
     "documented-requirements": "documented-requirements.md",
     "specification": "specification.md",
@@ -137,7 +137,7 @@ def prepare_template():
             } for checkpoint in checkpoints} for profile in PROFILES},
         })
     return {
-        "schema_version": 1, "fixture_id": "claude-context-1.4.1", "version": "1.4.1",
+        "schema_version": 1, "fixture_id": "claude-context-1.4.2", "version": "1.4.2",
         "evidence_kind": "unobserved", "capture_review": "", "scenarios": cases,
     }
 
@@ -224,7 +224,7 @@ def evaluate(path, *, synthetic=False, behavior_evidence=None, plugin_root=PLUGI
     try:
         data = read_json(path)
         exact(data, ("schema_version", "fixture_id", "version", "evidence_kind", "capture_review", "scenarios"), "fixture")
-        require(type(data["schema_version"]) is int and data["schema_version"] == 1 and data["fixture_id"] == "claude-context-1.4.1" and data["version"] == "1.4.1", "fixture identity/version mismatch")
+        require(type(data["schema_version"]) is int and data["schema_version"] == 1 and data["fixture_id"] == "claude-context-1.4.2" and data["version"] == "1.4.2", "fixture identity/version mismatch")
         require(data["evidence_kind"] == ("synthetic" if synthetic else "observed"), "unobserved/synthetic captures cannot establish observed measurement")
         require(isinstance(data["capture_review"], str) and bool(data["capture_review"].strip()), "independent capture-completeness review is required")
         if not synthetic:

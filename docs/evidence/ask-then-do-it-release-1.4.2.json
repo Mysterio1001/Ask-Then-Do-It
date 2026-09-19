@@ -1,0 +1,140 @@
+{
+  "schema_version": 2,
+  "artifact_type": "release-validation-ledger",
+  "artifact_id": "ask-then-do-it-release-1.4.2",
+  "release_version": "1.4.2",
+  "status": "Completed",
+  "scope": "Required repository, package, and release checks. Publication is recorded by the Git tag and GitHub Release.",
+  "tests": {
+    "status": "passed-before-maintainer-hygiene",
+    "outcome": "Historical pre-hygiene evidence: T3A ran 596 tests with 10 disclosed platform skips and exit 0. Final-diff behavioral tests were skipped by user. The later cleanup removes only one-release evidence machinery and process documents, retains the reusable Codex baseline fixture, and does not change consumer runtime bytes.",
+    "disclosure": "tests: skipped-by-user"
+  },
+  "candidate_identity": {
+    "files": 84,
+    "byte_identical_builds": true,
+    "tree_sha256": "1771a56d74a38537129a12b3d91e9e4e3c93507a5cf1279f1ab98f59ef61869e",
+    "archives": {
+      "codex/ask-then-do-it-1.4.2.zip": "e8212a69f3ba1424f0f827003beb1761705293ec39d7bebe87669630b92b5360",
+      "generic/ask-then-do-it-generic-1.4.2.zip": "48b16b732483f050fb036b45bf5f78b22504cc03f71c6fb31db9871ff7880485",
+      "claude/ask-then-do-it-claude-1.4.2.zip": "8e27c1010563d2cb7935f137671ba250a0dc138f7bfbce541f9b82592f250013",
+      "checksums.sha256": "3c51d6e0cfb932455c30cc2e481035d3934e8179237a5ef0e77e863128c3641c"
+    },
+    "note": "Release assets are rebuilt from the exact release commit and must match these hashes before publication."
+  },
+  "checks": [
+    {
+      "id": "automated-tests",
+      "status": "passed",
+      "command": "T3A isolated Python -m unittest discover -s tests -v",
+      "outcome": "Historical pre-hygiene evidence: 596 tests completed with exit 0 and 10 platform-specific skips. Final-diff behavioral tests were skipped by user; current cleanup surfaces use static validation, exact-commit build checks, and final Review instead."
+    },
+    {
+      "id": "workflow-token-proxy",
+      "status": "passed",
+      "command": "python scripts/measure_workflow_token_proxy.py --fixture tests/release/fixtures/workflow-token-proxy/benchmark-current.json --json",
+      "outcome": "Codex Full measured 17,240 proxy tokens and Lite 3,846, a 77.69% reduction. Generic fixed cost was 15,460; this is not a billing claim."
+    },
+    {
+      "id": "codex-skill-validation",
+      "status": "passed",
+      "command": "Official Skill validator for the nine source and nine packaged Skills",
+      "outcome": "All 18 Skill roots passed structural validation."
+    },
+    {
+      "id": "codex-plugin-validation",
+      "status": "passed",
+      "command": "Official Plugin validator for source and packaged Codex roots",
+      "outcome": "Both Codex Plugin roots passed."
+    },
+    {
+      "id": "codex-conformance",
+      "status": "passed",
+      "command": "python scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/codex/conformance.yaml",
+      "outcome": "Codex conformance passed against Core 1.4.2."
+    },
+    {
+      "id": "generic-conformance",
+      "status": "passed",
+      "command": "python scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/generic-prompts/manifest.yaml",
+      "outcome": "Generic conformance passed against Core 1.4.2."
+    },
+    {
+      "id": "codex-package-inventory",
+      "status": "passed",
+      "command": "python scripts/validate_codex_contract.py against source and packaged Codex roots",
+      "outcome": "The 30-file Codex package, nine Skills, references, Plugin structure, and ZIP inventory agreed."
+    },
+    {
+      "id": "generic-package-inventory",
+      "status": "passed",
+      "command": "Builder source/package inventory audit",
+      "outcome": "The 18-file Generic package and ZIP agreed byte-for-byte."
+    },
+    {
+      "id": "reproducible-build",
+      "status": "passed",
+      "command": "Two isolated build_release.py runs and full-tree comparison",
+      "outcome": "Both builds produced the same 84 paths and bytes."
+    },
+    {
+      "id": "zip-equivalence",
+      "status": "passed",
+      "command": "Expanded-directory and ZIP member comparison for all three packages",
+      "outcome": "Codex, Generic, and Claude archives matched their expanded directories."
+    },
+    {
+      "id": "sha256-verification",
+      "status": "passed",
+      "command": "Recalculate all archive hashes and compare checksums.sha256",
+      "outcome": "All archive hashes matched the checksum manifest."
+    },
+    {
+      "id": "removed-artifact-scan",
+      "status": "passed",
+      "command": "Marketplace validation, diff check, and package forbidden-path scan",
+      "outcome": "Consumer packages excluded tests, evidence, caches, credentials, transcripts, Git data, and machine-local paths."
+    },
+    {
+      "id": "release-architecture-diagnosis",
+      "status": "passed",
+      "command": "Read-only architecture and final-diff review",
+      "outcome": "No P0-P3 product, packaging, or release blocker remained; the removed source/evidence binding system was maintainer-only and caused the documented release delay."
+    },
+    {
+      "id": "claude-plugin-validation",
+      "status": "passed",
+      "command": "python scripts/validate_claude_plugin.py plus repository model-evidence validation",
+      "outcome": "Claude source structure, manifest, catalogs, model mapping, and static evidence passed."
+    },
+    {
+      "id": "claude-conformance",
+      "status": "passed",
+      "command": "python scripts/validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/claude-code/conformance.yaml",
+      "outcome": "Claude adapter conformance passed against Core 1.4.2."
+    },
+    {
+      "id": "claude-package-inventory",
+      "status": "passed",
+      "command": "Claude source/package parity and ZIP inventory audit",
+      "outcome": "The 32-file Claude package and ZIP agreed."
+    }
+  ],
+  "optional_qualification": {
+    "claude-behavior": {
+      "status": "not run",
+      "verification": "unverified",
+      "required_gate": false
+    },
+    "claude-context": {
+      "status": "not run",
+      "verification": "unverified",
+      "required_gate": false
+    },
+    "claude-live-smoke": {
+      "status": "not run",
+      "verification": "unverified",
+      "required_gate": false
+    }
+  }
+}

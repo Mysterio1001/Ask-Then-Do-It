@@ -100,11 +100,11 @@ class ReleaseSafetyTests(unittest.TestCase):
             self.assertFalse(
                 (output / "generic" / "ask-then-do-it-generic-1.1.0.zip").exists()
             )
-            self.assertTrue((output / "codex" / "ask-then-do-it-1.4.1.zip").is_file())
+            self.assertTrue((output / "codex" / "ask-then-do-it-1.4.2.zip").is_file())
             self.assertTrue(
-                (output / "generic" / "ask-then-do-it-generic-1.4.1.zip").is_file()
+                (output / "generic" / "ask-then-do-it-generic-1.4.2.zip").is_file()
             )
-            self.assertTrue((output / "claude" / "ask-then-do-it-claude-1.4.1.zip").is_file())
+            self.assertTrue((output / "claude" / "ask-then-do-it-claude-1.4.2.zip").is_file())
 
     def test_invalid_two_provider_history_cannot_authorize_three_provider_upgrade(self):
         for defect in ("checksum", "extra", "payload-mismatch"):
@@ -166,9 +166,9 @@ class ReleaseSafetyTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
 
             for name in (
-                "codex/ask-then-do-it-1.4.1.zip",
-                "generic/ask-then-do-it-generic-1.4.1.zip",
-                "claude/ask-then-do-it-claude-1.4.1.zip",
+                "codex/ask-then-do-it-1.4.2.zip",
+                "generic/ask-then-do-it-generic-1.4.2.zip",
+                "claude/ask-then-do-it-claude-1.4.2.zip",
                 "checksums.sha256",
             ):
                 self.assertEqual(
@@ -178,12 +178,12 @@ class ReleaseSafetyTests(unittest.TestCase):
                 )
 
             pairs = (
-                ("claude/ask-then-do-it", "claude/ask-then-do-it-claude-1.4.1.zip", "ask-then-do-it"),
-                ("codex/ask-then-do-it", "codex/ask-then-do-it-1.4.1.zip", "ask-then-do-it"),
+                ("claude/ask-then-do-it", "claude/ask-then-do-it-claude-1.4.2.zip", "ask-then-do-it"),
+                ("codex/ask-then-do-it", "codex/ask-then-do-it-1.4.2.zip", "ask-then-do-it"),
                 (
-                    "generic/ask-then-do-it-generic-1.4.1",
-                    "generic/ask-then-do-it-generic-1.4.1.zip",
-                    "ask-then-do-it-generic-1.4.1",
+                    "generic/ask-then-do-it-generic-1.4.2",
+                    "generic/ask-then-do-it-generic-1.4.2.zip",
+                    "ask-then-do-it-generic-1.4.2",
                 ),
             )
             for directory_name, archive_name, archive_root in pairs:

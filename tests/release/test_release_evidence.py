@@ -77,13 +77,42 @@ class ReleaseEvidenceGateTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("validated", result.stdout.lower())
 
-    def test_unverified_claude_evidence_cannot_complete_release(self):
-        for check in ("claude-behavior", "claude-context", "claude-live-smoke"):
+    def test_unverified_required_evidence_cannot_complete_release(self):
+        for check in ("automated-tests", "claude-plugin-validation"):
             with self.subTest(check=check), tempfile.TemporaryDirectory(dir=ROOT) as temporary:
                 ledger, evidence = self.make_artifacts(Path(temporary), (check, "unverified"))
                 result = run_validator(ledger, evidence)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn(check, result.stderr)
+
+    def test_release_config_cannot_promote_optional_claude_live_checks(self):
+        live_checks = ("claude-behavior", "claude-context", "claude-live-smoke")
+        for check_id in live_checks:
+            with self.subTest(check=check_id), tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+                root = Path(temporary)
+                ledger, evidence = self.make_artifacts(root)
+
+                config_data = json.loads(CONFIG.read_text(encoding="utf-8"))
+                if check_id not in config_data["required_validation_checks"]:
+                    config_data["required_validation_checks"].append(check_id)
+                config = root / "release.json"
+                config.write_text(json.dumps(config_data), encoding="utf-8")
+
+                ledger_data = json.loads(ledger.read_text(encoding="utf-8"))
+                if not any(item["id"] == check_id for item in ledger_data["checks"]):
+                    ledger_data["checks"].append(
+                        {
+                            "id": check_id,
+                            "status": "passed",
+                            "command": f"verify {check_id}",
+                            "outcome": f"{check_id}: passed",
+                        }
+                    )
+                ledger.write_text(json.dumps(ledger_data), encoding="utf-8")
+
+                result = run_validator(ledger, evidence, config)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(check_id, result.stderr)
 
     def test_failed_or_blocked_check_rejects_completed_evidence(self) -> None:
         for status in ("failed", "blocked"):

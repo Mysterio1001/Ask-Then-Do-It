@@ -14,7 +14,7 @@ GUIDES = ROOT / "docs/guides"
 EVIDENCE = ROOT / "tests/claude/fixtures/platform-support"
 LOCALES = ("en", "zh-TW", "ja")
 ENTRIES = ("/ask-then-do-it:ask-then-do-it", "/ask-then-do-it:ask-then-do-it-5")
-VERSION = "1.4.1"
+VERSION = "1.4.2"
 REPOSITORY = "https://github.com/Mysterio1001/Ask-Then-Do-It"
 VERSIONED_GUIDES = f"{REPOSITORY}/blob/v{VERSION}/docs/guides"
 DOWNLOAD = f"{REPOSITORY}/releases/download/v{VERSION}/ask-then-do-it-claude-{VERSION}.zip"
@@ -74,7 +74,7 @@ def assert_guide_contract(body: str, locale: str) -> None:
     if set(re.findall(r"/ask-then-do-it:[a-z0-9-]+", body)) != set(ENTRIES):
         raise AssertionError("exactly two supported namespaced entries")
     if re.search(r"preview|預覽版|プレビュー", body, re.I):
-        raise AssertionError("current guide must use the 1.4.1 target")
+        raise AssertionError("current guide must use the 1.4.2 target")
     body, _ = split_advanced_reference(body)
     if re.findall(r"^## (.+)$", body, re.M) != list(HEADINGS[locale]):
         raise AssertionError("main guide must keep the seven user-facing chapters")
@@ -93,7 +93,7 @@ def assert_guide_contract(body: str, locale: str) -> None:
         if internal in body:
             raise AssertionError("internal detail belongs in the advanced reference: " + internal)
     if re.search(r"preview|預覽版|プレビュー", body, re.I):
-        raise AssertionError("current guide must use the 1.4.1 target")
+        raise AssertionError("current guide must use the 1.4.2 target")
     assert_no_false_claims(body, locale)
 
 

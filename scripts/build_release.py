@@ -25,6 +25,7 @@ from typing import Any
 
 from validate_marketplace import CatalogError, DEFAULT_CATALOG, load_and_validate
 import validate_claude_package as claude_package
+from release_validation_contract import REQUIRED_VALIDATION_CHECKS
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -50,6 +51,7 @@ TOP_LEVEL_KEYS = {
     "core_version",
     "codex",
     "generic",
+    "claude",
     "required_validation_checks",
     "managed_outputs",
 }
@@ -63,6 +65,16 @@ GENERIC_KEYS = {
     "modules",
 }
 CLAUDE_KEYS = {"source", "directory", "archive", "inventory"}
+CLAUDE_REQUIRED_VALIDATION_CHECKS = {
+    "claude-plugin-validation",
+    "claude-conformance",
+    "claude-package-inventory",
+}
+CLAUDE_OPTIONAL_LIVE_QUALIFICATION_CHECKS = {
+    "claude-behavior",
+    "claude-context",
+    "claude-live-smoke",
+}
 PREVIEW_VERSION = "1.4.0-preview.1"
 PREVIEW_MARKER = "preview.json"
 PREVIEW_CLAIM = "packaging-only-no-host-or-model-verification"
@@ -213,8 +225,7 @@ def read_top_level_yaml_scalar(path: Path, key: str) -> str:
 
 def load_config(path: Path) -> dict[str, Any]:
     config = read_json_object(path.resolve(), "release configuration")
-    expected_keys = TOP_LEVEL_KEYS | ({"claude"} if "claude" in config else set())
-    require_exact_keys(config, expected_keys, "release configuration")
+    require_exact_keys(config, TOP_LEVEL_KEYS, "release configuration")
     if config["schema_version"] != 2:
         raise BuildError("release configuration schema_version must be 2")
     for key in ("package_id", "display_name", "release_version", "core_version"):
@@ -316,6 +327,11 @@ def load_config(path: Path) -> dict[str, Any]:
         raise BuildError(
             "release configuration.required_validation_checks contains duplicates"
         )
+    if tuple(required_checks) != REQUIRED_VALIDATION_CHECKS:
+        raise BuildError(
+            "release configuration.required_validation_checks must equal the "
+            "canonical ordered release gate"
+        )
 
     managed = config.get("managed_outputs")
     if not isinstance(managed, list) or not managed:
@@ -323,10 +339,8 @@ def load_config(path: Path) -> dict[str, Any]:
     normalized = [validate_relative_name(item, "managed_outputs entry") for item in managed]
     if len(normalized) != len(set(normalized)):
         raise BuildError("release configuration.managed_outputs contains duplicates")
-    expected = {"codex", "generic", "checksums.sha256"}
-    if "claude" in config:
-        validate_claude_config(config)
-        expected.add("claude")
+    validate_claude_config(config)
+    expected = {"codex", "generic", "claude", "checksums.sha256"}
     if set(normalized) != expected:
         raise BuildError(f"managed_outputs must equal configured outputs: {sorted(expected)}")
     return config
@@ -353,8 +367,16 @@ def validate_claude_config(config: dict[str, Any]) -> None:
     ):
         if read_top_level_yaml_scalar(declaration, key) != value:
             raise BuildError(f"Claude current conformance identity mismatch: {key}")
-    required = {"claude-plugin-validation", "claude-conformance", "claude-package-inventory", "claude-behavior", "claude-context", "claude-live-smoke"}
-    if not required <= set(config["required_validation_checks"]):
+    declared_checks = set(config["required_validation_checks"])
+    forbidden = sorted(
+        CLAUDE_OPTIONAL_LIVE_QUALIFICATION_CHECKS.intersection(declared_checks)
+    )
+    if forbidden:
+        raise BuildError(
+            "Optional Claude live qualification checks cannot be required: "
+            f"{forbidden}"
+        )
+    if not CLAUDE_REQUIRED_VALIDATION_CHECKS <= declared_checks:
         raise BuildError("Claude activation requires its declared validation checks")
     claude_package.validate_source(ROOT, config["release_version"])
 
@@ -999,7 +1021,7 @@ def main() -> int:
         if preview:
             selected = ["claude"]
         elif args.package == "all":
-            selected = [name for name in ("codex", "generic", "claude") if name in config]
+            selected = ["codex", "generic", "claude"]
         else:
             selected = [args.package]
         if any(name not in config for name in selected):

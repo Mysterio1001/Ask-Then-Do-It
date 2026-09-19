@@ -1,0 +1,173 @@
+{
+  "algorithm": {
+    "billing_guarantee": false,
+    "bytes_per_proxy_token": 4,
+    "id": "normalized-utf8-quarter-v1",
+    "limitation": "This is a source-level proxy, not billing or total-context measurement.",
+    "normalization": "Unicode NFC; collapse each Unicode whitespace run to one ASCII space; strip; join ordered load-set files with one LF; count ceil(UTF-8 bytes / 4).",
+    "total_context_guarantee": false
+  },
+  "load_sets": {
+    "full-architecture": {
+      "loaded_context_proxy": 4286,
+      "normalized_utf8_bytes": 17141,
+      "sources": [
+        "skills/ask-then-do-it/SKILL.md",
+        "skills/improve-architecture/SKILL.md"
+      ]
+    },
+    "full-documented-requirements": {
+      "loaded_context_proxy": 4342,
+      "normalized_utf8_bytes": 17368,
+      "sources": [
+        "skills/ask-then-do-it/SKILL.md",
+        "skills/ask-with-docs/SKILL.md"
+      ]
+    },
+    "full-implementation-direct": {
+      "loaded_context_proxy": 3822,
+      "normalized_utf8_bytes": 15287,
+      "sources": [
+        "skills/ask-then-do-it/SKILL.md",
+        "skills/implement-direct/SKILL.md"
+      ]
+    },
+    "full-implementation-tdd": {
+      "loaded_context_proxy": 4028,
+      "normalized_utf8_bytes": 16111,
+      "sources": [
+        "skills/ask-then-do-it/SKILL.md",
+        "skills/implement-tdd/SKILL.md"
+      ]
+    },
+    "full-requirements": {
+      "loaded_context_proxy": 3960,
+      "normalized_utf8_bytes": 15840,
+      "sources": [
+        "skills/ask-then-do-it/SKILL.md",
+        "skills/ask-requirements/SKILL.md"
+      ]
+    },
+    "full-review": {
+      "loaded_context_proxy": 4682,
+      "normalized_utf8_bytes": 18727,
+      "sources": [
+        "skills/ask-then-do-it/SKILL.md",
+        "skills/review-code/SKILL.md"
+      ]
+    },
+    "full-specification": {
+      "loaded_context_proxy": 3747,
+      "normalized_utf8_bytes": 14988,
+      "sources": [
+        "skills/ask-then-do-it/SKILL.md",
+        "skills/write-spec/SKILL.md"
+      ]
+    },
+    "full-ticket-plan": {
+      "loaded_context_proxy": 4396,
+      "normalized_utf8_bytes": 17583,
+      "sources": [
+        "skills/ask-then-do-it/SKILL.md",
+        "skills/plan-tickets/SKILL.md"
+      ]
+    },
+    "lite": {
+      "loaded_context_proxy": 4582,
+      "normalized_utf8_bytes": 18325,
+      "sources": [
+        "skills/ask-then-do-it/SKILL.md",
+        "skills/ask-then-do-it/references/lite-workflow.md"
+      ]
+    },
+    "root-router": {
+      "loaded_context_proxy": 2805,
+      "normalized_utf8_bytes": 11220,
+      "sources": [
+        "skills/ask-then-do-it/SKILL.md"
+      ]
+    }
+  },
+  "package": {
+    "package_matches_source": true,
+    "source": "plugin/ask-then-do-it"
+  },
+  "schema_version": 1,
+  "source_files": {
+    "ask-requirements": {
+      "path": "skills/ask-requirements/SKILL.md",
+      "raw_utf8_bytes": 4647,
+      "sha256": "3e694b4a6a5e4abe0f6ebfc77ce053415aa911147d2a602db09921fbb6b21875",
+      "whitespace_words": 651
+    },
+    "ask-then-do-it": {
+      "path": "skills/ask-then-do-it/SKILL.md",
+      "raw_utf8_bytes": 11273,
+      "sha256": "ac04fed06396e1ba5541155f183cf7a5e9a2add5fbd2cf4d52e3e415f827ca42",
+      "whitespace_words": 1589
+    },
+    "ask-with-docs": {
+      "path": "skills/ask-with-docs/SKILL.md",
+      "raw_utf8_bytes": 6182,
+      "sha256": "052397a19cf7a06559497c79b1cf6b3440540b8c27a77b1c30761bcb6a7c752f",
+      "whitespace_words": 815
+    },
+    "implement-direct": {
+      "path": "skills/implement-direct/SKILL.md",
+      "raw_utf8_bytes": 4085,
+      "sha256": "b7966d7ba798c2ff70971284ae25723b2de816d63c702bf787b4ea898743a732",
+      "whitespace_words": 568
+    },
+    "implement-tdd": {
+      "path": "skills/implement-tdd/SKILL.md",
+      "raw_utf8_bytes": 4914,
+      "sha256": "e45c7af280c90c3286bf23222327b7bb5449a32728cc2088f019aa308a289b89",
+      "whitespace_words": 701
+    },
+    "improve-architecture": {
+      "path": "skills/improve-architecture/SKILL.md",
+      "raw_utf8_bytes": 5954,
+      "sha256": "9e2bc2a13d7840ce7a23c412e20a1d484fa7018d60bebb90c1454a925320c41a",
+      "whitespace_words": 792
+    },
+    "plan-tickets": {
+      "path": "skills/plan-tickets/SKILL.md",
+      "raw_utf8_bytes": 6392,
+      "sha256": "86fe94805f7a73dd83882ac0ef743b2075785ac4b642349e15affd545728bfef",
+      "whitespace_words": 931
+    },
+    "review-code": {
+      "path": "skills/review-code/SKILL.md",
+      "raw_utf8_bytes": 7544,
+      "sha256": "298559ac35421908c48e321e6b7180b113e5ced6a75cfe1b2d03370036a570ea",
+      "whitespace_words": 1059
+    },
+    "write-spec": {
+      "path": "skills/write-spec/SKILL.md",
+      "raw_utf8_bytes": 3791,
+      "sha256": "5b1e64f922f87132ef90484d11896801b269ee2c75f3185f04b1499aef89ba56",
+      "whitespace_words": 524
+    }
+  },
+  "validation": {
+    "adapter_metadata_mapping_targets": [
+      "conformance.yaml",
+      "rule-mapping.yaml"
+    ],
+    "reference_targets": [
+      "skills/ask-then-do-it/references/lite-workflow.md"
+    ],
+    "runtime_mapping_targets": [
+      "plugin/ask-then-do-it/skills/ask-requirements/SKILL.md",
+      "plugin/ask-then-do-it/skills/ask-then-do-it/SKILL.md",
+      "plugin/ask-then-do-it/skills/ask-then-do-it/references/lite-workflow.md",
+      "plugin/ask-then-do-it/skills/ask-with-docs/SKILL.md",
+      "plugin/ask-then-do-it/skills/implement-direct/SKILL.md",
+      "plugin/ask-then-do-it/skills/implement-tdd/SKILL.md",
+      "plugin/ask-then-do-it/skills/improve-architecture/SKILL.md",
+      "plugin/ask-then-do-it/skills/plan-tickets/SKILL.md",
+      "plugin/ask-then-do-it/skills/review-code/SKILL.md",
+      "plugin/ask-then-do-it/skills/write-spec/SKILL.md"
+    ]
+  }
+}

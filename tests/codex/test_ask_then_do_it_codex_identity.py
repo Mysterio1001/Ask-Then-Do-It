@@ -39,7 +39,7 @@ class AskThenDoItCodexIdentityTests(unittest.TestCase):
 
         self.assertEqual(PLUGIN.name, "ask-then-do-it")
         self.assertEqual(manifest["name"], "ask-then-do-it")
-        self.assertEqual(manifest["version"], "1.4.1")
+        self.assertEqual(manifest["version"], "1.4.2")
         self.assertEqual(manifest["author"]["name"], "Ian Wu, Handle by me Tech Studio")
         self.assertIn("independent", manifest["description"].lower())
         self.assertIn("not affiliated with or endorsed by Matt Pocock", manifest["description"])
@@ -64,11 +64,22 @@ class AskThenDoItCodexIdentityTests(unittest.TestCase):
         orchestrator = (SKILLS / "ask-then-do-it" / "SKILL.md").read_text(
             encoding="utf-8"
         )
+        full_routing = (
+            SKILLS / "ask-then-do-it" / "references" / "full-routing.md"
+        ).read_text(encoding="utf-8")
 
-        self.assertIn("$ask-requirements", orchestrator)
-        self.assertIn("$ask-with-docs", orchestrator)
+        self.assertIn(
+            "[Full routing workflow](references/full-routing.md)", orchestrator
+        )
+        self.assertNotIn("$ask-requirements", orchestrator)
+        self.assertNotIn("$ask-with-docs", orchestrator)
         self.assertNotIn("$grill-requirements", orchestrator)
         self.assertNotIn("$grill-with-docs", orchestrator)
+
+        self.assertIn("$ask-requirements", full_routing)
+        self.assertIn("$ask-with-docs", full_routing)
+        self.assertNotIn("$grill-requirements", full_routing)
+        self.assertNotIn("$grill-with-docs", full_routing)
 
     def test_isolated_codex_package_carries_identical_legal_files(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
@@ -90,7 +101,7 @@ class AskThenDoItCodexIdentityTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             package = output / "codex" / "ask-then-do-it"
-            archive = output / "codex" / "ask-then-do-it-1.4.1.zip"
+            archive = output / "codex" / "ask-then-do-it-1.4.2.zip"
 
             for legal_file in ("LICENSE", "THIRD_PARTY_NOTICES.md"):
                 with self.subTest(legal_file=legal_file):
