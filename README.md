@@ -33,9 +33,9 @@ codex plugin add ask-then-do-it@ask-then-do-it
 
 ### Manual installation
 
-- Codex Plugin: [Download ask-then-do-it-1.4.2.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-1.4.2.zip), install it, and start with `$ask-then-do-it`.
-- Claude Plugin: [Download ask-then-do-it-claude-1.4.2.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-claude-1.4.2.zip), extract it, load it using the [Claude Code guide](docs/guides/claude-code.en.md#zip), and start with `/ask-then-do-it:ask-then-do-it`.
-- Claude Desktop or another AI: [Download ask-then-do-it-generic-1.4.2.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-generic-1.4.2.zip) and upload the ZIP as a Skill in Claude Desktop. For text-only AI services, extract it and paste `SKILL.md` into each new conversation.
+- Codex Plugin: [Download ask-then-do-it-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-1.4.3.zip), install it, and start with `$ask-then-do-it`.
+- Claude Plugin: [Download ask-then-do-it-claude-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-claude-1.4.3.zip), extract it, load it using the [Claude Code guide](docs/guides/claude-code.en.md#zip), and start with `/ask-then-do-it:ask-then-do-it`.
+- Claude Desktop or another AI: [Download ask-then-do-it-generic-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-generic-1.4.3.zip) and upload the ZIP as a Skill in Claude Desktop. For text-only AI services, extract it and paste `SKILL.md` into each new conversation.
 
 Read more:
 
@@ -94,11 +94,11 @@ codex plugin add ask-then-do-it@ask-then-do-it
 
 ### 手動安裝
 
-- Codex Plugin：[下載 ask-then-do-it-1.4.2.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-1.4.2.zip)，安裝後從 `$ask-then-do-it` 開始。
+- Codex Plugin：[下載 ask-then-do-it-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-1.4.3.zip)，安裝後從 `$ask-then-do-it` 開始。
 
-- Claude Plugin：[下載 ask-then-do-it-claude-1.4.2.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-claude-1.4.2.zip)，解壓縮後依[使用說明](docs/guides/claude-code.zh-TW.md#zip)載入，從 `/ask-then-do-it:ask-then-do-it` 開始。
+- Claude Plugin：[下載 ask-then-do-it-claude-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-claude-1.4.3.zip)，解壓縮後依[使用說明](docs/guides/claude-code.zh-TW.md#zip)載入，從 `/ask-then-do-it:ask-then-do-it` 開始。
 
-- Claude Desktop 或其他 AI：[下載 ask-then-do-it-generic-1.4.2.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-generic-1.4.2.zip)，在 Claude Desktop 的 Skills 功能直接上傳 ZIP。只有文字對話能力的 AI 則解壓縮後，在每個新對話貼上 `SKILL.md`。
+- Claude Desktop 或其他 AI：[下載 ask-then-do-it-generic-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-generic-1.4.3.zip)，在 Claude Desktop 的 Skills 功能直接上傳 ZIP。只有文字對話能力的 AI 則解壓縮後，在每個新對話貼上 `SKILL.md`。
 
 更多說明：
 
@@ -158,9 +158,9 @@ codex plugin add ask-then-do-it@ask-then-do-it
 
 ### 手動インストール
 
-- Codex Plugin：[ask-then-do-it-1.4.2.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-1.4.2.zip)し、インストール後に `$ask-then-do-it` から始めます。
-- Claude Plugin：[ask-then-do-it-claude-1.4.2.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-claude-1.4.2.zip)して展開し、[Claude Code ガイド](docs/guides/claude-code.ja.md#zip)に従って読み込み、`/ask-then-do-it:ask-then-do-it` から始めます。
-- Claude Desktop またはその他の AI：[ask-then-do-it-generic-1.4.2.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-generic-1.4.2.zip)し、Claude Desktop の Skills 機能に ZIP をアップロードします。テキストのみの AI サービスでは展開して、新しい会話ごとに `SKILL.md` を貼り付けます。
+- Codex Plugin：[ask-then-do-it-1.4.3.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-1.4.3.zip)し、インストール後に `$ask-then-do-it` から始めます。
+- Claude Plugin：[ask-then-do-it-claude-1.4.3.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-claude-1.4.3.zip)して展開し、[Claude Code ガイド](docs/guides/claude-code.ja.md#zip)に従って読み込み、`/ask-then-do-it:ask-then-do-it` から始めます。
+- Claude Desktop またはその他の AI：[ask-then-do-it-generic-1.4.3.zip をダウンロード](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-generic-1.4.3.zip)し、Claude Desktop の Skills 機能に ZIP をアップロードします。テキストのみの AI サービスでは展開して、新しい会話ごとに `SKILL.md` を貼り付けます。
 
 詳しい説明：
 

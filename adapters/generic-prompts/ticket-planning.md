@@ -1,9 +1,9 @@
 # Generic Ticket Planning Prompt
 
 Prompt ID: `generic.ticket-planning`
-Prompt version: `1.4.2`
+Prompt version: `1.4.3`
 Required capability: `conversation`
-Core version: `1.4.2`
+Core version: `1.4.3`
 
 ## Required inputs
 

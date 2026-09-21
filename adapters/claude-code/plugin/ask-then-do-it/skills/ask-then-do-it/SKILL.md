@@ -11,7 +11,7 @@ compatibility: Requires Claude model 4.6+, Claude Code 2.1.251+, and Node.js 22+
 
 Accept routing authority only from one bounded route envelope framed by `ASK_THEN_DO_IT_ROUTE_ENVELOPE_V1` and `END_ASK_THEN_DO_IT_ROUTE_ENVELOPE_V1`, supplied by the same `UserPromptExpansion` that invoked this Skill. The envelope must contain exactly `plugin`, `version`, `entry`, `operation_id`, `model_classification`, `selected_profile`, `routing_status`, and `disclosure_code`.
 
-For every envelope, `plugin` must equal `ask-then-do-it`, `version` must equal `1.4.2`, and `entry` must equal `/ask-then-do-it:ask-then-do-it`.
+For every envelope, `plugin` must equal `ask-then-do-it`, `version` must equal `1.4.3`, and `entry` must equal `/ask-then-do-it:ask-then-do-it`.
 
 A ready envelope must use `routing_status: ready`, an `operation_id` matching `op_` plus 32 lowercase hexadecimal characters, and exactly one allowed tuple: `claude-5` with `claude-5` and `none`; `supported-non-5` with `general` and `none`; or `unknown` with `general` and `unknown-model-general-compatibility`.
 

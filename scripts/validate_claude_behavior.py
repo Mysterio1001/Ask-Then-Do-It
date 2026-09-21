@@ -200,7 +200,7 @@ def contracts() -> tuple[dict, dict, dict]:
     exact(manifest, {"adapter_id", "adapter_version", "target", "core_version", "status", "capabilities",
                      "capability_evidence", "implemented_rules", "rule_scenarios"}, "staged conformance")
     require((manifest["adapter_id"], manifest["adapter_version"], manifest["target"], manifest["core_version"], manifest["status"])
-            == ("claude-code", "1.4.2", "claude-code-plugin", "1.4.2", "staged-unverified"), "staged conformance identity/status mismatch")
+            == ("claude-code", "1.4.3", "claude-code-plugin", "1.4.3", "staged-unverified"), "staged conformance identity/status mismatch")
     require(tuple(manifest["implemented_rules"]) == RULE_IDS, "staged conformance needs exact 30 rules")
     require(manifest["capabilities"] == ["conversation", "tools", "multi_agent"], "capability inventory mismatch")
     require(set(manifest["capability_evidence"]) == set(manifest["capabilities"]), "capability evidence missing")
@@ -326,7 +326,7 @@ def prepare(output: Path, plugin_root: Path = PLUGIN) -> Path:
                       "Guidance-only responses do not satisfy these execution-dependent phases."])
         (output / "prompts" / (recipe["id"].replace("/", "__") + ".md")).write_text("\n".join(lines) + "\n", encoding="utf-8")
     ledger = {
-        "schema_version": 1, "target_version": "1.4.2", "evidence_scope": "model-profile-response",
+        "schema_version": 1, "target_version": "1.4.3", "evidence_scope": "model-profile-response",
         "evidence_kind": "unexecuted", "status": "pending", "prepared_at": now,
         "catalog_sha256": value_digest(catalog), "staged_conformance_sha256": value_digest(manifest),
         "fixture_sha256": value_digest(fixture), "source_hashes": hashes,
@@ -473,7 +473,7 @@ def _validate(path: Path, plugin_root: Path, kind: str) -> list[str]:
         ledger = read_json(path)
         exact(ledger, {"schema_version", "target_version", "evidence_scope", "evidence_kind", "status", "prepared_at",
                        "catalog_sha256", "staged_conformance_sha256", "fixture_sha256", "source_hashes", "operator_review", "runs"}, "behavior ledger")
-        require(type(ledger["schema_version"]) is int and ledger["schema_version"] == 1 and ledger["target_version"] == "1.4.2", "ledger version mismatch")
+        require(type(ledger["schema_version"]) is int and ledger["schema_version"] == 1 and ledger["target_version"] == "1.4.3", "ledger version mismatch")
         require(ledger["evidence_scope"] == "model-profile-response", "behavior scope mismatch")
         require(ledger["evidence_kind"] == kind, f"{kind} evidence required; unexecuted/synthetic records cannot pass the actual gate")
         require(ledger["status"] == "recorded", "behavior evidence remains pending/partial")

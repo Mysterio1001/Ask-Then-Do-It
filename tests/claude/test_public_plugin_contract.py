@@ -202,7 +202,7 @@ class ClaudePublicPluginContractTests(unittest.TestCase):
         )
         self.assertEqual(entry["name"], "ask-then-do-it")
         self.assertEqual(entry["displayName"], "Ask Then Do It")
-        self.assertEqual(entry["version"], "1.4.2")
+        self.assertEqual(entry["version"], "1.4.3")
         self.assertEqual(entry["description"], DESCRIPTION)
         self.assertEqual(entry["author"], AUTHOR)
         self.assertEqual(entry["homepage"], HOMEPAGE)
@@ -218,7 +218,7 @@ class ClaudePublicPluginContractTests(unittest.TestCase):
                 "source": "git-subdir",
                 "url": SOURCE_REPOSITORY,
                 "path": "adapters/claude-code/plugin/ask-then-do-it",
-                "ref": "v1.4.2",
+                "ref": "v1.4.3",
             },
         )
 

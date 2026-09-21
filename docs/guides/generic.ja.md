@@ -2,13 +2,13 @@
 
 Claude Desktop Skills と、長いテキストを受け取れるその他の AI 向けです。Claude Desktop では ZIP を Skill としてアップロードし、テキストのみのホストではワークフローを貼り付けます。
 
-以下は 1.4.2 のインストール／ダウンロード先です。遠隔側で利用できない場合は公開を待ってください。
+以下は 1.4.3 のインストール／ダウンロード先です。遠隔側で利用できない場合は公開を待ってください。
 
 ## インストールと準備
 
 パッケージをダウンロードし、Claude Desktop の Skills 機能から ZIP をアップロードします。ZIP 内の一つのパッケージフォルダーの直下に `SKILL.md` があり、先頭に YAML の `name` と `description` を含みます。テキストのみのホストでは展開して、`SKILL.md` と `prompts/` を保持します。
 
-[ダウンロード ask-then-do-it-generic-1.4.2.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-generic-1.4.2.zip)
+[ダウンロード ask-then-do-it-generic-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-generic-1.4.3.zip)
 
 ## 使い始める
 

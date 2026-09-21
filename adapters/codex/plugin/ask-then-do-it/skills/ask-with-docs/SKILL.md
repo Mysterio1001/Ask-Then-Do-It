@@ -34,7 +34,7 @@ Do not ask for facts that available evidence already answers. Do not edit produc
 
 ## Keep provisional notes
 
-Maintain Draft Working Notes with `status` fixed to `Draft`; use the portable artifact contract for the shared envelope (including `core_version` `1.4.2`) and pending `approval`.
+Maintain Draft Working Notes with `status` fixed to `Draft`; use the portable artifact contract for the shared envelope (including `core_version` `1.4.3`) and pending `approval`.
 
 Label each entry:
 

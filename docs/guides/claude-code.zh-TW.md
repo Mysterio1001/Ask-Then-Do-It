@@ -2,7 +2,7 @@
 
 在 Claude Code 使用同一個 Plugin，即可取得一般 Claude 與 Claude 5 兩種流程設定。
 
-以下為 1.4.2 的安裝／下載目標；若遠端尚未提供，請等待發布。
+以下為 1.4.3 的安裝／下載目標；若遠端尚未提供，請等待發布。
 
 ## 安裝與準備
 
@@ -21,7 +21,7 @@
 
 下載後可依 Release 的 checksums 檔核對 SHA-256。
 
-[下載 ask-then-do-it-claude-1.4.2.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-claude-1.4.2.zip)
+[下載 ask-then-do-it-claude-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-claude-1.4.3.zip)
 
 下載並解壓縮完整 Plugin。每次從終端機啟動時加上：
 

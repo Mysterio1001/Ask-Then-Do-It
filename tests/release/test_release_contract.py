@@ -89,8 +89,8 @@ class ReleaseContractTests(unittest.TestCase):
     def test_current_release_identity_and_validation_gate_are_declared(self) -> None:
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
         self.assertEqual(config["schema_version"], 2)
-        self.assertEqual(config["release_version"], "1.4.2")
-        self.assertEqual(config["core_version"], "1.4.2")
+        self.assertEqual(config["release_version"], "1.4.3")
+        self.assertEqual(config["core_version"], "1.4.3")
         self.assertEqual(
             config["required_validation_checks"], REQUIRED_VALIDATION_CHECKS
         )
@@ -105,9 +105,9 @@ class ReleaseContractTests(unittest.TestCase):
             encoding="ascii"
         ).splitlines()
         expected = {
-            "codex/ask-then-do-it-1.4.2.zip",
-            "generic/ask-then-do-it-generic-1.4.2.zip",
-            "claude/ask-then-do-it-claude-1.4.2.zip",
+            "codex/ask-then-do-it-1.4.3.zip",
+            "generic/ask-then-do-it-generic-1.4.3.zip",
+            "claude/ask-then-do-it-claude-1.4.3.zip",
         }
         self.assertEqual({line.split("  ", 1)[1] for line in checksums}, expected)
         for line in checksums:

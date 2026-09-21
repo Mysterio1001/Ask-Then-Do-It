@@ -18,7 +18,7 @@ Every artifact must include or unambiguously convey:
 
 Artifacts that have an approval gate also include `approval` evidence. Preserve the envelope when revising an artifact; do not silently replace a stable ID or workflow ID.
 
-When creating an artifact, assign a stable `artifact_id` and use the same `workflow_id` as upstream artifacts in this workflow; at the first artifact, establish one stable workflow ID for later stages. Set `core_version` to the Core contract version `1.4.2` (not the plugin version). Record upstream artifacts and decisions in `inputs`, and identify the next stage or owner in `handoff`. Preserve these values when revising an artifact.
+When creating an artifact, assign a stable `artifact_id` and use the same `workflow_id` as upstream artifacts in this workflow; at the first artifact, establish one stable workflow ID for later stages. Set `core_version` to the Core contract version `1.4.3` (not the plugin version). Record upstream artifacts and decisions in `inputs`, and identify the next stage or owner in `handoff`. Preserve these values when revising an artifact.
 
 ## State and evidence honesty
 

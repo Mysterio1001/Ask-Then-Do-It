@@ -29,7 +29,7 @@ class AskThenDoItIdentityTests(unittest.TestCase):
 
         self.assertTrue(readme.startswith("# Ask Then Do It"))
         self.assertIn("Ask Then Do It", start_here)
-        self.assertIn("1.4.2", start_here)
+        self.assertIn("1.4.3", start_here)
         for platform in ("codex", "claude-code", "generic"):
             self.assertIn(f"docs/guides/{platform}.zh-TW.md", start_here)
 

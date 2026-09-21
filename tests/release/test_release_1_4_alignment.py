@@ -19,11 +19,11 @@ class ReleaseAlignmentTests(unittest.TestCase):
 
     def test_current_config_loads_three_version_matched_families(self):
         config = self.builder.load_config(ROOT / 'release/release.json')
-        self.assertEqual(config['release_version'], '1.4.2')
-        self.assertEqual(config['core_version'], '1.4.2')
+        self.assertEqual(config['release_version'], '1.4.3')
+        self.assertEqual(config['core_version'], '1.4.3')
         self.assertEqual(set(config['managed_outputs']), {'codex', 'generic', 'claude', 'checksums.sha256'})
         for family in ('codex', 'generic', 'claude'):
-            self.assertTrue(config[family]['archive'].endswith('-1.4.2.zip'))
+            self.assertTrue(config[family]['archive'].endswith('-1.4.3.zip'))
 
     def test_provider_catalogs_pin_the_same_current_release_tag(self):
         codex_catalog = json.loads(
@@ -32,9 +32,9 @@ class ReleaseAlignmentTests(unittest.TestCase):
         claude_catalog = json.loads(
             (ROOT / '.claude-plugin/marketplace.json').read_text(encoding='utf-8')
         )
-        self.assertEqual(codex_catalog['plugins'][0]['source']['ref'], 'v1.4.2')
-        self.assertEqual(claude_catalog['plugins'][0]['source']['ref'], 'v1.4.2')
-        self.assertEqual(claude_catalog['plugins'][0]['version'], '1.4.2')
+        self.assertEqual(codex_catalog['plugins'][0]['source']['ref'], 'v1.4.3')
+        self.assertEqual(claude_catalog['plugins'][0]['source']['ref'], 'v1.4.3')
+        self.assertEqual(claude_catalog['plugins'][0]['version'], '1.4.3')
 
     def test_historical_slimming_artifacts_keep_their_original_core_version(self):
         for relative in (

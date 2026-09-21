@@ -1,9 +1,9 @@
 # Generic Specification Prompt
 
 Prompt ID: `generic.specification`
-Prompt version: `1.4.2`
+Prompt version: `1.4.3`
 Required capability: `conversation`
-Core version: `1.4.2`
+Core version: `1.4.3`
 
 ## Required inputs
 

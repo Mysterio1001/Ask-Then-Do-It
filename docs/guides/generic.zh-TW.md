@@ -2,13 +2,13 @@
 
 適合 Claude Desktop Skills，以及其他能接收長文字的 AI。可在 Claude Desktop 上傳 ZIP 作為 Skill；只有文字對話能力的服務則貼上工作流即可使用。
 
-以下為 1.4.2 的安裝／下載目標；若遠端尚未提供，請等待發布。
+以下為 1.4.3 的安裝／下載目標；若遠端尚未提供，請等待發布。
 
 ## 安裝與準備
 
 下載套件後，在 Claude Desktop 的 Skills 功能直接上傳 ZIP。ZIP 內有一個套件資料夾，`SKILL.md` 位於該資料夾根目錄，開頭包含 YAML `name` 與 `description` 欄位。只有文字對話能力的服務，請解壓縮並保留 `SKILL.md` 與 `prompts/`。
 
-[下載 ask-then-do-it-generic-1.4.2.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.2/ask-then-do-it-generic-1.4.2.zip)
+[下載 ask-then-do-it-generic-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-generic-1.4.3.zip)
 
 ## 開始使用
 

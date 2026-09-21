@@ -223,7 +223,7 @@ class BehaviorEvidenceTests(unittest.TestCase):
         self.assertEqual(tuple(manifest["implemented_rules"]), behavior.RULE_IDS)
         self.assertEqual(len(manifest["rule_scenarios"]), 30)
         current = yaml.safe_load((ROOT / "adapters/claude-code/conformance.yaml").read_text(encoding="utf-8"))
-        self.assertEqual(current["adapter_version"], "1.4.2")
+        self.assertEqual(current["adapter_version"], "1.4.3")
         self.assertEqual(current["validation"]["status"], "unverified")
         self.assertEqual(tuple(current["implemented_rules"]), behavior.RULE_IDS)
         recipes = {recipe["id"]: recipe for recipe in behavior.run_recipes(catalog)}

@@ -116,10 +116,10 @@ HEADINGS = {
 }
 
 VERSIONED_GUIDE_ROOT = (
-    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.2/docs/guides"
+    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.3/docs/guides"
 )
 VERSIONED_README = (
-    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.2/README.md"
+    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.3/README.md"
 )
 
 
@@ -1061,7 +1061,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
             for locale, document in documents.items():
                 with self.subTest(group=group, locale=locale):
                     body = document.read_text(encoding="utf-8")
-                    self.assertIn("1.4.2", body.splitlines()[0])
+                    self.assertIn("1.4.3", body.splitlines()[0])
                     self.assertLess(len(body.splitlines()), 65)
                     self.assertIn("Full", body)
                     self.assertIn("Lite", body)
@@ -1120,10 +1120,10 @@ class ReleaseDocumentationTests(unittest.TestCase):
                 self.assertNotRegex(body.lower(), r"preview|預覽版|閱覽版|プレビュー")
                 self.assertNotIn("vscode://", body)
                 for version in re.findall(re.escape(repository) + r"/(?:blob|releases/download)/v([^/]+)/", body):
-                    self.assertEqual(version, "1.4.2")
+                    self.assertEqual(version, "1.4.3")
         for host, documents in HOST_GUIDES.items():
             suffix = {"codex": "", "claude-code": "-claude", "generic": "-generic"}[host]
-            expected = f"{repository}/releases/download/v1.4.2/ask-then-do-it{suffix}-1.4.2.zip"
+            expected = f"{repository}/releases/download/v1.4.3/ask-then-do-it{suffix}-1.4.3.zip"
             for document in documents.values():
                 self.assertIn(expected, document.read_text(encoding="utf-8"))
             self.assertIn(expected, README.read_text(encoding="utf-8"))
@@ -1177,7 +1177,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
     def test_current_document_navigation_anchors_resolve_offline(self) -> None:
         documents = set(USER_ZH_DOCUMENTS + USER_LOCALIZED_DOCUMENTS)
         documents.update((ROOT / "docs").rglob("*.md"))
-        prefix = "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.2/"
+        prefix = "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.3/"
         for document in documents:
             if is_historical_archive(document):
                 continue

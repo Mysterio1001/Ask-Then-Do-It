@@ -137,7 +137,7 @@ class CodexPackageIntegrationTests(unittest.TestCase):
                     relative,
                 )
 
-            archive_name = "codex/ask-then-do-it-1.4.2.zip"
+            archive_name = "codex/ask-then-do-it-1.4.3.zip"
             first_archive = outputs[0] / archive_name
             second_archive = outputs[1] / archive_name
             self.assertEqual(first_archive.read_bytes(), second_archive.read_bytes())
