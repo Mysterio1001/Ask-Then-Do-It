@@ -25,12 +25,12 @@
 
 ## 2. Claude catalog 與 Plugin manifest
 
-Repository root MUST 有 `.claude-plugin/marketplace.json`。它 MUST 使用 Claude Marketplace schema，且 authored top-level fields 恰為：`name`、`description`、`owner`、`plugins`；`name` 是 `ask-then-do-it`，`description` MUST 與唯一 Plugin entry 的 approved independent-project description 完全一致，`owner.name` 是 `Ian Wu, Handle by me Tech Studio`，`owner.url` 指向本 repository，`plugins` 恰有一個 Ask Then Do It entry。
+Repository root MUST 有 `.claude-plugin/marketplace.json`。它 MUST 使用 Claude Marketplace schema，且 authored top-level fields 恰為：`name`、`description`、`owner`、`plugins`；`name` 是 `ask-then-do-it`，`description` MUST 與唯一 Plugin entry 的 approved independent-project description 完全一致，`owner.name` 是 `Ian Wu, Handle by Me Tech Studio`，`owner.url` 指向本 repository，`plugins` 恰有一個 Ask Then Do It entry。
 
 該 entry MUST 使用：
 
 - `name: ask-then-do-it`、`displayName: Ask Then Do It`、`version: 1.4.2`；
-- 與現有產品一致的 independent-project description、author、repository、homepage、MIT license、Developer Tools category 與 discovery tags；
+- 與現有產品一致的 independent-project description、author、MIT license、Developer Tools category 與 discovery tags；`repository` 指向 GitHub repository，`homepage` 指向 `https://ask-then-do-it.handlebyme.com/`；
 - `strict: true` 與 `defaultEnabled: true`；
 - `git-subdir` source，URL 是 `https://github.com/Mysterio1001/Ask-Then-Do-It.git`，path 是 `adapters/claude-code/plugin/ask-then-do-it`，ref 是 `v1.4.2`；
 - 不含 Codex-only `policy`、Codex `interface` 或指向 Codex source 的欄位。
@@ -66,12 +66,12 @@ General MAY 使用較完整說明。Claude 5 profile MAY 合併重複敘述、�
 
 在 Claude Code `2.1.251+`、Node `22+` 且 router/state trustworthy 時，routing MUST 為：
 
-| Model classification | Automatic entry | Explicit Claude 5 entry |
-| --- | --- | --- |
-| `claude-5` | 綁定 Claude 5-optimized | 綁定 Claude 5-optimized |
-| `supported-non-5` | 綁定 general | 揭露不相容後綁定 general |
-| `unsupported` | 停止並要求 Claude `4.6+` | 停止並要求 Claude `4.6+` |
-| `unknown` | 揭露 compatibility mode 後綁定 general | 將 command invocation 視為明確選擇；揭露無法驗證後綁定 Claude 5-optimized |
+| Model classification | Automatic entry                        | Explicit Claude 5 entry                                                   |
+| -------------------- | -------------------------------------- | ------------------------------------------------------------------------- |
+| `claude-5`           | 綁定 Claude 5-optimized                | 綁定 Claude 5-optimized                                                   |
+| `supported-non-5`    | 綁定 general                           | 揭露不相容後綁定 general                                                  |
+| `unsupported`        | 停止並要求 Claude `4.6+`               | 停止並要求 Claude `4.6+`                                                  |
+| `unknown`            | 揭露 compatibility mode 後綁定 general | 將 command invocation 視為明確選擇；揭露無法驗證後綁定 Claude 5-optimized |
 
 Claude Code `<2.1.251` 時兩個 entries 都 MUST 停止。Node missing／`<22` 時 automatic entry MUST 停止；explicit entry只有在另行證明Claude Code version受支援後才 MAY走manual optimized path，且 MUST揭露model無法驗證、automatic routing unavailable、正式完整支援前仍需升級Node。Router executable/hook unavailable MUST使automatic entry停止；schema、state transition或ownership failure則使兩個entries都停止。只有valid、`ready` state的omitted/unmapped canonical model才是`unknown`。
 

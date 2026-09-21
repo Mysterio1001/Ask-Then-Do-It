@@ -40,6 +40,10 @@ class PluginAssetTests(unittest.TestCase):
         )
         interface = manifest["interface"]
         self.assertEqual(interface["brandColor"], "#C8262A")
+        self.assertEqual(
+            interface["websiteURL"],
+            "https://ask-then-do-it.handlebyme.com/",
+        )
         self.assertEqual(interface["composerIcon"], "./assets/icon.png")
         self.assertEqual(interface["logo"], "./assets/logo.png")
 

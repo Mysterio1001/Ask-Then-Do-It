@@ -23,12 +23,13 @@ NAME = "ask-then-do-it"
 DISPLAY_NAME = "Ask Then Do It"
 VERSION = "1.4.2"
 REPOSITORY = "https://github.com/Mysterio1001/Ask-Then-Do-It"
+HOMEPAGE = "https://ask-then-do-it.handlebyme.com/"
 DESCRIPTION = (
     "An independent gated AI development workflow from requirement discovery "
     "through evidence-based review and architecture diagnosis. This project is "
     "not affiliated with or endorsed by Matt Pocock."
 )
-AUTHOR = {"name": "Ian Wu, Handle by me Tech Studio"}
+AUTHOR = {"name": "Ian Wu, Handle by Me Tech Studio"}
 KEYWORDS = [
     "ai-development",
     "requirements",
@@ -510,7 +511,7 @@ def validate_marketplace(value: dict[str, Any]) -> dict[str, Any]:
         "version": VERSION,
         "description": DESCRIPTION,
         "author": AUTHOR,
-        "homepage": REPOSITORY,
+        "homepage": HOMEPAGE,
         "repository": REPOSITORY,
         "license": "MIT",
         "keywords": KEYWORDS,

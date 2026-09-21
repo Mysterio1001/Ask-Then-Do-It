@@ -40,7 +40,7 @@ class AskThenDoItCodexIdentityTests(unittest.TestCase):
         self.assertEqual(PLUGIN.name, "ask-then-do-it")
         self.assertEqual(manifest["name"], "ask-then-do-it")
         self.assertEqual(manifest["version"], "1.4.2")
-        self.assertEqual(manifest["author"]["name"], "Ian Wu, Handle by me Tech Studio")
+        self.assertEqual(manifest["author"]["name"], "Ian Wu, Handle by Me Tech Studio")
         self.assertIn("independent", manifest["description"].lower())
         self.assertIn("not affiliated with or endorsed by Matt Pocock", manifest["description"])
         self.assertEqual(

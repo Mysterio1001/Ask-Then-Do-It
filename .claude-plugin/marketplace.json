@@ -2,7 +2,7 @@
   "name": "ask-then-do-it",
   "description": "An independent gated AI development workflow from requirement discovery through evidence-based review and architecture diagnosis. This project is not affiliated with or endorsed by Matt Pocock.",
   "owner": {
-    "name": "Ian Wu, Handle by me Tech Studio",
+    "name": "Ian Wu, Handle by Me Tech Studio",
     "url": "https://github.com/Mysterio1001/Ask-Then-Do-It"
   },
   "plugins": [
@@ -12,9 +12,9 @@
       "version": "1.4.2",
       "description": "An independent gated AI development workflow from requirement discovery through evidence-based review and architecture diagnosis. This project is not affiliated with or endorsed by Matt Pocock.",
       "author": {
-        "name": "Ian Wu, Handle by me Tech Studio"
+        "name": "Ian Wu, Handle by Me Tech Studio"
       },
-      "homepage": "https://github.com/Mysterio1001/Ask-Then-Do-It",
+      "homepage": "https://ask-then-do-it.handlebyme.com/",
       "repository": "https://github.com/Mysterio1001/Ask-Then-Do-It",
       "license": "MIT",
       "keywords": [

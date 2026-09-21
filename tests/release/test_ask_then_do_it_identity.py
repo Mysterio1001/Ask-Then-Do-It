@@ -57,7 +57,7 @@ class AskThenDoItIdentityTests(unittest.TestCase):
         license_text = LICENSE.read_text(encoding="utf-8")
 
         self.assertTrue(license_text.startswith("MIT License\n"))
-        self.assertIn("Copyright (c) 2026 Ian Wu, Handle by me Tech Studio", license_text)
+        self.assertIn("Copyright (c) 2026 Ian Wu, Handle by Me Tech Studio", license_text)
         self.assertIn(MIT_PERMISSION, license_text)
         self.assertIn(MIT_WARRANTY, license_text)
 

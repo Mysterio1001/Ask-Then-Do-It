@@ -28,12 +28,13 @@ VALIDATOR = ROOT / "scripts" / "validate_claude_plugin.py"
 
 REPOSITORY = "https://github.com/Mysterio1001/Ask-Then-Do-It"
 SOURCE_REPOSITORY = f"{REPOSITORY}.git"
+HOMEPAGE = "https://ask-then-do-it.handlebyme.com/"
 DESCRIPTION = (
     "An independent gated AI development workflow from requirement discovery "
     "through evidence-based review and architecture diagnosis. This project is "
     "not affiliated with or endorsed by Matt Pocock."
 )
-AUTHOR = {"name": "Ian Wu, Handle by me Tech Studio"}
+AUTHOR = {"name": "Ian Wu, Handle by Me Tech Studio"}
 KEYWORDS = [
     "ai-development",
     "requirements",
@@ -175,7 +176,7 @@ class ClaudePublicPluginContractTests(unittest.TestCase):
         self.assertEqual(
             catalog["owner"],
             {
-                "name": "Ian Wu, Handle by me Tech Studio",
+                "name": "Ian Wu, Handle by Me Tech Studio",
                 "url": REPOSITORY,
             },
         )
@@ -204,7 +205,7 @@ class ClaudePublicPluginContractTests(unittest.TestCase):
         self.assertEqual(entry["version"], "1.4.2")
         self.assertEqual(entry["description"], DESCRIPTION)
         self.assertEqual(entry["author"], AUTHOR)
-        self.assertEqual(entry["homepage"], REPOSITORY)
+        self.assertEqual(entry["homepage"], HOMEPAGE)
         self.assertEqual(entry["repository"], REPOSITORY)
         self.assertEqual(entry["license"], "MIT")
         self.assertEqual(entry["keywords"], KEYWORDS)

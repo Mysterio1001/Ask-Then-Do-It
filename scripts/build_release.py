@@ -467,6 +467,10 @@ def validate_codex_source(config: dict[str, Any]) -> Path:
     }
     if interface.get("brandColor") != "#C8262A":
         raise BuildError("Plugin brandColor must be '#C8262A'")
+    if interface.get("websiteURL") != "https://ask-then-do-it.handlebyme.com/":
+        raise BuildError(
+            "Plugin websiteURL must be 'https://ask-then-do-it.handlebyme.com/'"
+        )
     for field, (raw_path, size) in expected_assets.items():
         if interface.get(field) != raw_path:
             raise BuildError(f"Plugin interface.{field} must be {raw_path!r}")
