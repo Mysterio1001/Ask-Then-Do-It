@@ -9,7 +9,7 @@
 - Verification performed and unavailable evidence.
 - Residual risks and untested areas.
 - Completion assessment against the approved ticket.
-- For a `direct` Ticket: `tests: skipped-by-user`, unavailable behavioral evidence, untested areas, external test constraints, and residual risk without passing-test, automatic declined-test prescriptions, or TDD-complete claims.
+- For a `direct` Ticket, preserve the Approved test choice. For `Run existing tests only`, cite raw outcomes and missing coverage. For skipped tests and legacy direct approvals, retain `tests: skipped-by-user`. Include external constraints and residual risk. Never prescribe declined tests or claim TDD completion.
 
 If no actionable findings exist, state that explicitly without implying unavailable evidence was checked.
 

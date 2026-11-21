@@ -70,6 +70,8 @@ Accept exactly one top-level `mode = "full"` or `mode = "lite"`. Conflicting exp
 
 An explicitly selected stage reuses the proven current-operation mode; without one, return to this resolver. Resolved Lite loads the Lite stage. Resolved Full continues below and preserves all gates.
 
+For a standalone read-only review or diagnosis, inspect the requested evidence and return findings, examples, and limitations in the same response. Skip implementation planning, Change Brief approval, and file writes. Ask only for genuinely missing inputs. Keep the requested review depth and independence; a formal Ticket Review still follows its evidence contract. A later request to fix findings is a new change request.
+
 ## Route Full
 
 Inspect applicable repository instructions, current changes, the Project Knowledge Base, and supplied artifacts. Validate each artifact's type, stable ID, workflow ID, Core version, status, inputs, assumptions, deferred work, handoff, and approval evidence. Reuse relevant Approved artifacts; edited status without approval is not approval.

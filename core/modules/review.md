@@ -8,8 +8,8 @@ Evaluate delivered changes against approved intent and raw evidence, prioritizin
 
 - Review the approved Specification, Ticket, selected implementation mode, diff, surrounding code, available test changes, and raw verification results (`REVIEW-EVIDENCE-001`).
 - Preserve the Approved implementation mode throughout the Review.
-- For a `direct` Ticket, retain `tests: skipped-by-user`, state unavailable behavioral evidence and untested areas, and MUST NOT execute or prescribe automatic execution of declined behavioral tests.
-- A `direct` Ticket MAY be assessed complete when approved behavior appears implemented and no blocking finding remains, but Review MUST NOT claim passing tests or TDD completion.
+- For a `direct` Ticket with the skip choice (including legacy approvals), retain `tests: skipped-by-user`, state unavailable behavioral evidence and untested areas, and MUST NOT execute or prescribe automatic execution of declined behavioral tests.
+- For `Run existing tests only`, verify the tests were unchanged and cite only observed commands and results. Report missing coverage; unresolved failures prevent an unqualified success claim. A `direct` Ticket may complete after a nonblocking Review without claiming TDD.
 - Check specification compliance, correctness, regressions, failure handling, security, privacy, test quality, and maintainability.
 - Apply [all twelve Architecture and Refactoring Lenses](../references/architecture-refactoring-lenses.md) to the changed code and its relevant impact area (`REVIEW-LENSES-001`).
 - Record evidence and one permitted outcome for every lens. Never use `no-finding` when evidence is missing.

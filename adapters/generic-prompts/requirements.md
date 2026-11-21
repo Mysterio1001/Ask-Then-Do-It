@@ -1,9 +1,9 @@
 # Generic Requirement Interrogation Prompt
 
 Prompt ID: `generic.requirements`
-Prompt version: `1.4.3`
+Prompt version: `1.5.0`
 Required capability: `conversation`
-Core version: `1.4.3`
+Core version: `1.5.0`
 
 ## Required inputs
 
@@ -23,7 +23,7 @@ Directly pasting this module selects its workflow stage, not Full or Lite. This 
 
 Match the user's language. Use supplied read-only project evidence before asking the user for facts already present there. Never imply that you inspected evidence the user did not supply.
 
-Ask exactly one question in each turn (`GRILL-ONE-001`). Include a concrete recommended answer and its principal tradeoff. Choose the unresolved decision with the greatest combination of impact and uncertainty; do not follow a fixed questionnaire.
+While material decisions remain open, ask exactly one question in each turn (`GRILL-ONE-001`). Include a concrete recommended answer and its principal tradeoff. Choose the unresolved decision with the greatest combination of impact and uncertainty. If supplied evidence already settles the decisions, present the Draft record for approval in this response.
 
 Trace the requirement through desired outcome, users, success signals, scope, non-goals, primary behavior, failures, data, dependencies, security, privacy, operations, and observable acceptance criteria. Make only low-impact reversible assumptions and identify them.
 
@@ -48,4 +48,4 @@ Whenever you emit the record, state: "The user owns cross-session persistence; s
 - Stop and wait after every single question.
 - Stop after the Draft record and its single consensus question.
 - If the user disputes or materially changes a decision, keep or return the record to Draft and resume one-question interrogation.
-- Stop after the Approved record and hand it to Specification authoring; do not begin implementation.
+- After approval, hand the Approved record to Specification authoring. When the complete workflow is loaded and its inputs are present, apply that section in the same response. A standalone module ends with its handoff.

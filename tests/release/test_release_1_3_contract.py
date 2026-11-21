@@ -17,10 +17,10 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "release" / "release.json"
 BUILDER = ROOT / "scripts" / "build_release.py"
-RELEASE_VERSION = "1.4.3"
-CORE_VERSION = "1.4.3"
+RELEASE_VERSION = "1.5.0"
+CORE_VERSION = "1.5.0"
 VERSIONED_GUIDE_ROOT = (
-    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.3/docs/guides"
+    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.5.0/docs/guides"
 )
 EXPECTED_SKILLS = {
     "ask-then-do-it",
@@ -197,7 +197,7 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
         self.assertEqual(plugin["version"], RELEASE_VERSION)
         self.assertEqual(
             read_json(ROOT / ".agents" / "plugins" / "marketplace.json")["plugins"][0]["source"]["ref"],
-            "v1.4.3",
+            "v1.5.0",
         )
 
         self.assertIn(f"Core version: `{CORE_VERSION}`", (ROOT / "core" / "CORE.md").read_text(encoding="utf-8"))
@@ -215,29 +215,29 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
         for document in root_download_docs:
             body = document.read_text(encoding="utf-8")
             with self.subTest(document=document.relative_to(ROOT)):
-                self.assertIn("v1.4.3", body)
-                self.assertIn("ask-then-do-it-1.4.3.zip", body)
-                self.assertIn("ask-then-do-it-generic-1.4.3.zip", body)
+                self.assertIn(f"v{RELEASE_VERSION}", body)
+                self.assertIn(f"ask-then-do-it-{RELEASE_VERSION}.zip", body)
+                self.assertIn(f"ask-then-do-it-generic-{RELEASE_VERSION}.zip", body)
 
         host_contracts = (
             (
                 "codex",
                 [ROOT / "docs" / "guides" / f"codex.{locale}.md" for locale in ("en", "zh-TW", "ja")],
-                "ask-then-do-it-1.4.3.zip",
-                "ask-then-do-it-generic-1.4.3.zip",
+                "ask-then-do-it-1.5.0.zip",
+                "ask-then-do-it-generic-1.5.0.zip",
             ),
             (
                 "generic",
                 [ROOT / "docs" / "guides" / f"generic.{locale}.md" for locale in ("en", "zh-TW", "ja")],
-                "ask-then-do-it-generic-1.4.3.zip",
-                "ask-then-do-it-1.4.3.zip",
+                "ask-then-do-it-generic-1.5.0.zip",
+                "ask-then-do-it-1.5.0.zip",
             ),
         )
         for host, documents, required_archive, forbidden_archive in host_contracts:
             for document in documents:
                 body = document.read_text(encoding="utf-8")
                 with self.subTest(host=host, document=document.relative_to(ROOT)):
-                    self.assertIn("v1.4.3", body)
+                    self.assertIn(RELEASE_VERSION, body)
                     self.assertIn(required_archive, body)
                     self.assertNotIn(forbidden_archive, body)
                     self.assertNotIn("1.2.0", body)
@@ -246,19 +246,19 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
             (
                 "codex",
                 [ROOT / "adapters" / "codex" / "plugin" / "ask-then-do-it" / f"START-HERE.{locale}.md" for locale in ("en", "zh-TW", "ja")],
-                "ask-then-do-it-generic-1.4.3.zip",
+                "ask-then-do-it-generic-1.5.0.zip",
             ),
             (
                 "generic",
                 [ROOT / "release" / "generic" / f"START-HERE.{locale}.md" for locale in ("en", "zh-TW", "ja")],
-                "ask-then-do-it-1.4.3.zip",
+                "ask-then-do-it-1.5.0.zip",
             ),
         )
         for host, documents, forbidden_archive in package_starts:
             for document in documents:
                 body = document.read_text(encoding="utf-8")
                 with self.subTest(host=host, document=document.relative_to(ROOT)):
-                    self.assertIn("1.4.3", body)
+                    self.assertIn("1.5.0", body)
                     self.assertNotIn(forbidden_archive, body)
 
     def test_release_config_locks_runtime_inventory_and_proxy_gate(self) -> None:
@@ -266,9 +266,9 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
         self.assertEqual(config["codex"]["skills"], EXPECTED_SKILL_ORDER)
         self.assertEqual(config["generic"]["modules"], EXPECTED_MODULES)
         self.assertIn("workflow-token-proxy", config["required_validation_checks"])
-        self.assertEqual(config["codex"]["archive"], "codex/ask-then-do-it-1.4.3.zip")
-        self.assertEqual(config["generic"]["directory"], "generic/ask-then-do-it-generic-1.4.3")
-        self.assertEqual(config["generic"]["archive"], "generic/ask-then-do-it-generic-1.4.3.zip")
+        self.assertEqual(config["codex"]["archive"], "codex/ask-then-do-it-1.5.0.zip")
+        self.assertEqual(config["generic"]["directory"], "generic/ask-then-do-it-generic-1.5.0")
+        self.assertEqual(config["generic"]["archive"], "generic/ask-then-do-it-generic-1.5.0.zip")
 
     def test_source_runtime_versions_and_generic_order_are_current(self) -> None:
         generic = ROOT / "adapters" / "generic-prompts"
@@ -303,7 +303,7 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
             candidate = Path(temporary) / "marketplace.json"
             candidate.write_text(json.dumps(catalog), encoding="utf-8")
             with mock.patch.object(builder, "MARKETPLACE_CATALOG", candidate):
-                with self.assertRaisesRegex(builder.BuildError, "marketplace.*v1.4.3"):
+                with self.assertRaisesRegex(builder.BuildError, "marketplace.*v1.5.0"):
                     builder.load_config(CONFIG)
 
     def test_builder_emits_exact_1_3_runtime_packages_and_reference_inventory(self) -> None:
@@ -311,10 +311,10 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
             output = Path(temporary) / "dist"
             result = run_builder(output)
             if result.returncode != 0:
-                self.fail(f"builder did not produce the approved 1.4.3 package: {result.stderr}")
+                self.fail(f"builder did not produce the approved 1.5.0 package: {result.stderr}")
 
             codex = output / "codex" / "ask-then-do-it"
-            generic = output / "generic" / "ask-then-do-it-generic-1.4.3"
+            generic = output / "generic" / "ask-then-do-it-generic-1.5.0"
             self.assertTrue(codex.is_dir(), codex)
             self.assertTrue(generic.is_dir(), generic)
             self.assertEqual(
@@ -340,8 +340,8 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
                 sorted(combined.index(f"BEGIN SOURCE: {name}") for name in EXPECTED_MODULES),
             )
             manifest = (generic / "manifest.yaml").read_text(encoding="utf-8")
-            self.assertIn('release_version: "1.4.3"', manifest)
-            self.assertIn('core_version: "1.4.3"', manifest)
+            self.assertIn('release_version: "1.5.0"', manifest)
+            self.assertIn('core_version: "1.5.0"', manifest)
 
             for host, package in (("codex", codex), ("generic", generic)):
                 for locale in ("en", "zh-TW", "ja"):
@@ -360,8 +360,8 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
                         )
 
             for provider, archive in (
-                ("codex", "ask-then-do-it-1.4.3.zip"),
-                ("generic", "ask-then-do-it-generic-1.4.3.zip"),
+                ("codex", "ask-then-do-it-1.5.0.zip"),
+                ("generic", "ask-then-do-it-generic-1.5.0.zip"),
             ):
                 with zipfile.ZipFile(output / provider / archive) as bundle:
                     self.assertTrue(bundle.namelist())
@@ -375,7 +375,7 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
                 self.fail(result.stderr)
 
             codex = output / "codex" / "ask-then-do-it"
-            generic = output / "generic" / "ask-then-do-it-generic-1.4.3"
+            generic = output / "generic" / "ask-then-do-it-generic-1.5.0"
             roots = (
                 ROOT / "adapters" / "codex" / "plugin" / "ask-then-do-it",
                 ROOT / "adapters" / "generic-prompts",
@@ -397,8 +397,8 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
             self.assertNotIn("\ndependencies:", f"\n{manifest.casefold()}")
 
             for archive in (
-                output / "codex" / "ask-then-do-it-1.4.3.zip",
-                output / "generic" / "ask-then-do-it-generic-1.4.3.zip",
+                output / "codex" / "ask-then-do-it-1.5.0.zip",
+                output / "generic" / "ask-then-do-it-generic-1.5.0.zip",
             ):
                 with zipfile.ZipFile(archive) as bundle:
                     for name in bundle.namelist():
@@ -427,15 +427,15 @@ class ReleaseOneThreeContractTests(unittest.TestCase):
                 checksums[relative] = digest
             self.assertEqual(
                 set(checksums),
-                {"codex/ask-then-do-it-1.4.3.zip", "generic/ask-then-do-it-generic-1.4.3.zip", "claude/ask-then-do-it-claude-1.4.3.zip"},
+                {"codex/ask-then-do-it-1.5.0.zip", "generic/ask-then-do-it-generic-1.5.0.zip", "claude/ask-then-do-it-claude-1.5.0.zip"},
             )
             for relative, digest in checksums.items():
                 self.assertEqual(sha256(first / relative), digest)
 
             for directory, archive, archive_root in (
-                ("claude/ask-then-do-it", "claude/ask-then-do-it-claude-1.4.3.zip", "ask-then-do-it"),
-                ("codex/ask-then-do-it", "codex/ask-then-do-it-1.4.3.zip", "ask-then-do-it"),
-                ("generic/ask-then-do-it-generic-1.4.3", "generic/ask-then-do-it-generic-1.4.3.zip", "ask-then-do-it-generic-1.4.3"),
+                ("claude/ask-then-do-it", "claude/ask-then-do-it-claude-1.5.0.zip", "ask-then-do-it"),
+                ("codex/ask-then-do-it", "codex/ask-then-do-it-1.5.0.zip", "ask-then-do-it"),
+                ("generic/ask-then-do-it-generic-1.5.0", "generic/ask-then-do-it-generic-1.5.0.zip", "ask-then-do-it-generic-1.5.0"),
             ):
                 with zipfile.ZipFile(first / archive) as bundle:
                     expected = {f"{archive_root}/{name}" for name in files_under(first / directory)}

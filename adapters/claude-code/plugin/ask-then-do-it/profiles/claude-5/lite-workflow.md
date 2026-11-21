@@ -4,6 +4,14 @@ Core rules: LITE-QUESTIONS-001, LITE-BRIEF-001, LITE-RISK-001, LITE-VALIDATE-001
 
 Use only after orchestration resolves Lite for this operation. Inspect only relevant repository evidence, preserve unrelated changes, and disclose capability limits.
 
+## Read-only requests and small edits
+
+For a standalone read-only review or diagnosis, inspect the requested evidence and return findings, examples, and limitations in the same response. Skip implementation planning, Change Brief approval, and file writes. Ask only for genuinely missing inputs. Keep the requested review depth and independence; a formal Ticket Review still follows its evidence contract. A later request to fix findings is a new change request.
+
+After checking the target and risk, use the original instruction as authorization for one exact, local, reversible edit, such as replacing a named button label or correcting a specified internal default. Its target and expected result must be unambiguous and directly verifiable. New features, unresolved decisions, material risk, public contract changes, and external effects use the standard flow. With tools, apply only that edit without a Change Brief or repeat approval, inspect the diff, verify the result, and report it. With conversation capability, provide the proposed edit and validation instructions only. Honor an explicit request for a preview or approval first. If the target, scope, or risk fails these conditions, follow the standard Lite flow below.
+
+The remaining sections describe the standard Lite change flow.
+
 ## Scope and risk
 
 Before approval, check authentication/authorization, payments, migration, destructive data work, public contracts, structural cross-module change, concurrency, asynchronous behavior, and external effects. When material risk exists—or appears later—pause, explain it, and ask whether to switch to Full or remain in Lite for this operation only. Switching returns to the earliest unmet Full gate; neither choice changes defaults.

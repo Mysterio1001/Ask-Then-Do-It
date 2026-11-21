@@ -32,7 +32,7 @@ Documentation also has explicit ownership. The three localized beginner guides a
 Hosts do not need identical tools, but the same user decisions must produce equivalent observable outcomes. Equivalence includes at least:
 
 - An explicit current-operation instruction outranks a persistent default, and no valid default means Full.
-- Full retains its three approvals; Lite has one Change Brief approval.
+- Full delivery has three approvals. Standard Lite changes have one; exact presentation edits can proceed on the original request.
 - A high-risk switch affects only the current operation, and material risk discovered during implementation pauses work for another decision.
 - Lite creates no workflow documents, adds no tests, and discloses both observed and unavailable validation.
 - Lite Review presents findings as a batch and requires user approval before corrections.
@@ -47,13 +47,15 @@ Full is for high-risk, cross-module, still-uncertain, or audit-sensitive work. I
 1. Perform repository reconnaissance, then ask one requirements question at a time until requirements consensus.
 2. Synchronize approved information to the Project Knowledge Base only after requirements approval.
 3. Create and approve a specification that defines behavior and failure handling.
-4. Split work into vertical Tickets, recommend a test choice for each, and ask in one response whether to add tests to every Ticket before approving the complete plan.
-5. Full maps the test choices internally to `tdd` or `direct`. TDD requires Red, Green, and Refactor; direct runs no behavioral tests and records the untested behavior.
+4. Split work into vertical Tickets, recommend a test choice for each, and ask in one response whether each Ticket should add tests, run existing tests only, or skip behavioral tests before approving the complete plan.
+5. Full maps the test choices internally to `tdd` or `direct`. TDD requires Red, Green, and Refactor; direct records observed existing-test outcomes or the approved skip.
 6. Preserve implementation evidence for independent Review through twelve perspectives. A systemic issue enters architecture improvement analysis and returns through specification and Tickets for new implementation authority.
 
 Requirements consensus, specification, and Ticket plan are Full's three formal approval gates. A mode resolver may precede Full, but it cannot remove or shorten these contracts.
 
 ## Lite contract and lower traceability
+
+A review-only request receives findings directly. For “change the home page button from Submit to Send request,” the instruction authorizes the edit when the target is unique, reversible, presentation-only, and low risk. Verify the diff and result. If two buttons match, payment behavior is affected, or the user asks to see the proposed edit first, clarify or use the ordinary approval process. The standard Lite flow for other changes follows.
 
 Lite has lower traceability than Full because its Change Brief, approval, progress, and Review remain in the current conversation instead of becoming workflow documents that another session can resume. Documentation and completion reporting must keep this tradeoff visible.
 

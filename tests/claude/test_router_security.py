@@ -24,6 +24,11 @@ from tests.claude.test_router_state import (
 )
 
 
+def make_cleanup_due(plugin_data: Path) -> None:
+    cursor = plugin_data / "routing" / "v1" / "cleanup-cursor.json"
+    os.utime(cursor, (946684800, 946684800))
+
+
 def run_router_raw(action: str, source: str, plugin_data: Path) -> subprocess.CompletedProcess[str]:
     node = shutil.which("node")
     if node is None:
@@ -606,6 +611,10 @@ class ClaudeRouterSecurityTests(unittest.TestCase):
             unknown_file.write_text("keep", encoding="utf-8")
 
             current_session = "current-cleanup-session"
+            # A damaged progress file can be rebuilt from the already validated session directory.
+            cursor = plugin_data / "routing" / "v1" / "cleanup-cursor.json"
+            cursor.write_text("broken cursor", encoding="utf-8")
+            make_cleanup_due(plugin_data)
             started = run_router(
                 "session-start",
                 lifecycle_event(current_session, "startup", "claude-sonnet-5"),
@@ -632,6 +641,7 @@ class ClaudeRouterSecurityTests(unittest.TestCase):
             lock_path = expired_path.with_name(f".{expired_path.name}.lock")
             lock_path.write_text("held", encoding="utf-8")
 
+            make_cleanup_due(plugin_data)
             run_router(
                 "session-start",
                 lifecycle_event("cleanup-lock-trigger-1", "startup", "claude-sonnet-5"),
@@ -640,12 +650,69 @@ class ClaudeRouterSecurityTests(unittest.TestCase):
             self.assertTrue(expired_path.is_file())
 
             lock_path.unlink()
+            make_cleanup_due(plugin_data)
             run_router(
                 "session-start",
                 lifecycle_event("cleanup-lock-trigger-2", "startup", "claude-sonnet-5"),
                 plugin_data,
             )
             self.assertFalse(expired_path.exists())
+
+    def test_cleanup_is_throttled_bounded_and_progresses_across_concurrent_starts(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="claude cleanup batch ") as temporary:
+            plugin_data = Path(temporary) / "plugin data"
+            current = "current-batch-session"
+            event = lifecycle_event(current, "startup", "claude-sonnet-5")
+            run_router("session-start", event, plugin_data)
+            template = load_state(plugin_data, current)
+            expired = []
+            for index in range(37):
+                pathname = state_path(plugin_data, f"historical-{index}")
+                state = {**template, "session_key": pathname.stem, "updated_at": "2000-01-01T00:00:00.000Z"}
+                pathname.write_text(json.dumps(state), encoding="utf-8")
+                expired.append(pathname)
+
+            def remaining() -> int:
+                return sum(pathname.exists() for pathname in expired)
+
+            resume = lifecycle_event(current, "resume", "claude-sonnet-5")
+            run_router("session-start", resume, plugin_data)
+            self.assertEqual(remaining(), 37)
+            make_cleanup_due(plugin_data)
+            with ThreadPoolExecutor(max_workers=3) as executor:
+                starts = list(executor.map(
+                    lambda _: run_router("session-start", resume, plugin_data), range(3),
+                ))
+            self.assertTrue(all(result.returncode == 0 for result in starts))
+            self.assertEqual(remaining(), 21)
+            run_router("session-start", resume, plugin_data)
+            self.assertEqual(remaining(), 21)
+            for expected in (5, 0):
+                make_cleanup_due(plugin_data)
+                run_router("session-start", resume, plugin_data)
+                self.assertEqual(remaining(), expected)
+            self.assertEqual(load_state(plugin_data, current)["routing_status"], "ready")
+
+    def test_cleanup_cursor_advances_past_a_full_batch_of_recent_files(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="claude cleanup cursor ") as temporary:
+            plugin_data = Path(temporary) / "plugin data"
+            current = "cursor-session"
+            event = lifecycle_event(current, "startup", "claude-sonnet-5")
+            run_router("session-start", event, plugin_data)
+            template = load_state(plugin_data, current)
+            paths = sorted(state_path(plugin_data, f"legacy-{i}") for i in range(17))
+            for index, pathname in enumerate(paths):
+                state = {**template, "session_key": pathname.stem}
+                if index == 16:
+                    state["updated_at"] = "2000-01-01T00:00:00.000Z"
+                pathname.write_text(json.dumps(state), encoding="utf-8")
+            make_cleanup_due(plugin_data)
+            run_router("session-start", event, plugin_data)
+            self.assertTrue(all(p.exists() for p in paths))
+            make_cleanup_due(plugin_data)
+            run_router("session-start", event, plugin_data)
+            self.assertTrue(all(p.exists() for p in paths[:16]))
+            self.assertFalse(paths[-1].exists())
 
     def test_concurrent_same_session_routes_leave_one_complete_atomic_state(self) -> None:
         with tempfile.TemporaryDirectory(prefix="claude concurrent ") as temporary:

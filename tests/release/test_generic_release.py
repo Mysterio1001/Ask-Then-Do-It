@@ -67,7 +67,7 @@ def read_generated_manifest(path: Path) -> dict[str, object]:
 
 class GenericReleaseTests(unittest.TestCase):
     def test_built_workflow_allows_only_default_mode_declaration_edits(self) -> None:
-        combined = (current_distribution() / "generic/ask-then-do-it-generic-1.4.3/SKILL.md").read_text(encoding="utf-8")
+        combined = (current_distribution() / "generic/ask-then-do-it-generic-1.5.0/SKILL.md").read_text(encoding="utf-8")
         declaration = "Default workflow mode: full"
 
         self.assertIn(MODE_EDIT_PERMISSION, combined)
@@ -78,8 +78,8 @@ class GenericReleaseTests(unittest.TestCase):
         config = json.loads(CONFIG.read_text(encoding="utf-8"))
         generic = config["generic"]
         self.assertEqual(generic["source"], "adapters/generic-prompts")
-        self.assertEqual(generic["directory"], "generic/ask-then-do-it-generic-1.4.3")
-        self.assertEqual(generic["archive"], "generic/ask-then-do-it-generic-1.4.3.zip")
+        self.assertEqual(generic["directory"], "generic/ask-then-do-it-generic-1.5.0")
+        self.assertEqual(generic["archive"], "generic/ask-then-do-it-generic-1.5.0.zip")
         self.assertEqual(generic["entrypoint"], "SKILL.md")
         self.assertEqual(
             generic["start_guide"],
@@ -89,7 +89,7 @@ class GenericReleaseTests(unittest.TestCase):
         self.assertFalse((SOURCE / "SKILL.md").exists())
 
     def test_built_skill_has_parseable_required_frontmatter(self) -> None:
-        skill = current_distribution() / "generic/ask-then-do-it-generic-1.4.3/SKILL.md"
+        skill = current_distribution() / "generic/ask-then-do-it-generic-1.5.0/SKILL.md"
         content = skill.read_bytes().decode("utf-8")
         self.assertTrue(content.startswith("---\n"))
         _, frontmatter, body = content.split("---\n", 2)
@@ -140,8 +140,8 @@ class GenericReleaseTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
 
-            package = output_root / "generic" / "ask-then-do-it-generic-1.4.3"
-            archive = output_root / "generic" / "ask-then-do-it-generic-1.4.3.zip"
+            package = output_root / "generic" / "ask-then-do-it-generic-1.5.0"
+            archive = output_root / "generic" / "ask-then-do-it-generic-1.5.0.zip"
             checksums = output_root / "checksums.sha256"
             actual_files = {
                 path.relative_to(package).as_posix()
@@ -153,6 +153,7 @@ class GenericReleaseTests(unittest.TestCase):
                 "LICENSE",
                 "THIRD_PARTY_NOTICES.md",
                 "SKILL.md",
+                "LITE.md",
                 "manifest.yaml",
                 *{f"prompts/{name}" for name in MODULES},
             }
@@ -194,6 +195,14 @@ class GenericReleaseTests(unittest.TestCase):
                 )
 
             combined = (package / "SKILL.md").read_text(encoding="utf-8")
+            lite = (package / "LITE.md").read_text(encoding="utf-8")
+            self.assertEqual(lite.splitlines().count("Default workflow mode: lite"), 1)
+            self.assertTrue(lite.endswith((SOURCE / "lite-workflow.md").read_text(encoding="utf-8")))
+            self.assertIn("supply the complete `SKILL.md`", lite)
+            self.assertNotIn("Prompt ID: `generic.orchestration`", lite)
+            self.assertLess(len(lite), len(combined))
+            for filename in START_GUIDES:
+                self.assertIn("LITE.md", (package / filename).read_text(encoding="utf-8"))
             self.assertNotIn("generic-workflow.md", actual_files)
             self.assertIn(MODE_EDIT_PERMISSION, combined)
             self.assertLess(
@@ -204,6 +213,12 @@ class GenericReleaseTests(unittest.TestCase):
             self.assertIn("Use the included sections internally", combined)
             self.assertIn("do not ask the user to paste another module", combined.lower())
             self.assertIn("Conversation-only capability boundary", combined)
+            header = combined.split("<!-- BEGIN SOURCE:", 1)[0]
+            self.assertLess(header.index("Declare conversation capability"), header.index("standalone read-only review"))
+            self.assertLess(header.index("standalone read-only review"), header.index("For a delivery workflow"))
+            self.assertIn("requires no Specification, Ticket, or change approval", header)
+            self.assertIn("For a formal Ticket Review only", combined)
+            self.assertIn("For standalone diagnosis, return the requested findings", combined)
             self.assertIn("same effective response", combined)
             self.assertIn("exactly one high-impact requirement question", combined)
             self.assertIn("explicit approval", combined)
@@ -214,8 +229,8 @@ class GenericReleaseTests(unittest.TestCase):
 
             manifest = read_generated_manifest(package / "manifest.yaml")
             self.assertEqual(manifest["package_id"], "ask-then-do-it")
-            self.assertEqual(manifest["release_version"], "1.4.3")
-            self.assertEqual(manifest["core_version"], "1.4.3")
+            self.assertEqual(manifest["release_version"], "1.5.0")
+            self.assertEqual(manifest["core_version"], "1.5.0")
             self.assertEqual(manifest["adapter_id"], "generic-prompts")
             self.assertEqual(manifest["entrypoint"], "SKILL.md")
             self.assertEqual(manifest["capabilities"], ["conversation"])
@@ -224,16 +239,16 @@ class GenericReleaseTests(unittest.TestCase):
             with zipfile.ZipFile(archive) as bundle:
                 self.assertEqual(
                     bundle.namelist(),
-                    sorted(f"ask-then-do-it-generic-1.4.3/{name}" for name in expected_files),
+                    sorted(f"ask-then-do-it-generic-1.5.0/{name}" for name in expected_files),
                 )
                 for relative in expected_files:
                     self.assertEqual(
-                        bundle.read(f"ask-then-do-it-generic-1.4.3/{relative}"),
+                        bundle.read(f"ask-then-do-it-generic-1.5.0/{relative}"),
                         (package / relative).read_bytes(),
                     )
             self.assertEqual(
                 checksums.read_text(encoding="ascii"),
-                f"{sha256(archive)}  generic/ask-then-do-it-generic-1.4.3.zip\n",
+                f"{sha256(archive)}  generic/ask-then-do-it-generic-1.5.0.zip\n",
             )
 
 

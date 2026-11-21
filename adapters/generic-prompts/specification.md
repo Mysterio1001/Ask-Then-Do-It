@@ -1,9 +1,9 @@
 # Generic Specification Prompt
 
 Prompt ID: `generic.specification`
-Prompt version: `1.4.3`
+Prompt version: `1.5.0`
 Required capability: `conversation`
-Core version: `1.4.3`
+Core version: `1.5.0`
 
 ## Required inputs
 
@@ -46,4 +46,4 @@ Whenever you emit the Specification, state: "The user owns cross-session persist
 
 - Stop and return to requirements when a material decision is missing.
 - Stop after emitting the Draft and requesting explicit approval.
-- Stop after emitting the Approved artifact and hand it to Ticket Planning; do not begin implementation.
+- After approval, hand the Approved Specification to Ticket Planning. When the complete workflow is loaded and its inputs are present, apply that section in the same response. A standalone module ends with its handoff.

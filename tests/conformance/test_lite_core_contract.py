@@ -41,6 +41,31 @@ class LiteCoreContractTests(unittest.TestCase):
         self.assertFalse(any("lite" in name for name in artifact_names))
         self.assertFalse(any("change-brief" in name for name in artifact_names))
 
+    def test_read_only_and_exact_edit_routes_precede_standard_lite_approval(self) -> None:
+        package = ROOT / "adapters"
+        profiles = package / "claude-code/plugin/ask-then-do-it/profiles"
+        lite_modules = [
+            LITE_MODULE,
+            package / "codex/plugin/ask-then-do-it/skills/ask-then-do-it/references/lite-workflow.md",
+            package / "generic-prompts/lite-workflow.md",
+            profiles / "general/lite-workflow.md",
+            profiles / "claude-5/lite-workflow.md",
+        ]
+        for path in lite_modules:
+            with self.subTest(path=path):
+                body = path.read_text(encoding="utf-8")
+                self.assertIn("## Read-only requests and small edits", body)
+                instruction = body.split("## Read-only requests and small edits", 1)[1].split("## ", 1)[0].lower()
+                for boundary in ("read-only", "reversible", "material risk", "public contract",
+                                 "external effect", "preview", "change brief", "approval"):
+                    self.assertIn(boundary, instruction)
+                if path.parent.name == "generic-prompts":
+                    self.assertIn("unexecuted implementation guidance", instruction)
+                else:
+                    self.assertIn("with conversation capability", instruction)
+                self.assertIn("standard lite", instruction)
+                self.assertIn("new features", instruction)
+
     def test_lite_module_covers_the_approved_lifecycle(self) -> None:
         text = LITE_MODULE.read_text(encoding="utf-8")
         for rule_id in LITE_RULE_MODULES:

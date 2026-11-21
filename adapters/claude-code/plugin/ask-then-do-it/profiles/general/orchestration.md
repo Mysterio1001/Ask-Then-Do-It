@@ -84,6 +84,8 @@ For `conversation` capability with no explicit mode, host-unavailable is absence
 
 The workflow must not claim that an unavailable Config was read, parsed, absent on disk, valid, or invalid. If a source becomes available through proven tools, use its actual absent/valid/invalid result instead of this host-unavailable branch.
 
+For a standalone read-only review or diagnosis, inspect the requested evidence and return findings, examples, and limitations in the same response. Skip implementation planning, Change Brief approval, and file writes. Ask only for genuinely missing inputs. Keep the requested review depth and independence; a formal Ticket Review still follows its evidence contract. A later request to fix findings is a new change request.
+
 ## Route the selected workflow
 
 For `lite`, load `lite-workflow.md` and do not load a Full stage. Lite must not fabricate Full artifacts or modes.

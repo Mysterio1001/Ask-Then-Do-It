@@ -13,7 +13,7 @@ import unicodedata
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from build_release import compose_generic_workflow
+from build_release import compose_generic_lite, compose_generic_workflow
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -637,6 +637,8 @@ def measure_generic(raw: object) -> tuple[dict[str, Any], bytes]:
     try:
         composed = compose_generic_workflow(composed_config, source)
         composed_text = composed.decode("utf-8")
+        lite_entry = compose_generic_lite(source)
+        lite_bytes = len(normalize(lite_entry.decode("utf-8")).encode("utf-8"))
     except (KeyError, OSError, UnicodeDecodeError) as exc:
         raise ProxyError(f"Unable to compose the Generic fixed prompt: {exc}") from exc
     normalized = normalize(composed_text)
@@ -650,12 +652,17 @@ def measure_generic(raw: object) -> tuple[dict[str, Any], bytes]:
             "sha256": hashlib.sha256(composed).hexdigest(),
             "source_modules": modules,
         },
+        "standalone_lite_prompt": {
+            "normalized_bytes": lite_bytes,
+            "proxy_tokens": proxy_tokens_for_bytes(lite_bytes),
+            "sha256": hashlib.sha256(lite_entry).hexdigest(),
+        },
         "limitation": (
-            "The complete composed prompt is a fixed cost for both modes; "
+            "SKILL.md has the same fixed cost in either mode. LITE.md is a separate text entry; "
             "no Generic 60% guarantee and no billing guarantee is claimed."
         ),
     }
-    return report, composed
+    return report, composed + b"\0generic-lite-entry\0" + lite_entry
 
 
 def fixture_fingerprint(
@@ -752,6 +759,7 @@ def print_human(report: dict[str, Any]) -> None:
         f"{generic['composed_prompt']['proxy_tokens']} proxy tokens"
     )
     print(f"Generic limitation: {generic['limitation']}")
+    print(f"Generic standalone Lite entry: {generic['standalone_lite_prompt']['proxy_tokens']} proxy tokens")
 
 
 def main() -> int:

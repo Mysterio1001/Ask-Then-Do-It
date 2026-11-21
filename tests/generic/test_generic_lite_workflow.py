@@ -63,8 +63,8 @@ def prompt(name: str) -> str:
 def composed_workflow() -> str:
     config = {
         "display_name": "Ask Then Do It",
-        "release_version": "1.4.3",
-        "core_version": "1.4.3",
+        "release_version": "1.5.0",
+        "core_version": "1.5.0",
         "generic": {"modules": GENERIC_MODULES},
     }
     return compose_generic_workflow(config, ADAPTER).decode("utf-8")
@@ -82,8 +82,8 @@ class GenericLiteCompositionTests(unittest.TestCase):
     def test_generated_workflow_has_one_early_full_default_declaration(self) -> None:
         config = {
             "display_name": "Ask Then Do It",
-            "release_version": "1.4.3",
-            "core_version": "1.4.3",
+            "release_version": "1.5.0",
+            "core_version": "1.5.0",
             "generic": {
                 "modules": [
                     "bootstrap.md",
@@ -213,7 +213,7 @@ class GenericDirectEntryModeTests(unittest.TestCase):
                     "bounded direct-entry guard, not complete resolver ownership",
                     text,
                 )
-                self.assertIn("Route resolved Lite", text)
+                self.assertIn("route resolved lite", text.lower())
                 self.assertIn("resolved Full", text)
 
         for name in STANDALONE_STAGE_MODULES:

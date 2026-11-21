@@ -46,6 +46,8 @@ Direct selection of any public stage Skill selects a stage, not top-level Full. 
 
 ## Route the selected mode
 
+For a standalone read-only review or diagnosis, inspect the requested evidence and return findings, examples, and limitations in the same response. Skip implementation planning, Change Brief approval, and file writes. Ask only for genuinely missing inputs. Keep the requested review depth and independence; a formal Ticket Review still follows its evidence contract. A later request to fix findings is a new change request.
+
 The top-level `full` and `lite` modes are distinct from the Full Ticket-level `tdd` and `direct` implementation choices.
 
 - For proven `full`, read the [Full routing workflow](references/full-routing.md) completely before acting and follow that lifecycle.

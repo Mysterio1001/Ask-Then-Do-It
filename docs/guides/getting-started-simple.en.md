@@ -25,8 +25,8 @@ The Generic workflow cannot read Codex Config. It instead uses the default-mode 
 | Best fit | High risk, cross-module work, unresolved requirements, or a complete audit trail | Well-bounded, lower-risk changes |
 | Questions | One at a time until requirements consensus | Up to three blockers per round, about 500 tokens for the batch |
 | Workflow documents | Keeps requirements, project knowledge, specification, Ticket plan, and implementation evidence | Keeps the Change Brief in the conversation and creates no workflow documents |
-| Approval before implementation | Three gates: requirements, specification, and Ticket plan | One gate for the Change Brief |
-| Tests | The user decides whether each Ticket adds tests | Adds or modifies no tests and does not use TDD |
+| Approval before implementation | Three gates: requirements, specification, and Ticket plan | One for ordinary changes; exact presentation edits can proceed immediately |
+| Tests | Choose per Ticket: add tests, run existing tests only, or skip behavioral tests | Adds or modifies no tests and does not use TDD |
 | Validation | Complete, traceable verification proportional to Ticket mode and risk | Static checks plus one success and one failure or boundary path |
 | Review | Independent twelve-perspective Review with evidence | Compact Review by the same AI; user approval still precedes finding corrections |
 | Traceability | High and resumable across sessions | Lower; unpersisted workflow state does not continue into a new session |
@@ -47,7 +47,8 @@ flowchart TD
     F_TICKET_PLAN_GATE{"Gate 3: Approve complete Ticket plan?"}
     F_TEST_CHOICE{"5. Route by approved test choice"}
     F_TDD["Add tests<br/>TDD: Red, Green, Refactor"]
-    F_DIRECT["Do not add tests<br/>Direct: tests: skipped-by-user"]
+    F_DIRECT["Skip behavioral tests<br/>Direct: tests: skipped-by-user"]
+    F_EXISTING["Run existing tests only<br/>Direct: record actual outcomes"]
     F_EVIDENCE["6. Record implementation evidence"]
     F_REVIEW["7. Review with twelve perspectives"]
     F_COMPLETE["8. Report completion<br/>Evidence gaps and residual risks"]
@@ -65,7 +66,9 @@ flowchart TD
     F_TICKET_PLAN_GATE -->|Revise| F_TICKETS
     F_TICKET_PLAN_GATE -->|Approve| F_TEST_CHOICE
     F_TEST_CHOICE -->|Add tests| F_TDD
-    F_TEST_CHOICE -->|Do not add tests| F_DIRECT
+    F_TEST_CHOICE -->|Skip tests| F_DIRECT
+    F_TEST_CHOICE -->|Existing tests only| F_EXISTING
+    F_EXISTING --> F_EVIDENCE
     F_TDD --> F_EVIDENCE
     F_DIRECT --> F_EVIDENCE
     F_EVIDENCE --> F_REVIEW
@@ -78,15 +81,17 @@ flowchart TD
 1. **Understand the current state.** The AI reads repository instructions, related code, tests, configuration, and current changes without touching unrelated work.
 2. **Reach requirements consensus.** It asks one requirements question at a time with a recommendation and main tradeoff. Your approval permits the project knowledge record to be updated and is the first gate.
 3. **Write the specification.** The specification defines observable behavior, failures, and boundaries without inserting production code. Your approval of the complete specification is the second gate.
-4. **Split the work into vertical Tickets.** Each Ticket delivers an independently verifiable outcome. The AI recommends a test choice for each Ticket, warns that running tests may add time and declining tests lowers confidence, then asks in one response whether to add tests to every Ticket. Your approval of the complete Ticket plan is the third gate.
-5. **Implement according to the test choice.** Within Full, adding and declining tests map internally to `tdd` and `direct`; users do not need to answer with those internal names.
-6. **Keep implementation evidence.** `$implement-tdd` records actual `Red`, `Green`, and `Refactor` results. `$implement-direct` creates and runs no behavioral tests, but may run lint, type-check, or build checks and records `tests: skipped-by-user` with the untested behavior.
+4. **Split the work into vertical Tickets.** Each Ticket delivers an independently verifiable outcome. The AI recommends a test choice for each Ticket, warns that running tests may add time and declining tests lowers confidence, then collects all choices in one response. Your approval of the complete Ticket plan is the third gate.
+5. **Implement according to the test choice.** Full maps adding tests to `tdd`. Running existing tests only and skipping behavioral tests both map to `direct`.
+6. **Keep implementation evidence.** `$implement-tdd` records actual `Red`, `Green`, and `Refactor` results. `$implement-direct` leaves test files untouched. It records actual results for relevant existing tests when selected, or `tests: skipped-by-user` when tests were declined. Legacy direct approvals keep their original skip.
 7. **Review.** Review compares the approved material, diff, and verification through twelve perspectives. A systemic issue receives architecture improvement analysis and returns through specification and Ticket planning instead of silently expanding the change.
 8. **Complete.** The AI reports delivered behavior, observed verification, unavailable evidence, and residual risks. Saved workflow documents allow a later session to continue.
 
 Silence, an unrelated response, or an AI-generated status change cannot replace any approval.
 
 ## Lite mode
+
+A review-only request receives findings directly. For “change the home page button from Submit to Send request,” the instruction authorizes the edit when the target is unique, reversible, presentation-only, and low risk. Verify the diff and result. If two buttons match, payment behavior is affected, or the user asks to see the proposed edit first, clarify or use the ordinary approval process. The standard Lite flow for other changes follows.
 
 Lite uses less workflow text for a bounded change. It asks up to three blocking questions per round and asks only about decisions that prevent implementation or materially redirect it.
 
@@ -131,7 +136,7 @@ flowchart TD
 1. **Understand current state and risk.** The AI inspects only instructions, changes, code, tests, configuration, and documentation relevant to this operation, then evaluates material risk before proposing work.
 2. **Ask only blockers.** It asks up to three blocking questions per round, ranked by impact and uncertainty. Each question uses at most three short sentences, asks one decision, and includes a recommendation plus the main tradeoff. The whole batch targets about `500 tokens`; it does not invent filler, and it reassesses lower-priority blockers after the answers.
 3. **Present the Change Brief.** The Change Brief targets about `800 tokens` and states the objective, in-scope behavior, explicit non-goals, three to five observable acceptance scenarios, material risks, and intended validation. If material information cannot fit honestly, the AI recommends Full.
-4. **Obtain one approval.** Lite has exactly one formal approval gate: explicit approval of the complete Change Brief before any production modification. Lite does not create or update workflow artifact files; the brief, progress, and Review exist only in this conversation.
+4. **Obtain one approval.** Standard Lite has exactly one formal approval gate: explicit approval of the complete Change Brief before any production modification. Lite does not create or update workflow artifact files; the brief, progress, and Review exist only in this conversation.
 5. **Implement the approved scope directly.** Lite does not add or modify tests, does not use `Red`, `Green`, or `Refactor`, and does not claim TDD-equivalent confidence. Materially new behavior or scope requires another user decision before work continues.
 6. **Run minimum validation.** The AI inspects final file scope and diff, runs applicable syntax, lint, type-check, build, configuration, schema, or equivalent static checks, then uses an existing focused test or manual smoke check for one principal success path and one most important failure or boundary path. An applicable failure is corrected and rerun; unavailable checks are disclosed, and a known unresolved failure prevents an unqualified completion claim.
 7. **Perform compact Review.** The same AI checks Change Brief coverage, diff scope, failure and security paths, unavailable validation, and residual risk. It presents every actionable finding in one batch and obtains approval before making corrections, then reruns relevant validation. Declined findings remain unchanged and are reported as unresolved. When there are zero actionable findings, the AI says so and does not create an empty correction approval gate.
@@ -157,7 +162,7 @@ Without an explicit mode instruction, the AI uses Config to choose Full or Lite.
 
 ## Start in Claude Desktop or another AI
 
-In Claude Desktop, upload the Generic ZIP as a Skill; `SKILL.md` is at the root of the package folder inside the ZIP. After the security scan, enable the Skill and ask to use Ask Then Do It. With a text-only host, paste the entire `SKILL.md` into every new conversation before describing the request. The Generic workflow remains conversation-only and must not claim to have edited repository files or run validation.
+In Claude Desktop, upload the Generic ZIP as a Skill; `SKILL.md` is at the root of the package folder inside the ZIP. After the security scan, enable the Skill and ask to use Ask Then Do It. With a text-only host, paste the entire `SKILL.md` for the complete workflow. For Lite, paste `LITE.md` instead and include your request in the same message. The Generic workflow remains conversation-only and must not claim to have edited repository files or run validation.
 
 ## Starting a new session
 
@@ -166,7 +171,7 @@ A new session resolves the mode again instead of reusing the prior operation's t
 ## Final check
 
 - [ ] Mode followed current-operation instruction, project Config, user Config, then Full fallback.
-- [ ] Full obtained approval for requirements, specification, and Ticket plan and asked in one response whether to add tests to every Ticket.
+- [ ] Full obtained approval for requirements, specification, and Ticket plan and collected the choice for every Ticket in one response.
 - [ ] Lite has one approved Change Brief and created neither new tests nor workflow documents.
 - [ ] Observed validation, unavailable checks, unresolved findings, and residual risks are disclosed.
 - [ ] A high-risk switch affects only the current operation and does not change Config behavior for another session.

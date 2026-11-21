@@ -4,6 +4,7 @@ import json
 import subprocess
 import sys
 import tempfile
+import unicodedata
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -142,15 +143,13 @@ class WorkflowTokenProxyTests(unittest.TestCase):
         self.assertLessEqual(lite * 100, full * 40)
         self.assertEqual(report["codex"]["difference_proxy_tokens"], full - lite)
         self.assertEqual(gate["formula"], "(full - lite) / full * 100")
-        self.assertEqual(
-            (
-                full,
-                lite,
-                report["codex"]["difference_proxy_tokens"],
-                gate["reduction_basis_points"],
-            ),
-            (17240, 3846, 13394, 7769),
-        )
+        for mode, measured in (("full", full), ("lite", lite)):
+            parts = []
+            for item in report["codex"][mode]["events"]:
+                source = (ROOT / item["source"]).read_text(encoding="utf-8")
+                parts.append(" ".join(unicodedata.normalize("NFC", source).split()))
+            size = len("\n".join(parts).encode("utf-8"))
+            self.assertEqual(measured, (size + 3) // 4)
 
     def test_output_is_deterministic_and_discloses_algorithm_and_fixture(self) -> None:
         first = run_proxy()
@@ -165,6 +164,19 @@ class WorkflowTokenProxyTests(unittest.TestCase):
         self.assertFalse(report["algorithm"]["billing_guarantee"])
         self.assertRegex(report["fixture"]["sha256"], r"^[0-9a-f]{64}$")
         self.assertNotIn(str(ROOT), first.stdout)
+
+    def test_fixed_scenario_and_scripted_conversation_remain_comparable(self) -> None:
+        fixture = read_fixture()
+        fixed = [fixture]
+        for mode in fixture["modes"].values():
+            for event in mode["events"]:
+                if event["category"] != "selected-instructions":
+                    fixed.append((ROOT / event["source"]).read_text(encoding="utf-8"))
+        serialized = json.dumps(fixed, sort_keys=True, ensure_ascii=False).encode("utf-8")
+        self.assertEqual(
+            hashlib.sha256(serialized).hexdigest(),
+            "d3c36ad7ad20ff5fbe6d3f70618cb08a9b07f81a5f49c96567989da4e27c000e",
+        )
 
     def test_fixture_uses_one_conservative_scenario_and_exact_event_inventory(self) -> None:
         data = read_fixture()
@@ -415,6 +427,10 @@ class WorkflowTokenProxyTests(unittest.TestCase):
             generic["composed_prompt"]["source_modules"], EXPECTED_GENERIC_MODULES
         )
         self.assertGreater(generic["composed_prompt"]["proxy_tokens"], 0)
+        lite = generic["standalone_lite_prompt"]
+        self.assertGreater(lite["proxy_tokens"], 0)
+        self.assertLess(lite["proxy_tokens"], generic["composed_prompt"]["proxy_tokens"])
+        self.assertRegex(lite["sha256"], r"^[0-9a-f]{64}$")
         self.assertRegex(generic["composed_prompt"]["sha256"], r"^[0-9a-f]{64}$")
         self.assertFalse(any("reduction" in key for key in generic))
         self.assertIn("fixed cost", generic["limitation"])

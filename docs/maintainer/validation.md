@@ -1,6 +1,6 @@
 # 驗證手冊
 
-適用來源版本：1.4.3。此文件集合既有工具操作、選配 Claude 實測程序及重要回歸測試對照；來源／已知缺口見[工作狀態](../project/status.md)。**離線測試、來源 integrity、simulated hook 結果與真實 Claude 行為是不同證據。** Required release 驗收使用 16 項 deterministic checks；真實 Claude 行為只支援另行授權的 live-qualified 宣稱，未執行時保持 `not run`／`unverified`，不冒充也不阻擋 required release completion。
+適用來源版本：1.5.0。此文件集合既有工具操作、選配 Claude 實測程序及重要回歸測試對照；來源／已知缺口見[工作狀態](../project/status.md)。**離線測試、來源 integrity、simulated hook 結果與真實 Claude 行為是不同證據。** Required release 驗收使用 16 項 deterministic checks；真實 Claude 行為只支援另行授權的 live-qualified 宣稱，未執行時保持 `not run`／`unverified`，不冒充也不阻擋 required release completion。
 
 ## 開發環境與一般檢查
 
@@ -19,6 +19,36 @@ python scripts/validate_claude_model_evidence.py --mapping adapters/claude-code/
 
 完整 suite 會建立並清理隔離 fixtures，不直接更新根目錄 dist。針對性套件可使用 `python -m unittest discover -s tests/claude -p test_documentation.py -v` 等既有 discovery 方式。Windows 無 symlink 權限時如實記錄 skip，不把未執行的分支記為已驗證。
 
+## 使用者等待時間
+
+維護者可用 `scripts/measure_workflow_latency.py` 在本機手動標記事件，對照停用 Skill、Lite、Full。工具僅記錄單調時鐘的經過秒數與事件，不傳送請求。此量測可獨立進行，沒有納入發布門檻。
+
+1. 把下方 HTML 存成實驗目錄的 `index.html`，每輪都從相同內容、相同工作目錄設定的新副本開始。使用同一主程式、模型、推理強度與工具權限，每輪開新對話。關閉其他會干預流程的 Skill。停用組確認本 Skill 已停用，Lite／Full 組啟用本 Skill 並明示「本次使用 Lite／Full」。保留實際走過的分支，例如 Full 自動簡化小改動。
+2. 兩題各跑三種模式，總共六輪。每輪選一題並使用程式顯示的相同請求。若 AI 問到已定義的行為，照原題回答。需要核准時，核對後回覆，Full 問到測試選擇時使用預先選定且各次一致的回答。若要比較典型值，可重複三組並輪換執行順序。不同模型或設定的結果分開看。
+3. 在第二個終端啟動計時，送出第一則請求時按 Enter。AI 有問題、要求核准、或交回結果需要你糾正時輸入 `wait`。送出後續回覆時輸入 `reply`。當得到可操作的首次成果，輸入 `first`。首次成果指可開頁操作的改動或可直接套用的完整修改內容。純計畫、需求提問及進度通知不算首次成果。要求修正前次成果時，同一行輸入 `reply rework`；同一批缺陷算一次。所有組別使用同一驗收標準。
+4. 驗收按鈕題時，確認文字為 `Save changes` 且仍會顯示 `Saved`。驗收搜尋題時，輸入 `LETTER` 或 `client` 都只留下第一筆，空白列出兩筆且順序不變，`zzz` 顯示空清單。驗收完成輸入 `done`。首次成果即驗收成功時可直接輸入 `done`。兩個標記可在同一行輸入，例如 `first wait`。中斷的檔案保留，報表會指出資料不完整。
+
+```html
+<!doctype html><meta charset="utf-8"><title>Settings</title>
+<button id="save">Save</button> <output id="message"></output>
+<ul id="templates">
+  <li>Letter — Client correspondence</li>
+  <li>Invoice — Billing form</li>
+</ul>
+<script>
+  document.querySelector("#save").onclick = () => {
+    document.querySelector("#message").textContent = "Saved";
+  };
+</script>
+```
+
+```text
+python scripts/measure_workflow_latency.py record button off --host Codex --model MODEL_ID --output button-off.jsonl
+python scripts/measure_workflow_latency.py report button-off.jsonl button-lite.jsonl button-full.jsonl search-off.jsonl search-lite.jsonl search-full.jsonl
+```
+
+將第一條指令的 `button|search`、`off|lite|full`、模型名稱與輸出檔名換成當輪資料。每個檔名只用一次。報表每列是一輪人工標記實錄，包含首次可用成果秒數、總秒數、等候人類回覆秒數、其餘經過秒數、使用者後續回覆次數與返工次數。其餘經過秒數包含模型、工具與最後驗收。記錄時若有人離席，保留該輪並註記後單獨分析。文字量 proxy 和測試用的虛構時間均不能當成實際等待時間。
+
 ## 工具責任與證據強度
 
 | 工具（scripts/） | 用途與限制 |
@@ -27,7 +57,7 @@ python scripts/validate_claude_model_evidence.py --mapping adapters/claude-code/
 | validate_marketplace.py | Codex catalog schema、identity、tag／source |
 | validate_conformance.py | Core rule／capability declaration；不以檔案存在證明語意等價 |
 | validate_release_evidence.py | required-check ledger 與 Completed 宣告；不自行執行或認證原始命令 |
-| measure_workflow_token_proxy.py | Codex tools 固定 Full／Lite benchmark，Lite proxy 至少降低 60%；Generic composed prompt 是兩模式共同固定成本，單列且 `gate_applied: false`，不宣稱 Generic 60% 縮減或帳單保證 |
+| measure_workflow_token_proxy.py | Codex tools 固定 Full／Lite benchmark，Lite proxy 至少降低 60%；Generic 完整入口與精簡文字入口分開計算，單列且 `gate_applied: false`，不宣稱 Generic 60% 縮減或帳單保證 |
 | validate_claude_plugin.py | Claude manifest、catalog、public components、router／profile 契約 |
 | validate_claude_package.py | Python API：validate_source／source_payload／validate_parity；builder 呼叫，沒有獨立 CLI |
 | validate_claude_model_evidence.py | exact model mapping 與 dated official snapshots、metadata／hash 連結 |
@@ -74,7 +104,7 @@ the fixture identity. Keep this evidence output separate from that directory.
 The staged conformance fixture maps all 30 Core rules and cumulative
 conversation/tools/multi_agent capabilities. Its `staged-unverified` status is
 intentional. It is a test recipe, not the current canonical conformance
-declaration. Current 1.4.3 declarations already exist; do not overwrite them
+declaration. Current 1.5.0 declarations already exist; do not overwrite them
 with staged-unverified fixture data.
 
 ### 執行實測

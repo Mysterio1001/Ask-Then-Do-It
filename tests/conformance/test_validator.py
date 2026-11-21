@@ -96,7 +96,7 @@ class ConformanceValidatorTests(unittest.TestCase):
     def test_core_defines_documented_requirements_artifacts(self) -> None:
         with CATALOG.open(encoding="utf-8") as handle:
             catalog = yaml.safe_load(handle)
-        self.assertEqual(catalog["core_version"], "1.4.3")
+        self.assertEqual(catalog["core_version"], "1.5.0")
 
         knowledge = (
             ROOT / "core" / "artifacts" / "project-knowledge-base.md"
@@ -240,12 +240,14 @@ class ConformanceValidatorTests(unittest.TestCase):
             "For every Ticket, warn that tests may increase work time",
             "complete Ticket definitions and all recommendations before requesting one batch test choice",
             "`Add tests`",
-            "`Do not add tests`",
+            "`Run existing tests only`",
+            "`Skip behavioral tests`",
             "all Tickets",
             "explicit mixed selection",
             "unresolved Tickets",
             "map `Add tests` to internal mode `tdd`",
-            "map `Do not add tests` to internal mode `direct`",
+            "both `Run existing tests only` and `Skip behavioral tests` to `direct`",
+            "Previously Approved `direct` Tickets",
             "`tdd`",
             "`direct`",
             "MUST NOT become `Approved`",
@@ -312,6 +314,8 @@ class ConformanceValidatorTests(unittest.TestCase):
             ROOT / "core" / "modules" / "direct-implementation.md"
         ).read_text(encoding="utf-8")
         self.assertIn("MUST NOT create, modify, or execute behavioral tests", direct)
+        self.assertIn("run relevant existing behavioral tests without adding or editing tests", direct)
+        self.assertIn("An unresolved failure prevents an unqualified success claim", direct)
         self.assertIn("`tests: skipped-by-user`", direct)
         self.assertIn("external CI, hosting, or release system", direct)
         self.assertIn("MUST NOT claim that `direct` bypasses", direct)
@@ -321,6 +325,7 @@ class ConformanceValidatorTests(unittest.TestCase):
         direct_evidence = (
             ROOT / "core" / "artifacts" / "direct-implementation-evidence.md"
         ).read_text(encoding="utf-8")
+        self.assertIn("For `Run existing tests only`, record the actual tests", direct_evidence)
         self.assertIn("`tests: skipped-by-user`", direct_evidence)
         self.assertIn("unavailable behavioral evidence", direct_evidence)
 

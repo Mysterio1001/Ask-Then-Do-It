@@ -1,9 +1,9 @@
 # Generic Ticket Planning Prompt
 
 Prompt ID: `generic.ticket-planning`
-Prompt version: `1.4.3`
+Prompt version: `1.5.0`
 Required capability: `conversation`
-Core version: `1.4.3`
+Core version: `1.5.0`
 
 ## Required inputs
 
@@ -14,7 +14,7 @@ Core version: `1.4.3`
 ## Expected outputs
 
 - A vertically sliced Ticket Plan in complete Markdown with status `Draft`.
-- One batch request for every Ticket's plain-language add-tests or do-not-add-tests choice.
+- One batch request for every Ticket's plain-language choice to add tests, run existing tests only, or skip behavioral tests.
 - After all test choices are resolved and mapped internally, one explicit Ticket Plan approval request displaying the complete selected plan.
 - After explicit human approval, an `Approved` Ticket Plan containing approval evidence.
 
@@ -34,7 +34,7 @@ For every ticket define:
 - dependencies;
 - likely ownership areas;
 - a TDD approach with the smallest meaningful first failing test, focused Green, and broader verification;
-- a direct approach with permitted non-test validation and unavailable behavioral evidence;
+- a direct approach with relevant existing tests, permitted static checks and unavailable coverage;
 - completion criteria;
 - parallel-safety reasoning.
 
@@ -42,7 +42,7 @@ Include the artifact envelope: `artifact_type`, `artifact_id`, `workflow_id`, `c
 
 Present the complete Ticket definitions and all recommendations before requesting one batch test choice. Give every Ticket a risk-based test recommendation and a scope-specific reason. Use available evidence about correctness, regression, security, privacy, migration, integration, destructive behavior, and release risk; state when relevant evidence is unavailable. For every Ticket, warn that tests may increase work time and that skipping them lowers behavioral verification confidence.
 
-Ask in the user's language whether tests should be added, and collect all Ticket choices in one response. Do not present `tdd` and `direct` as the initial user-facing options. Accept `Add tests to all Tickets`, `Do not add tests to all Tickets`, or an explicit mixed selection such as adding tests to named Tickets and declining them for the rest. Retain choices from an incomplete mixed selection and ask only about unresolved Tickets. There is no default; never infer an unresolved test choice from risk, repository conventions, another Ticket, prior history, or silence. For every resolved Ticket, map `Add tests` to internal mode `tdd` and map `Do not add tests` to internal mode `direct`.
+Offer `Add tests`, `Run existing tests only`, or `Skip behavioral tests` in the user's language, and collect all Ticket choices in one response. Do not present `tdd` and `direct` as the initial user-facing options. Accept any one choice for all Tickets, or an explicit mixed selection such as adding tests to one Ticket, running existing tests for another, and skipping tests for the rest. Retain choices from an incomplete mixed selection and ask only about unresolved Tickets. There is no default; never infer an unresolved test choice from risk, repository conventions, another Ticket, prior history, or silence. For every resolved Ticket, map `Add tests` to internal mode `tdd`. Both existing-only and skip use `direct`; preserve the approved choice. For a new answer that only declines adding tests, clarify execution. Legacy Approved direct Tickets without explicit permission to run existing tests keep their skip behavior.
 
 Emit the first Ticket Plan as `Draft` (`ART-STATE-001`). A plan with any unresolved test choice or missing mapped mode must remain `Draft`. After all choices are resolved, display the complete Ticket definitions and plain-language test choices; internal modes may also appear for traceability. Ask for explicit human approval (`GATE-PLAN-001`). Only a direct approval of that selected plan counts. On a later turn, record approval evidence and emit status `Approved`. Changing a test choice or mapped mode after approval returns the plan to `Draft` and requires reapproval before affected implementation continues.
 
@@ -54,4 +54,4 @@ Whenever you emit the Ticket Plan, state: "The user owns cross-session persisten
 - Stop and return to Specification authoring if a material behavior decision is missing or contradicted.
 - Stop after emitting the Draft and requesting the batch test choices or only the unresolved choices.
 - Stop after presenting the complete selected Draft and requesting explicit approval.
-- Stop after emitting the Approved artifact and identify the first eligible ticket; do not claim implementation has started.
+- After approval identify the first eligible Ticket. In the complete workflow, apply its implementation guidance section in the same response if the inputs are present. A standalone module ends with the handoff. Only a tools-capable host can execute the Ticket.

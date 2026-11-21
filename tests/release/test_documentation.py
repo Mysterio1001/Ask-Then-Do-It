@@ -116,10 +116,10 @@ HEADINGS = {
 }
 
 VERSIONED_GUIDE_ROOT = (
-    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.3/docs/guides"
+    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.5.0/docs/guides"
 )
 VERSIONED_README = (
-    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.3/README.md"
+    "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.5.0/README.md"
 )
 
 
@@ -164,9 +164,9 @@ class ReleaseDocumentationTests(unittest.TestCase):
 
     def test_detailed_full_guides_keep_plain_language_ticket_test_choices(self) -> None:
         expected = {
-            "zh-TW": ("一次回覆", "是否加上測試"),
-            "en": ("one response", "whether to add tests"),
-            "ja": ("一度に", "テストを追加するか"),
+            "zh-TW": ("一次回覆", "只跑既有測試", "略過行為測試"),
+            "en": ("one response", "run existing tests only", "skip behavioral tests"),
+            "ja": ("一度に", "既存テストのみ実行", "振る舞いテスト省略"),
         }
         forbidden = (
             "選擇 `tdd` 或 `direct`",
@@ -568,6 +568,8 @@ class ReleaseDocumentationTests(unittest.TestCase):
                 ("F_TICKET_PLAN_GATE", "F_TEST_CHOICE"),
                 ("F_TEST_CHOICE", "F_TDD"),
                 ("F_TEST_CHOICE", "F_DIRECT"),
+                ("F_TEST_CHOICE", "F_EXISTING"),
+                ("F_EXISTING", "F_EVIDENCE"),
                 ("F_TDD", "F_EVIDENCE"),
                 ("F_DIRECT", "F_EVIDENCE"),
                 ("F_EVIDENCE", "F_REVIEW"),
@@ -1061,7 +1063,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
             for locale, document in documents.items():
                 with self.subTest(group=group, locale=locale):
                     body = document.read_text(encoding="utf-8")
-                    self.assertIn("1.4.3", body.splitlines()[0])
+                    self.assertIn("1.5.0", body.splitlines()[0])
                     self.assertLess(len(body.splitlines()), 65)
                     self.assertIn("Full", body)
                     self.assertIn("Lite", body)
@@ -1120,12 +1122,13 @@ class ReleaseDocumentationTests(unittest.TestCase):
                 self.assertNotRegex(body.lower(), r"preview|預覽版|閱覽版|プレビュー")
                 self.assertNotIn("vscode://", body)
                 for version in re.findall(re.escape(repository) + r"/(?:blob|releases/download)/v([^/]+)/", body):
-                    self.assertEqual(version, "1.4.3")
+                    self.assertEqual(version, "1.5.0")
         for host, documents in HOST_GUIDES.items():
             suffix = {"codex": "", "claude-code": "-claude", "generic": "-generic"}[host]
-            expected = f"{repository}/releases/download/v1.4.3/ask-then-do-it{suffix}-1.4.3.zip"
+            expected = f"{repository}/releases/download/v1.5.0/ask-then-do-it{suffix}-1.5.0.zip"
             for document in documents.values():
-                self.assertIn(expected, document.read_text(encoding="utf-8"))
+                body = document.read_text(encoding="utf-8")
+                self.assertIn(expected, body)
             self.assertIn(expected, README.read_text(encoding="utf-8"))
 
     def test_host_guides_keep_mode_settings_and_direct_entry_boundaries(self) -> None:
@@ -1177,7 +1180,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
     def test_current_document_navigation_anchors_resolve_offline(self) -> None:
         documents = set(USER_ZH_DOCUMENTS + USER_LOCALIZED_DOCUMENTS)
         documents.update((ROOT / "docs").rglob("*.md"))
-        prefix = "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.4.3/"
+        prefix = "https://github.com/Mysterio1001/Ask-Then-Do-It/blob/v1.5.0/"
         for document in documents:
             if is_historical_archive(document):
                 continue

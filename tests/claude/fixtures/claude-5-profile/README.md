@@ -8,7 +8,7 @@ fences, final newlines, and appended instructions remain significant. Every
 scenario checks all ten candidate sources, including modules outside its nominal
 ownership. The references in this correction await independent Review.
 
-`scenarios.json` contains all 30 specified scenario IDs and 66 structured reference
+`scenarios.json` contains all 30 specified scenario IDs and 67 structured reference
 cases. Each records given capability, public-entry route, state and user decision,
 then expected module load, transition, artifact, status, disclosures and forbidden
 actions. These are authored reference observations for human review and later

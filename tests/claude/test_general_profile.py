@@ -143,8 +143,8 @@ SCENARIO_CONTRACTS = {
     "FULL-PLAN": ScenarioContract(
         "ticket-planning.md",
         "An Approved Specification needs vertically testable Tickets and explicit test choices.",
-        ("map add tests to `tdd` and do not add tests to `direct`", "only direct approval changes it to approved"),
-        ("map add tests to `direct` and do not add tests to `tdd`",),
+        ("map add tests to `tdd`", "both existing-only and skip use `direct`", "only direct approval changes it to approved"),
+        ("map add tests to `direct`",),
     ),
     "FULL-TDD": ScenarioContract(
         "tdd-implementation.md",
@@ -155,7 +155,7 @@ SCENARIO_CONTRACTS = {
     "FULL-DIRECT": ScenarioContract(
         "direct-implementation.md",
         "The Approved Ticket mode is direct.",
-        ("approved mode is `direct`", "must not create, modify, or execute behavioral tests", "tests: skipped-by-user"),
+        ("approved mode is `direct`", "run relevant existing behavioral tests without adding or modifying tests", "must not create, modify, or execute behavioral tests", "tests: skipped-by-user"),
         ("approved mode is `tdd`", "add a failing behavioral test"),
     ),
     "FULL-REVIEW": ScenarioContract(
@@ -753,8 +753,8 @@ class ClaudeGeneralProfileTests(unittest.TestCase):
             (
                 "ticket plan inverse mapping",
                 "ticket-planning.md",
-                "Map Add tests to `tdd` and Do not add tests to `direct`",
-                "Map Add tests to `direct` and Do not add tests to `tdd`",
+                "Map Add tests to `tdd`",
+                "Map Add tests to `direct`",
             ),
             (
                 "review downgrade inverse mapping",

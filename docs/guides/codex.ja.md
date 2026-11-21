@@ -2,8 +2,6 @@
 
 Codex Plugin で要件確認から実装、Review まで進めます。通常は `$ask-then-do-it` から始めます。
 
-以下は 1.4.3 のインストール／ダウンロード先です。遠隔側で利用できない場合は公開を待ってください。
-
 ## インストールと準備
 
 初回はターミナルで次を実行します。AI に実行を依頼することもできます。
@@ -17,7 +15,7 @@ codex plugin add ask-then-do-it@ask-then-do-it
 <details>
 <summary>ZIP フォールバック</summary>
 
-[ダウンロード ask-then-do-it-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-1.4.3.zip)
+[ダウンロード ask-then-do-it-1.5.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.5.0/ask-then-do-it-1.5.0.zip)
 
 `skills/` だけでなく完全な `ask-then-do-it/` を保持します。設定済みで編集可能なローカル Marketplace の `plugins/ask-then-do-it/` に置き、entry もそこを指すようにしてから実行します。
 
@@ -67,7 +65,7 @@ $ask-then-do-it 予約サイトの開発を手伝ってください。日本語�
 | `$ask-with-docs` | 要件を確認し Project Knowledge Base を整理 |
 | `$write-spec` | 承認済み要件を仕様に変換 |
 | `$plan-tickets` | 仕様を Ticket に分割しテスト選択を確認 |
-| `$implement-direct` | 行動テストなしで `direct` Ticket を実装 |
+| `$implement-direct` | 承認に従い、既存テストのみ実行するかテストを省略して `direct` Ticket を実装 |
 | `$implement-tdd` | Red、Green、Refactor で Ticket を実装 |
 | `$review-code` | 変更と証拠を Review |
 | `$improve-architecture` | アーキテクチャを分析し改善案を提示 |

@@ -14,10 +14,10 @@ GUIDES = ROOT / "docs/guides"
 EVIDENCE = ROOT / "tests/claude/fixtures/platform-support"
 LOCALES = ("en", "zh-TW", "ja")
 ENTRIES = ("/ask-then-do-it:ask-then-do-it", "/ask-then-do-it:ask-then-do-it-5")
-VERSION = "1.4.3"
+RELEASE_VERSION = "1.5.0"
 REPOSITORY = "https://github.com/Mysterio1001/Ask-Then-Do-It"
-VERSIONED_GUIDES = f"{REPOSITORY}/blob/v{VERSION}/docs/guides"
-DOWNLOAD = f"{REPOSITORY}/releases/download/v{VERSION}/ask-then-do-it-claude-{VERSION}.zip"
+VERSIONED_GUIDES = f"{REPOSITORY}/blob/v{RELEASE_VERSION}/docs/guides"
+DOWNLOAD = f"{REPOSITORY}/releases/download/v{RELEASE_VERSION}/ask-then-do-it-claude-{RELEASE_VERSION}.zip"
 HEADINGS = {
     "en": ("Installation and preparation", "Getting started", "Full / Lite modes", "Available commands", "Updating and removal", "Common questions", "License and attribution"),
     "zh-TW": ("安裝與準備", "開始使用", "Full／Lite 模式", "可用指令", "更新與移除", "常見問題", "授權與來源"),
@@ -74,7 +74,7 @@ def assert_guide_contract(body: str, locale: str) -> None:
     if set(re.findall(r"/ask-then-do-it:[a-z0-9-]+", body)) != set(ENTRIES):
         raise AssertionError("exactly two supported namespaced entries")
     if re.search(r"preview|預覽版|プレビュー", body, re.I):
-        raise AssertionError("current guide must use the 1.4.3 target")
+        raise AssertionError(f"installation must use the published v{RELEASE_VERSION} package")
     body, _ = split_advanced_reference(body)
     if re.findall(r"^## (.+)$", body, re.M) != list(HEADINGS[locale]):
         raise AssertionError("main guide must keep the seven user-facing chapters")
@@ -93,7 +93,7 @@ def assert_guide_contract(body: str, locale: str) -> None:
         if internal in body:
             raise AssertionError("internal detail belongs in the advanced reference: " + internal)
     if re.search(r"preview|預覽版|プレビュー", body, re.I):
-        raise AssertionError("current guide must use the 1.4.3 target")
+        raise AssertionError(f"installation must use the published v{RELEASE_VERSION} package")
     assert_no_false_claims(body, locale)
 
 
@@ -105,7 +105,7 @@ def section(body: str, name: str) -> str:
 
 
 def assert_reference_contract(body: str, locale: str) -> None:
-    require_all(body, (VERSION, f"claude-code.{locale}.md", f"getting-started-simple.{locale}.md"))
+    require_all(body, (RELEASE_VERSION, f"claude-code.{locale}.md", f"getting-started-simple.{locale}.md"))
     _, advanced = split_advanced_reference(body)
     for name, required in REFERENCE_SECTIONS.items():
         require_all(section(advanced, name), required)
@@ -208,7 +208,7 @@ class ClaudeDocumentationTests(unittest.TestCase):
         for locale in LOCALES:
             body = (PLUGIN / f"START-HERE.{locale}.md").read_text(encoding="utf-8")
             self.assertLess(len(body.splitlines()), 65)
-            self.assertIn(VERSION, body)
+            self.assertIn(RELEASE_VERSION, body.splitlines()[0])
             self.assertIn(ENTRIES[0], body)
             self.assertIn("claude --plugin-dir", body)
             self.assertIn("session-only", body)

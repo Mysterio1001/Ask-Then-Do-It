@@ -1,24 +1,26 @@
 # Generic Architecture Improvement Prompt
 
 Prompt ID: `generic.architecture-improvement`
-Prompt version: `1.4.3`
+Prompt version: `1.5.0`
 Required capability: `conversation`
-Core version: `1.4.3`
+Core version: `1.5.0`
 
 ## Required inputs
 
 - The requested module or system analysis scope.
-- User-supplied architecture descriptions, directory structures, code excerpts, dependency information, tests, configuration, and approved artifacts.
+- Relevant user-supplied architecture descriptions, directory structures, code excerpts, dependency information, tests, or configuration. Include approved artifacts when available for formal diagnosis.
 - Any existing Project Knowledge Base, Review Report, or Architecture Improvement Report supplied by the user.
 
 ## Expected outputs
 
 - A capability declaration and evidence inventory.
-- A diagnostic-only Architecture Improvement Report in complete Markdown.
+- A standalone diagnosis in the requested format, or a diagnostic-only Architecture Improvement Report in complete Markdown when formally requested.
 - Twelve evidence-backed lens results and safe simulated deletion analysis.
 - A Specification handoff for any accepted improvement.
 
 ## Instructions
+
+After resolving the current mode, fulfill a standalone read-only request directly from supplied evidence. Return the requested diagnosis and limits in this response. The Full-stage prerequisites and Lite change workflow below apply to formal stage requests. Only a later change request can authorize fixes.
 
 Directly pasting this module selects its workflow stage, not Full or Lite. This is a bounded direct-entry guard, not complete resolver ownership. When composed orchestration supplies a proven current-operation mode, reuse it and MUST NOT re-resolve. Only when directly pasted without a proven current-operation mode, resolve (`MODE-RESOLVE-001`) in order: (1) an unambiguous explicit current-operation instruction selecting Full or Lite; (2) the embedded `Default workflow mode` declaration, when available, if exactly `full` or `lite`; (3) Full fallback for a missing or invalid declaration. If explicit current-operation instructions conflict, ask one clarification and stop. Any local result applies to only the current operation and MUST NOT persist. Continue this stage only when Full resolves. If Lite resolves, stop this Full stage and route to `lite-workflow.md`.
 
@@ -47,7 +49,7 @@ Perform simulated deletion by tracing what would fail if the selected file, modu
 
 An actual deletion experiment requires explicit user authorization, proven Tools capability, and a disposable, isolated environment. This Conversation adapter cannot prove the latter two gates, so label an actual experiment `unavailable` and continue with simulation even when the user offers authorization.
 
-Emit an Architecture Improvement Report with the portable artifact envelope and every section:
+For a formal diagnosis, emit an Architecture Improvement Report with the portable artifact envelope and every section:
 
 1. Analysis scope and limitations.
 2. System architecture summary.
@@ -69,6 +71,6 @@ State: "The user owns cross-session persistence; save this artifact and re-suppl
 ## Stop conditions
 
 - Stop and request missing scope or minimum evidence when no bounded diagnosis is possible.
-- Stop after the complete `draft` report and one explicit acceptance question.
-- If accepted, stop after recording acceptance and the Specification handoff.
+- For standalone diagnosis, return the requested findings and limits directly. For a formal Architecture Improvement Report, stop after the complete `draft` report and one explicit acceptance question.
+- For an accepted formal report, record acceptance and the Specification handoff.
 - Stop with an honest `unavailable` result rather than simulating repository mutation or execution.

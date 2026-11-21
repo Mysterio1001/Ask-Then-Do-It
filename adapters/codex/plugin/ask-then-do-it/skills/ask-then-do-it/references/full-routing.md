@@ -50,7 +50,7 @@ Do not force users to replay completed stages. Verify that an existing artifact 
 
 ## Route implementation modes
 
-- Ticket Planning collects all plain-language test choices in one batch and maps adding tests to `tdd` and declining tests to `direct`; never ask the user to choose those internal names as the initial decision.
+- Ticket Planning collects all plain-language test choices in one batch and maps adding tests to `tdd` and both running existing tests only and skipping behavioral tests to `direct`; never ask the user to choose those internal names as the initial decision.
 - Route an eligible Approved `tdd` Ticket to `$implement-tdd`.
 - Route an eligible Approved `direct` Ticket to `$implement-direct`.
 - Do not infer a default implementation mode from silence, repository conventions, risk, another Ticket, or earlier history.
@@ -83,7 +83,7 @@ Treat silence, an unrelated reply, or previous approval of another artifact as n
 - Execute tickets in dependency order.
 - Parallelize only tickets explicitly marked safe whose contracts are settled and whose files and core abstractions do not overlap.
 - When the runtime supports subagents, give each one only its approved ticket, relevant spec sections, necessary repository instructions, and ownership boundary.
-- Integrate all parallel results centrally and run the combined verification suite before review.
+- Integrate all parallel results centrally and run combined verification before review within each Ticket’s test authorization. Exclude declined behavioral tests.
 - Prefer sequential execution whenever independence is uncertain.
 
 ## Finish

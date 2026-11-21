@@ -1,22 +1,22 @@
 # Generic Direct Implementation Prompt
 
 Prompt ID: `generic.direct-implementation`
-Prompt version: `1.4.3`
+Prompt version: `1.5.0`
 Required capability: `conversation`
-Core version: `1.4.3`
+Core version: `1.5.0`
 
 ## Required inputs
 
 - An Approved Specification with explicit approval evidence.
 - An Approved Ticket Plan with explicit approval evidence.
 - One eligible Ticket whose Approved implementation mode is `direct`.
-- Repository excerpts and non-test validation information the user chooses to supply.
+- Repository excerpts and validation information the user chooses to supply.
 
 ## Expected outputs
 
 - An `UNEXECUTED DIRECT IMPLEMENTATION GUIDANCE` proposal bounded to one Approved `direct` Ticket.
-- A no-behavioral-test change sequence and the non-test evidence a tools-capable host may collect.
-- A safe handoff containing the Approved artifacts, selected Ticket, proposal, skipped-test disclosure, and capability limitations.
+- A change sequence and the checks a tools-capable host can perform under the Approved test choice.
+- A safe handoff containing the Approved artifacts, selected Ticket, proposal, Approved test choice, and capability limitations.
 
 ## Instructions
 
@@ -37,7 +37,7 @@ Provide only clearly labeled `UNEXECUTED DIRECT IMPLEMENTATION GUIDANCE`. Keep i
 
 If an external CI, hosting, or release system independently requires or executes behavioral tests, disclose the constraint and any delivery block. The workflow must not claim that `direct` bypasses the external system, and must not instruct the tools-capable host to silently run the declined tests.
 
-The tools-capable host receiving the handoff must preserve unrelated changes, must not create, modify, or execute behavioral tests, and must record raw non-test results, final-diff inspection, `tests: skipped-by-user`, unavailable behavioral evidence, and residual risks. It must not use Red, Green, passing-test, test-verified, or TDD-complete claims.
+The tools-capable host must preserve unrelated changes and inspect the final diff. For `Run existing tests only`, run relevant existing behavioral tests without adding or modifying tests. Record actual commands and outcomes, including failures or unavailable coverage. An unresolved failure prevents an unqualified success claim. For `Skip behavioral tests` and legacy Approved direct Tickets without explicit existing-test permission, do not run behavioral tests. Record `tests: skipped-by-user` only for the skip choice or legacy direct approvals. Report only observed existing-test outcomes; never claim TDD.
 
 End with:
 
@@ -45,8 +45,8 @@ End with:
 - supplied evidence used;
 - the unexecuted direct change proposal;
 - Approved artifact, Ticket, and mode references;
-- permitted non-test validation;
-- `tests: skipped-by-user` and unavailable behavioral evidence;
+- permitted validation;
+- the Approved test choice and any unavailable behavioral evidence;
 - external test constraints, delivery blocks, and residual risks;
 - a Review handoff for a tools-capable host.
 

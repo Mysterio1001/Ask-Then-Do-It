@@ -1,9 +1,9 @@
 # Generic Documented Requirement Interrogation Prompt
 
 Prompt ID: `generic.documented-requirements`
-Prompt version: `1.4.3`
+Prompt version: `1.5.0`
 Required capability: `conversation`
-Core version: `1.4.3`
+Core version: `1.5.0`
 
 ## Required inputs
 
@@ -34,7 +34,7 @@ Maintain Draft Working Notes with the portable artifact envelope and `status` fi
 
 A confirmed note must not become formal project knowledge until the Requirement Decision Record and disclosed knowledge changes receive explicit approval (`KB-DRAFT-001`).
 
-Ask exactly one question in each turn (`GRILL-ONE-001`). Include one concrete recommended answer and its principal tradeoff. Choose the unresolved decision with the greatest impact and uncertainty. Trace goals, users, scope, non-goals, behavior, failures, data, dependencies, security, privacy, operations, recovery, and acceptance criteria without using a fixed questionnaire. Stop after the question.
+While material decisions remain open, ask exactly one question in each turn (`GRILL-ONE-001`). Include one concrete recommended answer and its principal tradeoff. Choose the unresolved decision with the greatest impact and uncertainty. Trace goals, users, scope, non-goals, behavior, failures, data, dependencies, security, privacy, operations, recovery, and acceptance criteria. If supplied evidence already settles the decisions, present the Draft record and any applicable Knowledge Base Change Summary for approval in this response.
 
 At consensus, emit a complete Draft Requirement Decision Record with `artifact_type`, `artifact_id`, `workflow_id`, `core_version`, `status`, `inputs`, `assumptions`, `deferred`, `handoff`, and pending `approval`.
 
@@ -49,7 +49,7 @@ Also emit a proposed Project Knowledge Base for the logical canonical path `docs
 
 If the user supplies an existing Knowledge Base, preserve unrelated content and propose a scoped update. Present a Knowledge Base Change Summary that cites upstream evidence and separates `additions`, `modifications`, and `removals` (`KB-SYNC-001`).
 
-Show the complete Draft Requirement Decision Record and complete Knowledge Base Change Summary, then ask one single explicit approval question for that exact content. Silence, an unrelated reply, or another artifact's approval does not count. After approval, record the evidence, emit the Approved record and approved Knowledge Base Markdown, and hand off to Specification authoring. Do not begin Specification authoring or implementation within this prompt.
+Show the complete Draft Requirement Decision Record and complete Knowledge Base Change Summary, then ask one single explicit approval question for that exact content. Silence, an unrelated reply, or another artifact's approval does not count. After approval, record the evidence, emit the Approved record and approved Knowledge Base Markdown, and hand off to Specification authoring.
 
 Whenever an artifact is emitted, state: "The user owns cross-session persistence; save this artifact and re-supply it when the conversation no longer contains it."
 
@@ -58,5 +58,5 @@ Whenever an artifact is emitted, state: "The user owns cross-session persistence
 - Stop and wait after every single question.
 - Stop after the Draft artifacts and their single explicit approval question.
 - If the user changes a material decision, keep all affected artifacts Draft and resume one-question interrogation.
-- Stop after the Approved record, approved Knowledge Base Markdown, and Specification handoff.
+- At the Specification handoff, apply that section in the same response if the complete workflow is loaded and its inputs are present. A standalone module ends with its handoff.
 - Stop with an honest limitation when required evidence is unavailable; do not fabricate repository or persistence claims.

@@ -1,6 +1,6 @@
 # Claude Code adapter 規格
 
-適用來源：1.4.3。這是現行行為要求的彙整，不是實測通過聲明。當前已驗證範圍與缺口見[工作狀態](../project/status.md)，操作方法見[Claude 使用說明](../guides/claude-code.zh-TW.md)及[驗證手冊](../maintainer/validation.md)。跨平台共同流程以[工作流程規格](workflow.md)與 [Core](../../core/CORE.md)為準。
+適用來源：1.5.0。這是現行行為要求的彙整，不是實測通過聲明。當前已驗證範圍與缺口見[工作狀態](../project/status.md)，操作方法見[Claude 使用說明](../guides/claude-code.zh-TW.md)及[驗證手冊](../maintainer/validation.md)。跨平台共同流程以[工作流程規格](workflow.md)與 [Core](../../core/CORE.md)為準。
 
 原始規格的行為章節保留在下方，移除重複的目標／情境敘述、施工交接與歷史版本切換指示。原始要求和核准時間可由[來源索引](../evidence/release-history.md#document-sources)追溯。前期可行性研究中的 95%／98% 通過率、其他命名及自訂 doctor 等方案均未採用，不能覆蓋本規格。
 
@@ -29,10 +29,10 @@ Repository root MUST 有 `.claude-plugin/marketplace.json`。它 MUST 使用 Cla
 
 該 entry MUST 使用：
 
-- `name: ask-then-do-it`、`displayName: Ask Then Do It`、`version: 1.4.3`；
+- `name: ask-then-do-it`、`displayName: Ask Then Do It`、`version: 1.5.0`；
 - 與現有產品一致的 independent-project description、author、MIT license、Developer Tools category 與 discovery tags；`repository` 指向 GitHub repository，`homepage` 指向 `https://ask-then-do-it.handlebyme.com/`；
 - `strict: true` 與 `defaultEnabled: true`；
-- `git-subdir` source，URL 是 `https://github.com/Mysterio1001/Ask-Then-Do-It.git`，path 是 `adapters/claude-code/plugin/ask-then-do-it`，ref 是 `v1.4.3`；
+- `git-subdir` source，URL 是 `https://github.com/Mysterio1001/Ask-Then-Do-It.git`，path 是 `adapters/claude-code/plugin/ask-then-do-it`，ref 是 `v1.5.0`；
 - 不含 Codex-only `policy`、Codex `interface` 或指向 Codex source 的欄位。
 
 Canonical Plugin manifest MUST 位於 `adapters/claude-code/plugin/ask-then-do-it/.claude-plugin/plugin.json`，authored fields 恰為：`name`、`displayName`、`version`、`description`、`author`、`homepage`、`repository`、`license`、`keywords`、`defaultEnabled`。Name、display name、version、author、repository、license、description 與 catalog MUST 一致；`defaultEnabled` MUST 是 `true`。
@@ -157,7 +157,7 @@ Install/update完成後 MUST 要求 `/reload-plugins` 或 new session依官方 l
 
 ## 9. Router state、資料與安全
 
-Immutable Plugin resources MUST 只從 `${CLAUDE_PLUGIN_ROOT}` 讀；runtime MUST 不寫 cached Plugin directory。Persistent state MUST 只位於 `${CLAUDE_PLUGIN_DATA}/routing/v1/sessions/<session-key>.json`。
+Immutable Plugin resources MUST 只從 `${CLAUDE_PLUGIN_ROOT}` 讀；runtime MUST 不寫 cached Plugin directory。Session routing state MUST 只位於 `${CLAUDE_PLUGIN_DATA}/routing/v1/sessions/<session-key>.json`。清理進度另存在同一個 `v1/cleanup-cursor.json`，只記錄最後檢查的雜湊檔名或空值，以檔案修改時間判斷下次維護時間。
 
 State authored keys MUST 恰為：
 
@@ -179,11 +179,11 @@ Hook JSON、session ID、model ID、paths、Config與state全部視為 untrusted
 
 Invalid JSON、unknown keys、wrong type、unsupported schema、session-key/filename mismatch、unsafe symlink/path、impossible lifecycle transition、`pending`／`indeterminate` state或cross-session read MUST使automatic route fail closed。Model omitted/unmapped只有在state ownership/schema/lifecycle全都valid且routing state為`ready`時才成為`unknown`。
 
-Session files last updated超過 30 days MAY 在成功的 SessionStart 後清理；current session file不得被清理。Time age本身不得讓 same-session `resume` 在 30-day boundary前失效。最後 scope uninstall依官方 lifecycle刪除 data；`--keep-data`保留時，下次使用仍須通過schema/ownership/lifecycle validation。
+Session files last updated 超過 30 days MAY 在成功的 SessionStart 後清理。全使用者範圍每 24 小時最多一批，時鐘大幅回撥時可重新建立週期。未到期時不列目錄、不讀其他 session。每批依既有平面目錄的檔名排序，接續上次位置，最多檢查 16 份其他 session，走到底後下一批從頭開始。多個同時啟動的 hook 共用清理鎖，每個候選檔仍須取得各自的鎖並驗證所有權、schema 與年齡。當前 session、使用中的檔案與無法驗證的檔案均保留。清理失敗不影響當次路由。Time age 本身不得讓 same-session `resume` 在 30-day boundary 前失效。最後 scope uninstall 依官方 lifecycle 刪除 data；`--keep-data` 保留時，下次使用仍須通過 schema/ownership/lifecycle validation。
 
 ## 10. Package 與 deterministic release inventory
 
-Canonical Claude source、expanded package `dist/claude/ask-then-do-it/` 與 ZIP root `ask-then-do-it/` MUST 有相同 runtime relative paths。Claude archive MUST 是 `dist/claude/ask-then-do-it-claude-1.4.3.zip`。
+Canonical Claude source、expanded package `dist/claude/ask-then-do-it/` 與 ZIP root `ask-then-do-it/` MUST 有相同 runtime relative paths。Claude archive MUST 是 `dist/claude/ask-then-do-it-claude-1.5.0.zip`。
 
 Claude expanded package與ZIP MUST 恰含下列 authored runtime/legal inventory，不得含 catalog、test fixture、source evidence、local state或machine path：
 
@@ -209,7 +209,7 @@ Codex／Generic除current version、Claude cross-entry docs與三-family release
 
 ## 11. Conformance 與選配 fresh-session behavior qualification
 
-Claude MUST 維持獨立 `adapters/claude-code/conformance.yaml` 與 provider-specific validator/tests。Manifest MUST 使用 `adapter_id: claude-code`、`adapter_version: 1.4.3`、`target: claude-code-plugin`、`core_version: 1.4.3`，宣告 cumulative `conversation`、`tools`、`multi_agent`，為每個 capability提供非空evidence，並列出target Core全部30個mandatory rule IDs。
+Claude MUST 維持獨立 `adapters/claude-code/conformance.yaml` 與 provider-specific validator/tests。Manifest MUST 使用 `adapter_id: claude-code`、`adapter_version: 1.5.0`、`target: claude-code-plugin`、`core_version: 1.5.0`，宣告 cumulative `conversation`、`tools`、`multi_agent`，為每個 capability提供非空evidence，並列出target Core全部30個mandatory rule IDs。
 
 若要宣稱 Claude behavior `live-verified`，General與Claude 5 profiles MUST 各自對以下固定behavior scenario inventory取得100% pass；任何skip、partial或profile-specific exemption都算該 live qualification fail：
 
@@ -224,7 +224,7 @@ Claude MUST 維持獨立 `adapters/claude-code/conformance.yaml` 與 provider-sp
 9. `FULL-SPEC`：behavioral no-code Specification與approval gate。
 10. `FULL-PLAN`：vertical Tickets、一次plain-language test-choice batch與plan gate。
 11. `FULL-TDD`：Red-before-production、Green、Refactor、evidence與scope control。
-12. `FULL-DIRECT`：no behavioral tests、non-test validation、skipped-test disclosure與evidence。
+12. `FULL-DIRECT`：不新增或修改行為測試。依核准選擇執行既有測試並記錄結果，或略過並記錄 `tests: skipped-by-user`。舊 direct 核准維持略過。
 13. `FULL-REVIEW`：raw evidence、Ticket mode、12 lenses與findings severity。
 14. `FULL-ARCH`：diagnostic-only、simulated deletion、report與spec reflow。
 15. `LITE-QUESTIONS`：blocking-only question count/sentence/recommendation budgets。
@@ -285,7 +285,7 @@ Compatibility contract涵蓋Windows、macOS、Linux上的local Claude Code termi
 3. 以該環境實際可用supported model驗證automatic與explicit route；拿不到的model branches不得冒充live。
 4. 真實model switch、同operation profile stability、Post hook commit後的next-permitted-entry reroute，以及general→Claude 5與Claude 5→general連續invocation的authority precedence；若觀察到host race，evidence明確標示best-effort window。
 5. 兩個同時／先後sessions不cross-contaminate，且至少驗證resume或compact lifecycle。
-6. 從isolated、test-only、明確標示「非正式release」的older Claude candidate更新到exact `1.4.3` candidate；不得冒充`1.3.1`，因`1.3.1`沒有Claude Adapter。
+6. 從isolated、test-only、明確標示「非正式release」的older Claude candidate更新到exact `1.5.0` candidate；不得冒充`1.3.1`，因`1.3.1`沒有Claude Adapter。
 7. Normal remove、default data deletion disclosure，以及reinstall或recovery。
 8. Exact release ZIP透過`claude --plugin-dir <path>`啟動，兩commands可用，bare `claude plugin list`不被誤稱為persistent install。
 

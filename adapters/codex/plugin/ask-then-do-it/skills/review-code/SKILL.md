@@ -16,6 +16,7 @@ Match user-facing communication and generated artifacts to the user's language w
 Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before stage behavior, require a current-operation mode proof from `$ask-then-do-it`; never persist or reuse mode.
 
 - Missing proof: stop and delegate to `$ask-then-do-it`.
+- In either mode, fulfill a standalone read-only request immediately from evidence. Report findings and limits without writes; use the following routes for formal stages.
 - Proven `lite`: stop this Full stage and route to the Lite workflow.
 - Proven `full`: continue with this stage's prerequisites and gates.
 
@@ -43,8 +44,8 @@ Never use a stronger label than the available evidence and runtime isolation can
 ## Preserve the implementation mode
 
 - Read and retain the Ticket's Approved `tdd` or `direct` mode.
-- For a `direct` Ticket, retain `tests: skipped-by-user`, identify unavailable behavioral evidence, untested areas, and external test constraints. Do not execute or prescribe automatic execution of declined behavioral tests.
-- A `direct` Ticket may appear complete when approved behavior is present and no blocking finding remains, but never describe it as passing tests or TDD-complete.
+- For a `direct` Ticket with skipped tests (including legacy approvals), retain `tests: skipped-by-user`, identify unavailable behavioral evidence, untested areas, and external test constraints. Do not execute or prescribe automatic execution of declined behavioral tests.
+- A `direct` Ticket may appear complete when approved behavior is present and no blocking finding remains, without claiming TDD. For `Run existing tests only`, confirm test files were unchanged, report only observed existing-test results, and disclose unavailable coverage or unresolved failures.
 - If the supplied mode conflicts with the Approved Ticket Plan, stop at the plan gate rather than choosing a route.
 
 ## Review in priority order
@@ -52,7 +53,7 @@ Never use a stronger label than the available evidence and runtime isolation can
 1. Verify every changed behavior against the approved specification and acceptance criteria.
 2. Trace correctness, state transitions, failure paths, compatibility, and regressions.
 3. Examine trust boundaries, authorization, validation, secrets, privacy, and destructive behavior.
-4. Evaluate whether available tests would fail for likely defects and identify important untested paths without running tests declined by an Approved `direct` mode.
+4. Evaluate whether available tests would fail for likely defects and identify important untested paths while respecting the Approved Ticket’s test choice.
 5. Apply all twelve Architecture and Refactoring Lenses to the changed code and its relevant impact area (`REVIEW-LENSES-001`). Read the [canonical architecture and refactoring lens contract](../ask-then-do-it/references/architecture-refactoring-lenses.md) completely immediately before the lens pass. If it is missing or unreadable, stop and do not claim a completed twelve-lens pass.
 
 Ignore purely stylistic preferences unless they create a material maintenance, correctness, or repository-convention problem.

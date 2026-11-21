@@ -23,7 +23,7 @@ The `MODE-RESOLVE-001` mapping MUST cover every public workflow entry. Direct st
 
 Host capabilities MAY change which default sources, implementation actions, or validation evidence are available. They MUST NOT change the resolved mode semantics, fabricate unavailable evidence, persist a current-operation override, or represent a Lite Change Brief as a durable workflow artifact.
 
-Adapters that expose implementation MUST represent both Approved Ticket modes consistently: `tdd` routes to test-driven implementation and `direct` routes to direct implementation. Capability limitations may change what an adapter can execute, but MUST NOT change the selected mode or fabricate evidence.
+Adapters that expose implementation MUST represent both Approved Ticket modes consistently: `tdd` routes to test-driven implementation and `direct` routes to direct implementation with the Approved Ticket’s test choice (existing tests only or skip). Capability limitations may change what an adapter can execute, but MUST NOT change the selected mode or fabricate evidence.
 
 Capability profiles are cumulative: `tools` includes `conversation`; `multi_agent` includes `conversation` and `tools`.
 

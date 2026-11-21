@@ -19,11 +19,11 @@ class ReleaseAlignmentTests(unittest.TestCase):
 
     def test_current_config_loads_three_version_matched_families(self):
         config = self.builder.load_config(ROOT / 'release/release.json')
-        self.assertEqual(config['release_version'], '1.4.3')
-        self.assertEqual(config['core_version'], '1.4.3')
+        self.assertEqual(config['release_version'], '1.5.0')
+        self.assertEqual(config['core_version'], '1.5.0')
         self.assertEqual(set(config['managed_outputs']), {'codex', 'generic', 'claude', 'checksums.sha256'})
         for family in ('codex', 'generic', 'claude'):
-            self.assertTrue(config[family]['archive'].endswith('-1.4.3.zip'))
+            self.assertTrue(config[family]['archive'].endswith('-1.5.0.zip'))
 
     def test_provider_catalogs_pin_the_same_current_release_tag(self):
         codex_catalog = json.loads(
@@ -32,9 +32,9 @@ class ReleaseAlignmentTests(unittest.TestCase):
         claude_catalog = json.loads(
             (ROOT / '.claude-plugin/marketplace.json').read_text(encoding='utf-8')
         )
-        self.assertEqual(codex_catalog['plugins'][0]['source']['ref'], 'v1.4.3')
-        self.assertEqual(claude_catalog['plugins'][0]['source']['ref'], 'v1.4.3')
-        self.assertEqual(claude_catalog['plugins'][0]['version'], '1.4.3')
+        self.assertEqual(codex_catalog['plugins'][0]['source']['ref'], 'v1.5.0')
+        self.assertEqual(claude_catalog['plugins'][0]['source']['ref'], 'v1.5.0')
+        self.assertEqual(claude_catalog['plugins'][0]['version'], '1.5.0')
 
     def test_historical_slimming_artifacts_keep_their_original_core_version(self):
         for relative in (
@@ -55,19 +55,22 @@ class ReleaseAlignmentTests(unittest.TestCase):
                 )
                 self.assertEqual(recorded_version, '1.4.1')
 
-    def test_readme_downloads_and_adapter_manifests_match_release_version(self):
-        version = self.config['release_version']
+    def test_readme_downloads_match_the_published_release_in_each_language(self):
         repository = 'https://github.com/Mysterio1001/Ask-Then-Do-It'
         readme = (ROOT / 'README.md').read_text(encoding='utf-8')
-        downloads = re.findall(
-            re.escape(repository) + r'/releases/download/v([^/]+)/([^\s)]+\.zip)',
-            readme,
-        )
-        self.assertEqual(
-            set(downloads),
-            {(version, Path(self.config[family]['archive']).name)
-             for family in ('codex', 'generic', 'claude')},
-        )
+        sections = re.split(r'^## (?:Introduction|介紹|はじめに)$', readme, flags=re.M)[1:]
+        self.assertEqual(len(sections), 3)
+        version = self.config['release_version']
+        assets = [(version, Path(self.config[family]['archive']).name) for family in ('codex', 'generic', 'claude')]
+        for section in sections:
+            downloads = re.findall(
+                re.escape(repository) + r'/releases/download/v([^/]+)/([^\s)]+\.zip)',
+                section,
+            )
+            self.assertCountEqual(downloads, assets)
+
+    def test_adapter_manifests_match_source_version(self):
+        version = self.config['release_version']
         for family, manifest_directory in (
             ('codex', '.codex-plugin'), ('claude', '.claude-plugin'),
         ):

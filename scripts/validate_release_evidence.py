@@ -89,21 +89,22 @@ def validate(
     ledger = read_object(ledger_path, "validation ledger")
     version = config.get("release_version")
     required = config.get("required_validation_checks")
-    if not isinstance(version, str) or not isinstance(required, list) or not required:
+    if not isinstance(version, str) or not isinstance(required, list):
         raise EvidenceError("Release configuration lacks the evidence gate contract")
+    if not all(isinstance(check_id, str) for check_id in required):
+        raise EvidenceError("Release configuration validation check IDs must be strings")
     if tuple(required) != REQUIRED_VALIDATION_CHECKS:
-        raise EvidenceError(
-            "Release configuration required_validation_checks must equal the "
-            "canonical ordered release gate"
-        )
-    forbidden_required = sorted(
-        FORBIDDEN_REQUIRED_VALIDATION_CHECKS.intersection(required)
-    )
-    if forbidden_required:
-        raise EvidenceError(
-            "Optional Claude live qualification checks cannot be required: "
-            f"{forbidden_required}"
-        )
+        details = ["Release configuration required_validation_checks must equal the canonical ordered release gate."]
+        missing = [check_id for check_id in REQUIRED_VALIDATION_CHECKS if check_id not in required]
+        extra = [check_id for check_id in required if check_id not in REQUIRED_VALIDATION_CHECKS]
+        if missing:
+            details.append(f"Missing required checks: {missing}.")
+        if extra:
+            details.append(f"Unexpected required checks: {extra}.")
+        optional = sorted(FORBIDDEN_REQUIRED_VALIDATION_CHECKS.intersection(extra))
+        if optional:
+            details.append(f"Optional Claude live qualification checks cannot be required: {optional}.")
+        raise EvidenceError(" ".join(details))
     if ledger.get("release_version") != version:
         raise EvidenceError("Validation ledger release_version does not match release")
     checks = ledger.get("checks")

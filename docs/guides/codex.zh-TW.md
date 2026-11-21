@@ -2,8 +2,6 @@
 
 使用 Codex Plugin 引導需求、實作與 Review。一般從 `$ask-then-do-it` 開始。
 
-以下為 1.4.3 的安裝／下載目標；若遠端尚未提供，請等待發布。
-
 ## 安裝與準備
 
 在終端機執行以下首次安裝指令，也可以請 AI 代為執行：
@@ -17,7 +15,7 @@ codex plugin add ask-then-do-it@ask-then-do-it
 <details>
 <summary>ZIP 備援</summary>
 
-[下載 ask-then-do-it-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-1.4.3.zip)
+[下載 ask-then-do-it-1.5.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.5.0/ask-then-do-it-1.5.0.zip)
 
 保留完整 `ask-then-do-it/`，不要只複製 `skills/`。將它放到已設定且可修改的本機 Marketplace 的 `plugins/ask-then-do-it/`，其 entry 也須指向該位置，再執行：
 
@@ -66,8 +64,8 @@ $ask-then-do-it 幫我建立一個預約網站，請使用繁體中文。
 | `$ask-requirements` | 一次釐清一個高影響需求 |
 | `$ask-with-docs` | 釐清需求並整理 Project Knowledge Base（專案知識庫） |
 | `$write-spec` | 將已核准需求整理成規格 |
-| `$plan-tickets` | 將規格拆成垂直 Tickets，並批次取得每張 Ticket 是否加上測試的選擇 |
-| `$implement-direct` | 不建立也不執行行為測試，直接實作已核准的 `direct` Ticket |
+| `$plan-tickets` | 將規格拆成垂直 Tickets，並批次取得每張 Ticket 的測試選擇 |
+| `$implement-direct` | 依核准選擇，只跑既有測試或略過行為測試，實作 `direct` Ticket |
 | `$implement-tdd` | 依 Ticket 進行 Red、Green、Refactor |
 | `$review-code` | 根據需求、變更、可用證據與略過測試風險進行 Review |
 | `$improve-architecture` | 分析架構問題與模組關係，提出改善方向 |

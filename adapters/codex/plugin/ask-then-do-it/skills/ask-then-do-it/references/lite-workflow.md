@@ -19,13 +19,21 @@ Read applicable repository instructions, inspect current repository changes, and
 
 Stop and return to the user when implementation would require materially new behavior or scope. When the operation cannot be represented honestly within the Lite budgets or assurance level, recommend Full for only the current operation.
 
+## Read-only requests and small edits
+
+For a standalone read-only review or diagnosis, inspect the requested evidence and return findings, examples, and limitations in the same response. Skip implementation planning, Change Brief approval, and file writes. Ask only for genuinely missing inputs. Keep the requested review depth and independence; a formal Ticket Review still follows its evidence contract. A later request to fix findings is a new change request.
+
+After checking the target and risk, use the original instruction as authorization for one exact, local, reversible edit, such as replacing a named button label or correcting a specified internal default. Its target and expected result must be unambiguous and directly verifiable. New features, unresolved decisions, material risk, public contract changes, and external effects use the standard flow. With tools, apply only that edit without a Change Brief or repeat approval, inspect the diff, verify the result, and report it. With conversation capability, provide the proposed edit and validation instructions only. Honor an explicit request for a preview or approval first. If the target, scope, or risk fails these conditions, follow the standard Lite flow below.
+
+The remaining sections describe the standard Lite change flow.
+
 ## Reconsider material risk
 
 Evaluate available evidence before Change Brief approval and again during implementation for material authentication, authorization, payment, data migration, destructive data operation, public contract, cross-module structural, concurrency, asynchronous, or external side effect risk.
 
 When material risk exists, explain the specific evidence and ask whether only the current operation should switch to Full or continue in Lite with the risk accepted. The user may remain in Lite. If no mode answer is received, remain paused.
 
-If new evidence appears after approval or during implementation, pause further modification and ask the same current-operation question again. The decision MUST NOT persist or modify Config.
+If new evidence reveals a material risk after approval or during implementation, pause further modification and ask the same current-operation question again. The decision MUST NOT persist or modify Config.
 
 Switching to Full preserves observable current changes and returns to the earliest unmet Full gate before more implementation. Continuing in Lite retains the accepted risk for the completion report.
 
@@ -57,7 +65,7 @@ After blockers are resolved, present one conversation-only Change Brief containi
 
 Target approximately 800 tokens. Do not omit material behavior, failure handling, risk, or validation to fit the budget. If an honest brief cannot fit, recommend Full and ask whether only the current operation should switch.
 
-Lite has exactly one formal pre-implementation approval. Do not begin production modification until the user explicitly approves the complete Change Brief.
+Standard Lite has exactly one formal pre-implementation approval. Do not begin production modification until the user explicitly approves the complete Change Brief.
 
 For this Lite operation, the workflow MUST NOT create or update a Requirement Decision Record, Draft Working Notes, Project Knowledge Base, Specification, Ticket Plan, Implementation Evidence, Direct Implementation Evidence, Review Report, or Architecture Improvement Report. User-requested production code, configuration, content, and documentation remain valid implementation outputs.
 

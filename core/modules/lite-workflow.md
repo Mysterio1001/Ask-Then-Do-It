@@ -13,6 +13,14 @@ Lite is a top-level workflow mode. It is not the Full Ticket implementation mode
 - Preserve unrelated user changes and declare capability limitations before relying on unavailable actions or evidence.
 - Stop when material behavior or scope cannot be represented honestly in Lite and recommend Full for the current operation.
 
+## Read-only requests and small edits
+
+For a standalone read-only review or diagnosis, inspect the requested evidence and return findings, examples, and limitations in the same response. Skip implementation planning, Change Brief approval, and file writes. Ask only for genuinely missing inputs. Keep the requested review depth and independence; a formal Ticket Review still follows its evidence contract. A later request to fix findings is a new change request.
+
+After checking the target and risk, use the original instruction as authorization for one exact, local, reversible edit, such as replacing a named button label or correcting a specified internal default. Its target and expected result must be unambiguous and directly verifiable. New features, unresolved decisions, material risk, public contract changes, and external effects use the standard flow. With tools, apply only that edit without a Change Brief or repeat approval, inspect the diff, verify the result, and report it. With conversation capability, provide the proposed edit and validation instructions only. Honor an explicit request for a preview or approval first. If the target, scope, or risk fails these conditions, follow the standard Lite flow below.
+
+The remaining sections describe the standard Lite change flow.
+
 ## Reconnaissance and risk
 
 Before Change Brief approval, evaluate available evidence for authentication or authorization, payments, data migration, destructive data operations, public contracts, cross-module structural change, concurrency or asynchronous behavior, and external side effects (`LITE-RISK-001`).
@@ -41,7 +49,7 @@ After blockers are resolved, display one conversation-only Change Brief containi
 
 The Change Brief MUST target approximately 800 tokens. Material behavior, failure handling, risk, or validation MUST NOT be omitted to meet the target. If an honest brief cannot fit, recommend Full and ask whether to switch the current operation.
 
-Lite has exactly one formal approval before implementation. Production modification MUST NOT begin until the user explicitly approves the complete Change Brief.
+Standard Lite has exactly one formal approval before implementation. For these changes, production modification MUST NOT begin until the user explicitly approves the complete Change Brief.
 
 Lite MUST NOT create or update workflow artifacts, including a Requirement Decision Record, Draft Working Notes, Project Knowledge Base, Specification, Ticket Plan, Implementation Evidence, Direct Implementation Evidence, Review Report, or Architecture Improvement Report. Requested production code, configuration, content, and documentation remain valid outputs.
 

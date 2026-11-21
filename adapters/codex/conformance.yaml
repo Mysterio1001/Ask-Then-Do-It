@@ -1,7 +1,7 @@
 adapter_id: codex
-adapter_version: 1.4.3
+adapter_version: 1.5.0
 target: Codex skill runtime
-core_version: 1.4.3
+core_version: 1.5.0
 capabilities:
   - conversation
   - tools

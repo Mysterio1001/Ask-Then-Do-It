@@ -1,6 +1,6 @@
 # Ask Then Do It 工作流程規格
 
-本文件彙整現行 Core 1.4.3 的 Full／Lite 與 Ticket 測試選擇契約，供維護者查閱。2026-09-10 的文件整理核准只改變文件組織；2026-09-11 核准統一升至 1.4.1，亦不改變這些產品行為。原始需求、規格及核准紀錄的定位見[來源索引](../evidence/release-history.md#document-sources)。
+本文件彙整現行 Core 1.5.0 的 Full／Lite 與 Ticket 測試選擇契約，供維護者查閱。2026-09-10 的文件整理核准只改變文件組織；2026-09-11 核准統一升至 1.4.1，亦不改變這些產品行為。原始需求、規格及核准紀錄的定位見[來源索引](../evidence/release-history.md#document-sources)。
 
 執行來源仍為 [Core](../../core/CORE.md)、[規則目錄](../../core/rules/rules.yaml)及各 adapter。使用者操作見[初學者流程](../guides/getting-started-simple.zh-TW.md)；Claude 特有行為見 [Claude 規格](claude-code-adapter.md)。
 
@@ -53,18 +53,19 @@ Generic 使用組合入口開頭的 `Default workflow mode: full`／`lite`；本
 
 ## Full Ticket 的測試選擇
 
-先展示每張 Ticket、測試建議及理由，說明加測試可能增加時間，再用使用者語言一次詢問「加測試／不加測試」。不能要求新使用者猜 `tdd`／`direct` 的意義。建議依功能、風險、複雜度、外部契約及既有覆蓋評估；接受全部加、全部不加或明確混合選擇，未回答的 Ticket 不可核准或進入實作。
+先展示每張 Ticket、測試建議及理由，說明加測試可能增加時間，再用使用者語言一次詢問「新增測試、只跑既有測試、略過行為測試」。不能要求新使用者猜 `tdd`／`direct` 的意義。建議依功能、風險、複雜度、外部契約及既有覆蓋評估；接受全部套用同一選項或逐張明確選擇，未回答的 Ticket 不可核准或進入實作。
 
 | 選擇 | 內部 mode | 執行與證據 |
 | --- | --- | --- |
 | 加測試 | `tdd` | 先有可解釋的失敗 Red，再最小實作、Green、必要 Refactor；無合理自動化失敗測試時依下述 test-first 例外處理；保存實際命令、結果、範圍與風險 |
-| 不加測試 | `direct` | 不新增、修改或執行行為測試；可做語法、lint、型別、schema、build 等非測試驗證；記錄 `tests: skipped-by-user`、未測路徑及殘餘風險 |
+| 只跑既有測試 | `direct` | 執行相關既有行為測試，不新增或修改測試；記錄實際結果、失敗和未涵蓋範圍 |
+| 略過行為測試 | `direct` | 不新增、修改或執行行為測試；可做語法、lint、型別、schema、build 等非測試驗證；記錄 `tests: skipped-by-user`、未測路徑及殘餘風險 |
 
 TDD 的 test-first 例外只適用於文件、格式、產生的輸出或其他沒有合理自動化測試介面的變更。修改前須說明為何自動化失敗測試沒有意義，並指定替代驗證；實際執行後，在 Implementation Evidence 保存例外理由、驗證方法、原始命令與結果及殘餘風險。不為湊 Red 製造無意義的失敗，也不把例外當成任意省略有意義行為測試的理由。依據：[Core TDD 契約](../../core/modules/tdd-implementation.md)。
 
 行為測試含 unit、integration、end-to-end 及等價可執行行為檢查。Workflow 不因安全、資料搬移、CI 或 release 建議而把使用者拒絕的測試改成必選；外部系統真正強制的檢查仍是交付限制，須揭露並解決，不冒稱可繞過。
 
-Review 保留 Ticket mode，不補跑被拒絕的測試，也不把 direct 稱為 tested／TDD-complete。Direct 可在非阻塞 Review 後完成其範圍。核准後改測試選擇，計畫回 Draft，受影響實作等待重新核准；沒有 mode 的舊計畫亦須補齊，不能猜預設。
+Review 保留 Ticket mode，不補跑被拒絕的測試，只依實際執行結果回報。先前核准、未明示執行既有測試的 `direct` Ticket 維持略過行為測試。新選擇若只說不新增，須確認是否執行既有測試。Direct 可在非阻塞 Review 後完成其範圍。核准後改測試選擇，計畫回 Draft，受影響實作等待重新核准；沒有 mode 的舊計畫亦須補齊，不能猜預設。
 
 ## Full 知識與產物
 
@@ -84,6 +85,8 @@ Full Review 使用原始證據；有可用隔離 reviewer 時作獨立複查，�
 
 ## Lite：單次精簡變更
 
+唯讀審查在本輪回報發現與依據，不要求修改核准。已指定唯一目標與內容、限於局部、可直接驗證、可還原且低風險的小改（例如顯示文字或已指定的內部預設值），以原始請求授權，檢查差異與結果即可。範圍或風險不明、涉及新功能、外部副作用或公開契約、或使用者要求先預覽時，走一般流程。僅能對話的主機提供建議修改及驗證方法。以下為標準 Lite 流程。
+
 Lite 只探查相關範圍，保留現有變更。先評估認證／授權、付款、資料搬移、破壞性操作、公開契約、跨模組結構、並行／非同步及外部副作用；重大風險出現於核准前或實作中都暫停後續修改，說明證據並讓使用者決定本次轉 Full 或接受風險續用 Lite。選擇不寫回 Config。轉 Full 保留已做變更，回第一個未滿足關卡。
 
 1. **問題**：每輪最多三個真正會阻擋／改變實作方向的問題，依影響及不確定性排序；每題最多三句、一個決策、一個推薦與主要取捨，整輪約 500 tokens，沒有問題就不湊數。
@@ -99,9 +102,9 @@ Lite 不建立／更新 RDR、Working Notes、知識庫、Specification、Ticket
 
 - 明確指示覆蓋合法／無效 Config；衝突暫停；專案 absent 與 present-invalid 的回退結果不同。
 - 直接 stage entry 不繞過 mode 或前置核准；Full test choice 缺失／更改都停在 plan gate。
-- TDD 有可觀察的先失敗後成功，或符合前述 test-first 例外，已在修改前聲明理由及替代驗證並保存實際執行結果；direct 沒有行為測試且留下 skipped disclosure；Lite 的最低驗證不被當成 TDD。
+- TDD 有可觀察的先失敗後成功，或符合前述 test-first 例外，已在修改前聲明理由及替代驗證並保存實際執行結果；direct 記錄核准的既有測試實際結果或略過測試聲明；Lite 的最低驗證不被當成 TDD。
 - 各 host 遵循同一觀察結果，能力不足如實降級；不以 Generic 對話聲稱檔案已保存。
-- Codex tools 的固定 benchmark 在相同任務／決策／風險／結果下，Lite 的 workflow-controlled token proxy 至少比 Full 少 60%。兩側用相同 normalization 與 exclusions；fixtures、fingerprint 與原始總量可重算，不代表帳單、總 context 或 latency 保證。Generic 的完整 composed prompt 是 Full／Lite 共同固定成本，單獨列報且 `gate_applied: false`，不套用或宣稱 Generic 60% 縮減保證。
+- Codex tools 的固定 benchmark 在相同任務／決策／風險／結果下，Lite 的 workflow-controlled token proxy 至少比 Full 少 60%。兩側用相同 normalization 與 exclusions；fixtures、fingerprint 與原始總量可重算，不代表帳單、總 context 或 latency 保證。Generic 使用完整 `SKILL.md` 時兩模式讀取相同內容。另行貼入精簡入口 `LITE.md` 時只讀 Lite 指令。兩種入口均單獨列報且 `gate_applied: false`，不套用或宣稱 Generic 60% 縮減保證。
 - 三語使用指南保持語意一致，初學者指南承接共同流程，平台指南承接設定與安裝，短 START-HERE 只導向；不新增平行 Lite 指南。
 
 驗證命令與證據限制見[驗證手冊](../maintainer/validation.md)。本規格由 `ask-then-do-it-1.0.0`、`grill-me-clean-slate-1.0.0`、`optional-ticket-testing`、`lite-workflow-mode-1.3.0` 的有效內容及現行 Core 彙整；不再保留版本升級時的施工下一步。

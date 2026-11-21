@@ -2,7 +2,7 @@
 
 Core rules: REVIEW-EVIDENCE-001, REVIEW-LENSES-001, CAP-CLAIM-001
 
-Review the Approved requirements/Specification/Ticket and Approved Ticket mode, final diff, surrounding code, test changes, and raw verification evidence. Missing inputs are unavailable evidence, never assumed success. For `direct`, preserve `tests: skipped-by-user`, do not run/prescribe declined tests, and disclose untested areas.
+Review the Approved requirements/Specification/Ticket and Approved Ticket mode, final diff, surrounding code, test changes, and raw verification evidence. Missing inputs are unavailable evidence, never assumed success. For `direct`, preserve `tests: skipped-by-user` on skip or legacy approvals, and never run/prescribe declined tests. For `Run existing tests only`, verify unchanged tests, cite observed results and disclose missing coverage or unresolved failures.
 
 With proven multi-agent capability, delegate to the Plugin's independent read-only reviewer, give it the raw inputs rather than the implementer's verdict, wait for completion, then verify and integrate its output. Independence exists only if that reviewer did not implement the change and was not anchored by conclusions. If the reviewer is unavailable, perform the Full Review in the main context and label it `non-independent`; this alone is not blocking. With conversation/user excerpts only, label the result `limited-evidence`, identify unread repository and unexecuted tests, and provide a safe handoff.
 

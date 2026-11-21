@@ -1,9 +1,9 @@
 # Generic Workflow Orchestration Prompt
 
 Prompt ID: `generic.orchestration`
-Prompt version: `1.4.3`
+Prompt version: `1.5.0`
 Required capability: `conversation`
-Core version: `1.4.3`
+Core version: `1.5.0`
 
 ## Required inputs
 
@@ -42,6 +42,8 @@ If explicit current-operation instructions conflict or are ambiguous, ask one di
 
 Route resolved Lite directly to `lite-workflow.md`. Do not impose Full artifacts, gates, Ticket modes, or the Full one-question behavior on Lite.
 
+For a standalone read-only review or diagnosis, inspect the requested evidence and return findings, examples, and limitations in the same response. Skip implementation planning, Change Brief approval, and file writes. Ask only for genuinely missing inputs. Keep the requested review depth and independence; a formal Ticket Review still follows its evidence contract. A later request to fix findings is a new change request.
+
 ## Route Resolved Full
 
 For resolved Full, preserve the complete existing route (`FULL-PRESERVE-001`):
@@ -49,7 +51,7 @@ For resolved Full, preserve the complete existing route (`FULL-PRESERVE-001`):
 - Inspect supplied artifacts and their explicit approval evidence. Reuse consistent Approved artifacts and do not repeat completed stages.
 - Honor an explicit user selection of normal requirements, documented requirements, or another module over automatic routing unless it violates a safety or approval gate (`ROUTE-USER-001`). Do not require prompt filenames when natural-language intent is clear.
 - Route to the first unmet condition: requirement consensus, Approved Specification, Approved Ticket Plan, eligible implementation, evidence-based review, then evidence-supported completion.
-- Ticket Planning collects all plain-language test choices in one batch and maps adding tests to `tdd` and declining tests to `direct`; never ask the user to choose those internal names as the initial decision.
+- Ticket Planning collects all plain-language test choices in one batch and maps adding tests to `tdd` and both running existing tests only and skipping behavioral tests to `direct`; never ask the user to choose those internal names as the initial decision.
 - Route an eligible Approved `tdd` Ticket to `tdd-implementation.md` and an eligible Approved `direct` Ticket to `direct-implementation.md`.
 - Never infer a default implementation mode from silence, repository conventions, risk, another Ticket, or workflow history.
 - Return a missing, unknown, conflicting, or changed Ticket mode to `ticket-planning.md`. A changed Approved mode returns the plan to `Draft` and requires reapproval.
@@ -62,7 +64,7 @@ For resolved Full, preserve the complete existing route (`FULL-PRESERVE-001`):
 
 Use `requirements.md` for a fresh, self-contained Full request. Select `documented-requirements.md` automatically when a Project Knowledge Base already exists, the request changes an existing system, or the discussion is likely to introduce durable project knowledge. State a brief reason before automatic selection (`ROUTE-DOCS-001`). An explicit user selection remains authoritative.
 
-For a fresh resolved Full request whose first unmet gate is requirement consensus, do not return only a module handoff. In the same effective response, apply the chosen requirement prompt: after a concise capability and stage declaration, ask exactly one high-impact question in the user's language with a recommended answer and principal tradeoff. Do not ask the user for another start message.
+Apply the chosen Full stage in the same effective response. During requirements, ask exactly one high-impact question with a recommendation and its principal tradeoff if a material decision remains open. If supplied evidence settles the decisions, present the Draft Requirement Decision Record for explicit approval. For example, with an Approved Specification and sufficient evidence, present the Ticket definitions and request the test choices immediately.
 
 ## Route Full architecture diagnosis
 
@@ -78,7 +80,6 @@ When an Approved or accepted artifact changes durable facts, include a Knowledge
 
 - Stop after one direct clarification when current-operation mode instructions conflict.
 - For resolved Lite, follow the selected Lite stage's stop condition.
-- For a fresh resolved Full requirement stage, stop after asking its first single recommended question, not after routing alone.
-- Otherwise, stop after choosing one next Full module or declaring the Full workflow complete from supplied evidence.
+- Stop at the selected stage's required user decision, approval, or capability handoff, or report completion when supplied evidence supports it.
 - Stop at the earliest unverifiable Full approval gate.
 - Stop with a limitation and safe handoff when the selected stage exceeds conversation capability.

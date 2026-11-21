@@ -44,6 +44,8 @@ Resolution is fail-closed and distinguishes absence from invalid content:
 
 The workflow MUST NOT persist a current-operation override or reuse it as an undocumented later-session default.
 
+For a standalone read-only review or diagnosis, inspect the requested evidence and return findings, examples, and limitations in the same response. Skip implementation planning, Change Brief approval, and file writes. Ask only for genuinely missing inputs. Keep the requested review depth and independence; a formal Ticket Review still follows its evidence contract. A later request to fix findings is a new change request.
+
 ## Route Full mode
 
 When the resolved mode is `full`, the workflow MUST preserve the existing assurance-oriented behavior (`FULL-PRESERVE-001`). In particular:
@@ -52,7 +54,7 @@ When the resolved mode is `full`, the workflow MUST preserve the existing assura
 - Existing approved artifacts SHOULD be reused when relevant and internally consistent.
 - A missing, disputed, incompatible, or unverifiable upstream artifact MUST return the workflow to the affected gate.
 - Implementation MUST NOT begin before requirement, Specification, and Ticket Plan gates applicable to the work are approved.
-- Ticket Planning collects all plain-language test choices in one batch, maps adding tests to `tdd` and declining tests to `direct`, and leaves every unresolved Ticket at the plan gate.
+- Ticket Planning collects all plain-language test choices in one batch, maps adding tests to `tdd` and both running existing tests only and skipping behavioral tests to `direct`, and leaves every unresolved Ticket at the plan gate.
 - Route an eligible approved `tdd` Ticket to test-driven implementation and an eligible approved `direct` Ticket to direct implementation.
 - The orchestrator MUST NOT infer a default implementation mode from silence, repository conventions, risk, another Ticket, or prior workflow history.
 - A missing, unknown, conflicting, or unapproved Ticket mode MUST return the workflow to Ticket Planning rather than falling back to an implementation path.

@@ -255,7 +255,8 @@ class Claude5ProfileTests(unittest.TestCase):
                     self.assertTrue(expected["forbidden"])
                     case_ids.append((scenario["id"], case["id"]))
                 self.assertEqual(scenario_failures(sources, scenario), [])
-        self.assertEqual(len(case_ids), 66)
+        self.assertEqual(len(case_ids), 67)
+        self.assertIn(("FULL-DIRECT", "approved-existing-tests-only"), case_ids)
         self.assertEqual(len(case_ids), len(set(case_ids)))
 
     def test_exact_core_rule_ownership_and_occurrences(self) -> None:

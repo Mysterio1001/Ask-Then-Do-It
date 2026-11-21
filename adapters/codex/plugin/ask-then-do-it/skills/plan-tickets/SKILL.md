@@ -49,7 +49,7 @@ Include:
 - Dependencies and ordering constraints.
 - Likely files or architectural areas, without prescribing speculative code.
 - A TDD approach with the first failing test, focused Green, and broader verification.
-- A direct approach with permitted non-test validation and behavioral evidence that would remain unavailable.
+- A direct approach covering relevant existing tests, permitted static validation, and coverage that would remain unavailable.
 - Completion criteria.
 - Parallel safety: `Yes` or `No`, with a concrete reason and ownership boundary.
 
@@ -60,11 +60,11 @@ Keep tickets small enough for one agent to complete with the relevant context, b
 - Present the complete Ticket definitions and all recommendations before requesting one batch test choice.
 - Give every Ticket a risk-based test recommendation and a scope-specific reason. Use available evidence about correctness, regression, security, privacy, migration, integration, destructive behavior, and release risk; state when relevant evidence is unavailable.
 - For every Ticket, warn that tests may increase work time and that skipping them lowers behavioral verification confidence.
-- Ask in the user's language whether tests should be added, and collect all Ticket choices in a single response. Do not present `tdd` and `direct` as the initial user-facing options.
-- Accept `Add tests to all Tickets`, `Do not add tests to all Tickets`, or an explicit mixed selection such as adding tests to named Tickets and declining them for the rest.
+- Offer `Add tests`, `Run existing tests only`, or `Skip behavioral tests` in the user's language, and collect all Ticket choices in a single response. Do not present `tdd` and `direct` as the initial user-facing options.
+- Accept any one choice for all Tickets, or an explicit mixed selection such as adding tests to one Ticket, running existing tests for another, and skipping tests for the rest.
 - Retain choices from an incomplete mixed selection and ask only about unresolved Tickets.
 - There is no default. Do not infer an unresolved test choice from risk, repository conventions, another Ticket, prior history, or silence.
-- For every resolved Ticket, map `Add tests` to internal mode `tdd` and map `Do not add tests` to internal mode `direct`.
+- For every resolved Ticket, map `Add tests` to internal mode `tdd`. Both existing-only and skip use `direct`; preserve the approved choice. For a new answer that only declines adding tests, clarify execution. Legacy Approved direct Tickets without explicit permission to run existing tests keep their skip behavior.
 - Display all plain-language test choices before requesting approval. Internal modes may also be shown for traceability, but the user must not need to understand them. A plan with any unresolved choice or missing mapped mode must remain `Draft`.
 
 ## Analyze parallel work
@@ -83,7 +83,7 @@ When any condition is uncertain, mark the tickets sequential.
 
 1. Save the plan with `Status: Draft` and link the approved specification.
 2. Present the complete Ticket definitions, dependency order, vertical outcomes, and proposed parallel groups.
-3. Present every recommendation, then collect all plain-language test choices in one batch. Accept all-add, all-decline, or explicit mixed selection; ask only about unresolved Tickets when necessary.
+3. Present every recommendation, then collect all plain-language test choices in one batch. Accept a single choice for all Tickets or an explicit mixed selection; ask only about unresolved Tickets when necessary.
 4. Map each resolved choice to its internal mode, present the complete Ticket definitions and test choices, then ask the user to approve or revise the plan.
 5. After explicit approval, set `Status: Approved` and preserve both the test choices and mapped modes.
 

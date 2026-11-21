@@ -2,17 +2,15 @@
 
 Claude Desktop Skills と、長いテキストを受け取れるその他の AI 向けです。Claude Desktop では ZIP を Skill としてアップロードし、テキストのみのホストではワークフローを貼り付けます。
 
-以下は 1.4.3 のインストール／ダウンロード先です。遠隔側で利用できない場合は公開を待ってください。
-
 ## インストールと準備
 
-パッケージをダウンロードし、Claude Desktop の Skills 機能から ZIP をアップロードします。ZIP 内の一つのパッケージフォルダーの直下に `SKILL.md` があり、先頭に YAML の `name` と `description` を含みます。テキストのみのホストでは展開して、`SKILL.md` と `prompts/` を保持します。
+パッケージをダウンロードし、Claude Desktop の Skills 機能から ZIP をアップロードします。ZIP 内の一つのパッケージフォルダーの直下に `SKILL.md` があり、先頭に YAML の `name` と `description` を含みます。テキストのみのホストでは ZIP を展開します。パッケージ直下の `SKILL.md` は全機能用、`LITE.md` は Lite 用です。
 
-[ダウンロード ask-then-do-it-generic-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-generic-1.4.3.zip)
+[ダウンロード ask-then-do-it-generic-1.5.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.5.0/ask-then-do-it-generic-1.5.0.zip)
 
 ## 使い始める
 
-Claude Desktop ではアップロードとセキュリティスキャンの完了後に Skill を有効にし、Ask Then Do It の使用を依頼します。指示は Skill が選択されたときに読み込まれます。テキストのみのホストでは、新しい会話ごとに `SKILL.md` の**全文**を貼り付け、その後に依頼を伝えます。例：
+Claude Desktop ではアップロードとセキュリティスキャンの完了後に Skill を有効にし、Ask Then Do It の使用を依頼します。指示は Skill が選択されたときに読み込まれます。テキストのみのホストでは、新しい会話ごとに、Lite を使うなら `LITE.md`、全機能を使うなら `SKILL.md` を選び、**全文**と依頼を同じメッセージで送ります。例：
 
 ```text
 Ask Then Do It を使って予約サイトの計画を手伝ってください。日本語で進めてください。
@@ -30,7 +28,7 @@ Ask Then Do It を使って予約サイトの計画を手伝ってください�
 
 ## 利用できるコマンド
 
-通常はアップロードした Skill または完全な `SKILL.md` だけで十分です。慣れたら `prompts/` の個別モジュールを貼り付けられますが、モード判定や承認は省略されません。
+短い Lite 入口から Full へ切り替える際は、完全な `SKILL.md` と、すでに決めた内容を渡します。慣れたら `prompts/` の個別モジュールを貼り付けられますが、モード判定や承認は省略されません。
 
 <details>
 <summary>詳細な入口を表示</summary>
@@ -43,8 +41,8 @@ Ask Then Do It を使って予約サイトの計画を手伝ってください�
 | `requirements.md` | 要件について一度に一つ質問する |
 | `documented-requirements.md` | 要件を確認し、長期的なプロジェクト知識を整理する |
 | `specification.md` | 承認済みの要件を仕様にまとめる |
-| `ticket-planning.md` | 仕様を縦割りの Tickets に分け、テストを追加するかを一度に確認する |
-| `direct-implementation.md` | 振る舞いテストなしの直接実装ガイダンスを提示する |
+| `ticket-planning.md` | 仕様を縦割りの Tickets に分け、テスト方針を一度に確認する |
+| `direct-implementation.md` | 承認に従い、既存テストのみ実行するかテストを省略する手順を示す |
 | `tdd-implementation.md` | Ticket ごとにテストと実装を準備する |
 | `review.md` | 会話で提示された内容を Review する |
 | `architecture-improvement.md` | アーキテクチャ上の問題と改善案を分析する |

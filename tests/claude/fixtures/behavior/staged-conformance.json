@@ -1,8 +1,8 @@
 {
   "adapter_id": "claude-code",
-  "adapter_version": "1.4.3",
+  "adapter_version": "1.5.0",
   "target": "claude-code-plugin",
-  "core_version": "1.4.3",
+  "core_version": "1.5.0",
   "status": "staged-unverified",
   "capabilities": [
     "conversation",

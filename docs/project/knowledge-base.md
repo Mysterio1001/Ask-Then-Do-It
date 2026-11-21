@@ -6,15 +6,15 @@ Artifact ID: `ask-then-do-it-project-knowledge-base`
 
 Workflow ID: `repository-cleanup-2026-09-10`
 
-Core version: `1.4.2`
+Core version: `1.5.0`
 
 Status: Consolidated — 既有核准知識的整理；不新增產品行為核准。
 
 Inputs: 現行 Core／adapter sources、既有核准需求／規格／計畫、最新關鍵 Reviews 與發布收據；原始版本見[來源索引](../evidence/release-history.md#document-sources)。
 
-Assumptions: 當前來源 1.4.2，required release contract、Claude static/package assurance 與 optional live qualification 分開判斷；歷史 1.4.0／1.4.1 核准、Review、收據、hash 與實測紀錄保留原版本。
+Assumptions: 當前來源 1.5.0，required release contract、Claude static/package assurance 與 optional live qualification 分開判斷；歷史 1.4.0／1.4.1 核准、Review、收據、hash 與實測紀錄保留原版本。
 
-Deferred: 1.4.2 的精準 commit、exact-commit 雙 clean build、required evidence gate、non-force `dev` push、唯一 tag／GitHub Release 與公開下載驗證，以及未接受的架構提案列在[狀態文件](status.md)；Claude live qualification 與 Codex exact GPT-5.x／GPT-6 fresh-session compatibility 均保留為非阻擋的 `unverified` 項目。
+Deferred: 1.5.0 的最終 commit、兩次乾淨建置、發布驗證與公開下載，以及未接受的架構提案列在[狀態文件](status.md)；Claude live qualification 與 Codex exact GPT-5.x／GPT-6 fresh-session compatibility 均保留為非阻擋的 `unverified` 項目。
 
 Handoff: 維護時先讀本索引，再讀相關規格／手冊；不要依舊 Ticket 的下一步重走已完成工作。
 
@@ -65,7 +65,7 @@ Codex catalog 位於 `.agents/plugins/marketplace.json`，Claude 位於 `.claude
 - **Codex slimming 的驗證邊界**：第一版須保留 universal trigger、direct-entry guard、Full／Lite isolation、artifact fields、十二 lenses、mandatory rule mappings、package inventory 與 release reproducibility。一般 prompt 文句改以 semantic invariants、reference reachability／cycle／package checks 驗證；只有 identity、path、status、rule ID、安全或外部契約 literal 才維持 exact-prose assertion。Before／after bytes、words 與 token proxy 使用相同方法量測，不設會誘發刪除安全契約的硬性縮減比例，也不把 proxy 當 billing 或 total context。靜態相容與 exact-model fresh-session evidence 分開；未執行 live cases 的 GPT-5.x／GPT-6 target 維持 `unverified`。
 - **來源升版不等於發布完成**：2026-09-10 已核准先對齊 1.4.0 與離線 ZIP，不新增缺 live evidence 即禁止 builder 的限制。當時的正式 completion 仍保留原驗收 gates；其中把 Claude live evidence 當成 release prerequisite 的部分，自 2026-09-19 與 1.4.2 起由新核准政策取代。來源下載連結不是遠端存在證明。
 - **專案與套件統一版本**：2026-09-11 核准目前專案、Core、Codex／Claude／Generic ZIP、catalogs 與 consumer 文件同步到 1.4.1。原 1.4.0 歷史證據和固定 1.4.0-preview.1 不升版；1.4.1 candidate 必須重建並留下對應的驗證，不覆蓋已發布的同版 bytes。
-- **1.4.2 唯一 stable 發布邊界**：目前來源與三平台 package identity 對齊 `1.4.2`，只從既有 `dev` 產生唯一 stable `v1.4.2`；不得建立新 branch、force push、建立第二版本或覆寫同版 tag／Release／assets。Claude authenticated behavior、context 與 live lifecycle 是 optional qualification。正式 release 仍須完成 16 項 deterministic required checks、exact-commit candidate byte proof、Git remote safety與公開下載驗證。
+- **1.4.2 唯一 stable 發布邊界**：當時來源與三平台 package identity 對齊 `1.4.2`，只從既有 `dev` 產生唯一 stable `v1.4.2`；不得建立新 branch、force push、建立第二版本或覆寫同版 tag／Release／assets。Claude authenticated behavior、context 與 live lifecycle 是 optional qualification。正式 release 仍須完成 16 項 deterministic required checks、exact-commit candidate byte proof、Git remote safety與公開下載驗證。
 - **Git-stable package bytes**：提交前只暫存核准的 exact paths，禁止 `git add -A`。每個 consumer-package input，以及決定其選取、組合、metadata、EOL 或 filter 的 authority，都必須從 exact release commit 的兩個全新乾淨 checkout 逐 byte 重建並比對。Dirty worktree build、舊 source-selection、binding 或 staging manifest 都不能替代最終 commit 證明；不得依賴未記錄的 `core.autocrlf`、clean/smudge 或 builder runtime normalization。
 - **16 項 required checks 是固定契約**：自 1.4.2 起 required ledger 必須包含 `automated-tests`、`workflow-token-proxy`、`codex-skill-validation`、`codex-plugin-validation`、`codex-conformance`、`generic-conformance`、`codex-package-inventory`、`generic-package-inventory`、`reproducible-build`、`zip-equivalence`、`sha256-verification`、`removed-artifact-scan`、`release-architecture-diagnosis`、`claude-plugin-validation`、`claude-conformance` 與 `claude-package-inventory`。`claude-behavior`、`claude-context`、`claude-live-smoke` 不得列入 required `checks` array；optional live 狀態只能放在獨立 disclosure。
 - **Claude live hard gate 不得無聲恢復**：自 1.4.2 起及往後版本，release workflow 不得自動要求 Claude 登入、OAuth、模型呼叫、session／transcript、人工語意審閱、context capture 或真實安裝生命週期。未來若要恢復任何 live hard gate，必須重新通過 Requirement、Specification 與 Ticket Plan 核准，不能只修改 config、builder 或 test assertion。若選配實測已發現重大 correctness、安全、隱私或資料損失 defect，該已知 finding 仍依一般 Review gate 處理；非阻擋的是「沒有執行 live qualification」本身。
@@ -83,7 +83,7 @@ Codex catalog 位於 `.agents/plugins/marketplace.json`，Claude 位於 `.claude
 
 ## Unresolved items
 
-Claude actual host／profile／context／smoke 目前均為 optional／deferred qualification，未執行且不得標成 passed。1.4.2 的版本、既有 `dev` policy 與唯一 stable publication target已核准；尚待精準 commit、exact-commit 雙 clean build、required evidence gate、non-force push、tag／Release 與公開驗證。提交前瘦身已使舊 source-selection／binding／staging identities 失效，不得沿用；最終 Git commit 與從它重建的 candidate bytes才是 authority。Codex exact GPT-5.x／GPT-6 fresh-session compatibility仍是非 release blocker 的 deferred／`unverified`項目。既有未接受架構提案維持 future proposals，不代表已授權重構。
+Claude actual host／profile／context／smoke 目前均為 optional／deferred qualification，未執行且不得標成 passed。目前的 1.5.0 套件將於正式發布時從最終 commit 重建並驗證；1.4.2 的核准紀錄見下方。提交前瘦身已使舊 source-selection／binding／staging identities 失效，不得沿用；最終 Git commit 與從它重建的 candidate bytes才是 authority。Codex exact GPT-5.x／GPT-6 fresh-session compatibility仍是非 release blocker 的 deferred／`unverified`項目。既有未接受架構提案維持 future proposals，不代表已授權重構。
 
 新增其他 adapters、universal installer／registry、Claude 非 user scopes、Desktop／web/cloud、unattended updates、private fork 分發、Community Marketplace 與 signing/provenance 方案均待後續決策。官方 bare aliases 是否顯示與 exact invocation 仍按實測記錄，不作多一個受支援公開入口的承諾。
 
@@ -116,5 +116,7 @@ Approval: 原始 Knowledge Base 於 2026-08-13 核准；使用者於 2026-08-17 
 使用者於 2026-09-20 核准提交前瘦身：保留實質維護文件、移除一次性 1.4.2 Ticket／binding／staging 流程文件，並以精準 staged commit、exact-commit clean rebuild、required evidence、non-force `dev` push、唯一 `v1.4.2` tag／GitHub Release及公開驗證完成發布。該核准不使舊 manifest 或 candidate hashes自動適用於整理後 commit。
 
 上述為原始知識庫的歷史核准來源；其原始 bytes 同時保存在清理快照。
+
+使用者於 2026-11-22 確認 Core、Codex、Claude Code 與 Generic 本次一同升至 1.5.0。
 
 [回到 README](../../README.md)

@@ -18,7 +18,7 @@ Reviewer availability alone does not block completion when all other gates pass.
 
 ## Review contract
 
-Review the Approved Specification, Approved Ticket mode, final diff/surrounding code, test changes and raw results, and raw evidence. Preserve `tests: skipped-by-user` for direct Tickets and do not run declined tests. Check behavior, regressions, failure paths, security/privacy, test quality, maintainability, and evidence honesty.
+Review the Approved Specification, Approved Ticket mode, final diff/surrounding code, test changes and raw results, and raw evidence. For direct Tickets, preserve `tests: skipped-by-user` on skip or legacy approvals and do not run declined tests. For `Run existing tests only`, verify unchanged tests, report only observed results and expose missing coverage or unresolved failures. Check behavior, regressions, failure paths, security/privacy, test quality, maintainability, and evidence honesty.
 
 Apply all twelve Architecture and Refactoring Lenses in this order: Duplicated Code or Policy; Long Function; Large Module or Class; Long Parameter List; Data Clumps; Primitive Obsession; Feature Envy; Divergent Change; Shotgun Surgery; Message Chains; Leaky Abstraction; Shallow Module. For each, provide evidence and exactly `finding`, `no-finding`, `not-applicable` with reason, or `unverified` with missing evidence.
 

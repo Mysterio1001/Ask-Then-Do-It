@@ -612,6 +612,7 @@ def expected_package_files(
         *START_GUIDE_FILES,
         *LEGAL_FILES,
         generic["entrypoint"],
+        "LITE.md",
         "manifest.yaml",
         *{f"prompts/{name}" for name in generic["modules"]},
     }
@@ -804,24 +805,28 @@ Default workflow mode: full
 
 ## Internal routing contract
 
-Resolve one top-level mode before stage routing. An explicit, unambiguous Full or Lite
+Declare conversation capability and resolve one top-level mode before stage routing. An explicit, unambiguous Full or Lite
 instruction for the current operation overrides the editable declaration above. A missing
 or unsupported declaration resolves to Full. If current-operation instructions conflict,
 ask for clarification before routing. Never persist an operation override or infer it from
 an earlier operation.
 
-Use the included sections internally; do not ask the user to paste another module prompt.
-Match the user's language in user-facing output. Begin with the bootstrap section for a
-fresh or resumed request, use the orchestration section to identify the first unmet gate,
-then route resolved Lite to the Lite workflow section or apply exactly one matching Full
-stage section at a time. Preserve every explicit Full approval gate, stop condition,
-Artifact contract, and user-managed persistence reminder.
+For a standalone read-only review or architecture diagnosis, use the supplied evidence
+to return findings and limitations in the same response. Ask only for evidence needed
+to answer. A standalone diagnosis requires no Specification, Ticket, or change approval.
+An explicitly requested formal Ticket Review retains its prerequisites.
 
-For a fresh resolved Full workflow whose first unmet stage is requirement consensus, apply
-the selected requirement section in the same effective response. After a concise capability
-and stage declaration, ask exactly one high-impact requirement question in the user's
-language and include a recommended answer and the principal tradeoff. Do not stop at routing
-status, promise to ask later, or require the user to say "start".
+Use the included sections internally; do not ask the user to paste another module prompt.
+Match the user's language. For a delivery workflow, use bootstrap and orchestration to
+identify the first unmet gate. Route resolved Lite to the Lite workflow section; in Full,
+apply one matching stage, preserving its approvals, artifact contract, and persistence reminder.
+
+For a fresh resolved Full workflow delivering a change, apply the first unmet stage in the same effective response.
+When a material requirement decision remains open, ask exactly one high-impact requirement question
+with a recommendation and its main tradeoff. When supplied evidence settles the decisions,
+present the Draft Requirement Decision Record for approval. With verified upstream approvals,
+produce the next supported deliverable immediately and stop at its own approval or capability boundary.
+If the user requested one stage only, finish that stage and return its result.
 
 ## Conversation-only capability boundary
 
@@ -845,6 +850,17 @@ def yaml_string(value: str) -> str:
     """Return a JSON string, which is also a valid YAML scalar."""
 
     return json.dumps(value, ensure_ascii=False)
+
+
+def compose_generic_lite(source: Path) -> bytes:
+    header = (
+        "# Ask Then Do It — Lite text entry\n\n"
+        "Default workflow mode: lite\n\n"
+        "Use the default above unless the user explicitly selects a mode. If Full is explicitly "
+        "selected or accepted after a risk review, ask the user to supply the complete "
+        "`SKILL.md` with their existing decisions and continue there.\n\n"
+    )
+    return header.encode("utf-8") + (source / "lite-workflow.md").read_bytes()
 
 
 def generic_manifest(config: dict[str, Any]) -> str:
@@ -884,6 +900,7 @@ def build_generic(config: dict[str, Any], staging: Path) -> list[str]:
     (package / generic["entrypoint"]).write_bytes(
         compose_generic_workflow(config, source)
     )
+    (package / "LITE.md").write_bytes(compose_generic_lite(source))
     (package / "manifest.yaml").write_text(
         generic_manifest(config), encoding="utf-8", newline="\n"
     )

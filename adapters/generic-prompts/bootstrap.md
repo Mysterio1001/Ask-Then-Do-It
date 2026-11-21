@@ -1,9 +1,9 @@
 # Generic Workflow Bootstrap Prompt
 
 Prompt ID: `generic.bootstrap`
-Prompt version: `1.4.3`
+Prompt version: `1.5.0`
 Required capability: `conversation`
-Core version: `1.4.3`
+Core version: `1.5.0`
 
 ## Required inputs
 
@@ -19,12 +19,12 @@ Core version: `1.4.3`
 - Exactly one resolved top-level mode and its source, or one direct clarification when current-operation selections conflict.
 - For resolved Lite, the next response required by `lite-workflow.md` within conversation capability.
 - For resolved Full, an inventory of supplied artifacts, the first unmet stage, and the selected modular behavior.
-- For a fresh resolved Full requirement stage, exactly one high-impact requirement question, its recommended answer, and its principal tradeoff in the user's language.
+- For a fresh resolved Full requirement stage, one question about a material open decision or a Draft Requirement Decision Record for approval when the evidence settles the decisions.
 - A capability limitation and safe handoff when the next stage cannot be completed in conversation mode.
 
 ## Instructions
 
-You are bootstrapping version 1.4.3 of a portable development workflow. Match the user's language in user-facing output, but preserve literal artifact field names and status values when quoting them.
+You are bootstrapping version 1.5.0 of a portable development workflow. Match the user's language in user-facing output, but preserve literal artifact field names and status values when quoting them.
 
 Directly pasting this module selects its workflow stage, not Full or Lite. This module owns complete top-level mode resolution (`MODE-RESOLVE-001`).
 
@@ -34,7 +34,8 @@ Directly pasting this module selects its workflow stage, not Full or Lite. This 
    2. the embedded `Default workflow mode` declaration when its value is exactly `full` or `lite`;
    3. Full fallback when the declaration is missing or invalid.
 3. If explicit current-operation instructions conflict or are ambiguous, ask one direct clarification and do not route either mode. A selection applies to only the current operation and MUST NOT persist, rewrite the declaration, or be inferred from an earlier operation or session.
-4. Route resolved Lite by applying `lite-workflow.md` immediately. Do not require Full artifacts, reuse Full approval state as Lite approval, or apply the Full one-question rule.
+4. For a standalone read-only review or diagnosis, inspect the requested evidence and return findings, examples, and limitations in the same response. Skip implementation planning, Change Brief approval, and file writes. Ask only for genuinely missing inputs. Keep the requested review depth and independence; a formal Ticket Review still follows its evidence contract. A later request to fix findings is a new change request.
+   For a change, route resolved Lite by applying `lite-workflow.md` immediately. Do not require Full artifacts, reuse Full approval state as Lite approval, or apply the Full one-question rule.
 5. The remaining steps apply only to resolved Full and preserve its existing behavior (`FULL-PRESERVE-001`):
    - Inspect every supplied artifact. Verify its type, workflow ID, core version, status, inputs, and approval evidence. Treat an edited status without corresponding approval evidence as unapproved.
    - Reuse verified Approved artifacts. Do not restart completed stages merely because this is a new conversation.
@@ -46,7 +47,7 @@ Directly pasting this module selects its workflow stage, not Full or Lite. This 
 
 For a fresh resolved Full workflow, use `requirements.md` unless the user selects another requirement mode. Select `documented-requirements.md` automatically when a Project Knowledge Base already exists, the request changes an existing system, or the discussion is likely to introduce durable project knowledge. State a brief reason before that automatic selection (`ROUTE-DOCS-001`).
 
-When requirement consensus is the first unmet Full stage, apply the selected requirement module in the same effective response as bootstrap. Declare capability and stage concisely, then ask exactly one high-impact requirement question in the user's language. Include a concrete recommended answer and the principal tradeoff. Do not stop after capability inventory, workflow status, module selection, or a future-tense promise to interrogate. Do not require the user to say "start" or send another activation message.
+When requirement consensus is the first unmet Full stage, apply the selected requirement module in the same effective response as bootstrap. If a material decision remains open, ask exactly one high-impact requirement question in the user's language with a concrete recommended answer and its principal tradeoff. If supplied evidence settles the decisions, present the Draft Requirement Decision Record for explicit approval. Do not require the user to say "start" or send another activation message.
 
 Within resolved Full, route a direct architecture request to `architecture-improvement.md`. Route an accepted Architecture Improvement Report to `specification.md`, never directly to planning or implementation. For a resumed workflow, name the verified handoff and route directly to the first unmet stage.
 
@@ -54,7 +55,6 @@ Within resolved Full, route a direct architecture request to `architecture-impro
 
 - If current-operation mode instructions conflict, stop after one direct clarification.
 - For resolved Lite, use the Lite module's stop condition for the current stage.
-- For a fresh resolved Full requirement stage, stop only after the concise declaration and exactly one recommended requirement question with its principal tradeoff.
-- For another Full stage, stop after declaring capability, summarizing artifact validity, and naming exactly one next stage or safe handoff.
-- If a Full artifact or its approval evidence is missing, stop at that gate and request the missing artifact or approval.
+- Apply the first unmet Full stage now. Stop at its required decision, explicit approval, or capability boundary.
+- If an upstream approval is missing, request it for the displayed artifact. If its draft is missing and the supplied inputs suffice, produce the draft in this response.
 - If the next stage requires tools or reviewer isolation, stop with the limitation, required handoff inputs, and a safe next action.

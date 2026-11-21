@@ -6,10 +6,10 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 
 const PLUGIN = "ask-then-do-it";
-const VERSION = "1.4.3";
+const VERSION = "1.5.0";
 const STATE_SCHEMA_VERSION = 1;
 const MINIMUM_NODE_MAJOR = 22;
-const MAPPING_SEMANTIC_SHA256 = "fdba5a2fb64111a15d35a08bf2ab1a0bf422f443788b19e859fe586410c30592";
+const MAPPING_SEMANTIC_SHA256 = "127e89a8ba26d104e29bea9b395017a2da6a8308a01c5cdf94cf324704194977";
 const MAPPING_KEYS = new Set([
   "schema_version",
   "release_version",
@@ -88,6 +88,9 @@ const MAX_MAPPING_BYTES = 65_536;
 const MAX_STATE_BYTES = 16_384;
 const MAX_LOCK_RECORD_BYTES = 1_024;
 const SESSION_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1_000;
+const CLEANUP_INTERVAL_MS = 24 * 60 * 60 * 1_000;
+const CLEANUP_BATCH_SIZE = 16;
+const CLEANUP_CURSOR_KEYS = new Set(["after"]);
 const LOCK_SCHEMA_VERSION = 1;
 const LOCK_LEASE_MS = 30_000;
 const LOCK_RECLAIM_GRACE_MS = 30_000;
@@ -1112,30 +1115,74 @@ async function readState(
 }
 
 
-async function cleanupExpiredSessions(directory, currentKey, now, mapping) {
-  let entries;
+async function cleanupDue(cursorPath) {
   try {
-    entries = await readdir(directory, { withFileTypes: true });
-  } catch {
-    return;
+    const info = await lstat(cursorPath);
+    const age = Date.now() - info.mtimeMs;
+    return info.isFile() && !info.isSymbolicLink() && Math.abs(age) >= CLEANUP_INTERVAL_MS;
+  } catch (error) {
+    if (error?.code === "ENOENT") return true;
+    throw error;
   }
-  for (const entry of entries) {
-    const match = SESSION_FILENAME.exec(entry.name);
-    if (match === null || match[1] === currentKey || !entry.isFile() || entry.isSymbolicLink()) {
-      continue;
-    }
-    const pathname = path.join(directory, entry.name);
-    try {
-      await withSessionLock(pathname, async () => {
-        const candidate = await readState(pathname, match[1], false, true, mapping);
-        const updatedAt = Date.parse(candidate.updated_at);
-        if (Number.isFinite(updatedAt) && now.getTime() - updatedAt > SESSION_MAX_AGE_MS) {
-          await unlink(pathname);
+}
+
+
+async function readCleanupCursor(cursorPath) {
+  await assertNoLinkedAncestors(cursorPath);
+  let info;
+  try {
+    info = await lstat(cursorPath);
+  } catch (error) {
+    if (error?.code === "ENOENT") return null;
+    throw error;
+  }
+  if (!info.isFile() || info.isSymbolicLink()) throw new RouterError("state-read-failed");
+  if (info.size > 256) return null;
+  const text = await readBoundedRegularFile(cursorPath, 256, "state-read-failed");
+  let record;
+  try {
+    record = requireObject(parseJsonStrict(text, "state-invalid"), "state-invalid");
+  } catch {
+    return null;
+  }
+  if (hasExactKeys(record, CLEANUP_CURSOR_KEYS) && typeof record.after === "string" &&
+      SESSION_FILENAME.test(record.after)) {
+    return record.after;
+  }
+  // A missing, completed, or damaged maintenance cursor starts a new sweep.
+  return null;
+}
+
+
+async function cleanupExpiredSessions(directory, currentKey, now, mapping) {
+  const cursorPath = path.join(path.dirname(directory), "cleanup-cursor.json");
+  try {
+    if (!await cleanupDue(cursorPath)) return;
+    await withSessionLock(cursorPath, async () => {
+      if (!await cleanupDue(cursorPath)) return;
+      const after = await readCleanupCursor(cursorPath);
+      const names = (await readdir(directory))
+        .filter(name => SESSION_FILENAME.test(name) && name !== `${currentKey}.json` && (after === null || name > after))
+        .sort();
+      const batch = names.slice(0, CLEANUP_BATCH_SIZE);
+      // Claim this interval before starting I/O. Interrupted or busy files get another turn on wrap.
+      await atomicWriteJson(cursorPath, { after: names.length > batch.length ? batch.at(-1) : null });
+      for (const name of batch) {
+        const pathname = path.join(directory, name);
+        try {
+          await withSessionLock(pathname, async () => {
+            const candidate = await readState(pathname, name.slice(0, -5), false, true, mapping);
+            if (now.getTime() - Date.parse(candidate.updated_at) > SESSION_MAX_AGE_MS) {
+              await unlink(pathname);
+            }
+          }, { retryCount: 0, allowReclaim: false });
+        } catch {
+          // Invalid, linked, or concurrently changing files are retained.
         }
-      }, { retryCount: 0, allowReclaim: false });
-    } catch {
-      // Invalid, linked, or concurrently changing files are retained for diagnosis.
-    }
+      }
+    }, { retryCount: 0 });
+  } catch {
+    // Optional maintenance never changes the result of the current SessionStart.
   }
 }
 
@@ -1544,12 +1591,7 @@ export async function main(argv = process.argv.slice(2)) {
     if (action === "session-start") {
       const mapping = await loadMapping();
       await withSessionLock(pathname, () => handleSessionStart(event, pluginData, mapping));
-       await cleanupExpiredSessions(
-         path.dirname(pathname),
-         sessionKey(event.session_id),
-         new Date(),
-         mapping,
-       );
+      await cleanupExpiredSessions(path.dirname(pathname), sessionKey(event.session_id), new Date(), mapping);
       return 0;
     }
     if (isExpansion) {

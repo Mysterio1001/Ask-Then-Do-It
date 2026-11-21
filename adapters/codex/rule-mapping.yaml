@@ -1,4 +1,4 @@
-core_version: 1.4.3
+core_version: 1.5.0
 rules:
   CAP-DECLARE-001:
     - file: conformance.yaml
@@ -104,7 +104,7 @@ rules:
   REVIEW-EVIDENCE-001:
     - file: plugin/ask-then-do-it/skills/review-code/SKILL.md
       section: Create an independent view
-      implementation: Supplies approved artifacts, selected mode, final diff, surrounding code, available test changes, raw results, and skipped-test disclosure without implementer conclusions.
+      implementation: Supplies approved artifacts, selected mode, final diff, surrounding code, available test changes, raw results, and the approved existing-test or skip choice without implementer conclusions.
   ART-STATE-001:
     - file: plugin/ask-then-do-it/skills/ask-then-do-it/references/full-routing.md
       section: Enforce the gates
@@ -121,7 +121,7 @@ rules:
   ADAPTER-COVERAGE-001:
     - file: conformance.yaml
       section: implemented_rules
-      implementation: Enumerates every mandatory rule in core version 1.4.3 for deterministic shared validation.
+      implementation: Enumerates every mandatory rule in core version 1.5.0 for deterministic shared validation.
     - file: rule-mapping.yaml
       section: rules
       implementation: Resolves each mandatory rule to its concrete Codex adapter implementation.

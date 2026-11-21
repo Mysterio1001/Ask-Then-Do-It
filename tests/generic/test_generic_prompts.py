@@ -39,9 +39,9 @@ class GenericPromptContractTests(unittest.TestCase):
             text = prompt(name)
             with self.subTest(prompt=name):
                 self.assertRegex(text, r"(?m)^Prompt ID: `[^`]+`$")
-                self.assertRegex(text, r"(?m)^Prompt version: `1\.4\.3`$")
+                self.assertRegex(text, r"(?m)^Prompt version: `1\.5\.0`$")
                 self.assertRegex(text, r"(?m)^Required capability: `[^`]+`$")
-                self.assertRegex(text, r"(?m)^Core version: `1\.4\.3`$")
+                self.assertRegex(text, r"(?m)^Core version: `1\.5\.0`$")
                 for heading in (
                     "## Required inputs",
                     "## Expected outputs",
@@ -103,7 +103,7 @@ class GenericPromptScenarioTests(unittest.TestCase):
         self.assertIn("exactly one high-impact requirement question", text)
         self.assertIn("recommended answer", text)
         self.assertIn("principal tradeoff", text)
-        self.assertIn("Do not stop after", text)
+        self.assertIn("If supplied evidence settles the decisions, present the Draft", text)
         self.assertIn('say "start"', text)
 
     def test_resumed_bootstrap_imports_artifacts_without_restarting(self) -> None:
@@ -112,6 +112,15 @@ class GenericPromptScenarioTests(unittest.TestCase):
         self.assertIn("Reuse verified Approved artifacts", text)
         self.assertIn("Do not restart completed stages", text)
         self.assertIn("approval evidence", text)
+
+    def test_full_with_sufficient_inputs_advances_to_the_next_deliverable(self) -> None:
+        orchestration = prompt("orchestration.md")
+        self.assertIn("present the Draft Requirement Decision Record for explicit approval", orchestration)
+        self.assertIn("present the Ticket definitions and request the test choices immediately", orchestration)
+        for name in ("requirements.md", "documented-requirements.md", "specification.md", "ticket-planning.md"):
+            with self.subTest(module=name):
+                self.assertIn("in the same response", prompt(name))
+                self.assertIn("standalone module ends", prompt(name))
 
     def test_generic_routing_honors_explicit_selection_and_explains_auto_routes(self) -> None:
         texts = prompt("bootstrap.md") + "\n" + prompt("orchestration.md")
@@ -140,14 +149,14 @@ class GenericPromptScenarioTests(unittest.TestCase):
 
     def test_requirements_asks_one_recommended_question_and_matches_language(self) -> None:
         text = prompt("requirements.md")
-        self.assertIn("Ask exactly one question in each turn", text)
+        self.assertIn("While material decisions remain open, ask exactly one question", text)
         self.assertIn("recommended answer", text)
         self.assertIn("principal tradeoff", text)
         self.assertIn("Match the user's language", text)
 
     def test_documented_requirements_keeps_unapproved_knowledge_in_draft(self) -> None:
         text = prompt("documented-requirements.md")
-        self.assertIn("Ask exactly one question in each turn", text)
+        self.assertIn("While material decisions remain open, ask exactly one question", text)
         self.assertIn("recommended answer", text)
         self.assertIn("principal tradeoff", text)
         self.assertIn("Draft Working Notes", text)
@@ -198,12 +207,14 @@ class GenericPromptScenarioTests(unittest.TestCase):
             "tests may increase work time",
             "For every Ticket, warn that tests may increase work time",
             "complete Ticket definitions and all recommendations before requesting one batch test choice",
-            "`Add tests to all Tickets`",
-            "`Do not add tests to all Tickets`",
+            "`Add tests`",
+            "`Run existing tests only`",
+            "`Skip behavioral tests`",
             "explicit mixed selection",
             "unresolved Tickets",
             "map `Add tests` to internal mode `tdd`",
-            "map `Do not add tests` to internal mode `direct`",
+            "Both existing-only and skip use `direct`",
+            "Legacy Approved direct Tickets",
             "`tdd`",
             "`direct`",
             "There is no default",
@@ -211,11 +222,11 @@ class GenericPromptScenarioTests(unittest.TestCase):
             self.assertIn(phrase, planning)
         self.assertLess(
             planning.index("Give every Ticket a risk-based test recommendation"),
-            planning.index("Ask in the user's language whether tests should be added"),
+            planning.index("Offer `Add tests`"),
         )
         self.assertLess(
             planning.index("For every Ticket, warn that tests may increase work time"),
-            planning.index("Ask in the user's language whether tests should be added"),
+            planning.index("Offer `Add tests`"),
         )
         prohibition = (
             "Do not present `tdd` and `direct` as the initial user-facing options"
@@ -265,6 +276,8 @@ class GenericPromptScenarioTests(unittest.TestCase):
         for phrase in (
             "UNEXECUTED DIRECT IMPLEMENTATION GUIDANCE",
             "do not create or modify behavioral tests",
+            "run relevant existing behavioral tests without adding or modifying tests",
+            "legacy Approved direct Tickets without explicit existing-test permission",
             "do not run or claim to run commands or tests",
             "external CI, hosting, or release system",
             "must not claim that `direct` bypasses",
@@ -275,6 +288,7 @@ class GenericPromptScenarioTests(unittest.TestCase):
             self.assertIn(phrase, direct)
 
         review = prompt("review.md")
+        self.assertIn("For `Run existing tests only`, assess unchanged tests and supplied results", review)
         self.assertIn("`tests: skipped-by-user`", review)
         self.assertIn(
             "do not execute or prescribe automatic execution of declined behavioral tests",

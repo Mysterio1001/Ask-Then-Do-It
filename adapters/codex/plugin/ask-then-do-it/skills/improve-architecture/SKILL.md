@@ -14,6 +14,7 @@ Assess architecture without changing it. Keep this skill diagnostic-only by defa
 Direct selection of this Skill chooses this Full-workflow stage, not top-level `full`. Before stage behavior, require a current-operation mode proof from `$ask-then-do-it`; never persist or reuse mode.
 
 - Missing proof: stop and delegate to `$ask-then-do-it`.
+- In either mode, fulfill a standalone read-only request immediately from evidence. Report findings and limits without writes; use the following routes for formal stages.
 - Proven `lite`: stop this Full stage and route to the Lite workflow.
 - Proven `full`: continue with this stage's prerequisites and gates.
 

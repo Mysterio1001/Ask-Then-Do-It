@@ -250,7 +250,7 @@ class CodexAdapterTests(unittest.TestCase):
         skill = SKILLS / "ask-with-docs"
         text = (skill / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("name: ask-with-docs", text)
-        self.assertIn("core_version` `1.4.3`", text)
+        self.assertIn("core_version` `1.5.0`", text)
         self.assertIn("exactly one question", text)
         self.assertIn("Draft Working Notes", text)
         for state in ("`proposed`", "`confirmed`", "`unresolved`"):
@@ -362,7 +362,7 @@ class CodexAdapterTests(unittest.TestCase):
             contract_text,
             r"same\s+`workflow_id`\s+as\s+upstream",
         )
-        self.assertRegex(contract_text, r"`core_version`.*`1\.4\.3`")
+        self.assertRegex(contract_text, r"`core_version`.*`1\.5\.0`")
         self.assertRegex(contract_text, r"upstream.*in\s+`inputs`")
         self.assertRegex(contract_text, r"next.*in\s+`handoff`")
 
@@ -398,12 +398,14 @@ class CodexAdapterTests(unittest.TestCase):
             "tests may increase work time",
             "For every Ticket, warn that tests may increase work time",
             "complete Ticket definitions and all recommendations before requesting one batch test choice",
-            "`Add tests to all Tickets`",
-            "`Do not add tests to all Tickets`",
+            "`Add tests`",
+            "`Run existing tests only`",
+            "`Skip behavioral tests`",
             "explicit mixed selection",
             "unresolved Tickets",
             "map `Add tests` to internal mode `tdd`",
-            "map `Do not add tests` to internal mode `direct`",
+            "Both existing-only and skip use `direct`",
+            "Legacy Approved direct Tickets",
             "`tdd`",
             "`direct`",
             "There is no default",
@@ -411,11 +413,11 @@ class CodexAdapterTests(unittest.TestCase):
             self.assertIn(phrase, planning)
         self.assertLess(
             planning.index("Give every Ticket a risk-based test recommendation"),
-            planning.index("Ask in the user's language whether tests should be added"),
+            planning.index("Offer `Add tests`"),
         )
         self.assertLess(
             planning.index("For every Ticket, warn that tests may increase work time"),
-            planning.index("Ask in the user's language whether tests should be added"),
+            planning.index("Offer `Add tests`"),
         )
         prohibition = (
             "Do not present `tdd` and `direct` as the initial user-facing options"
@@ -459,7 +461,8 @@ class CodexAdapterTests(unittest.TestCase):
         direct = (direct_dir / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("name: implement-direct", direct)
         self.assertIn("Approved `direct` Ticket", direct)
-        self.assertIn("Do not create, modify, or execute behavioral tests", direct)
+        self.assertIn("run relevant existing behavioral tests without adding or modifying tests", direct)
+        self.assertIn("legacy Approved direct Tickets without explicit existing-test permission, skip all behavioral tests", direct)
         self.assertIn("`tests: skipped-by-user`", direct)
         self.assertIn("external CI, hosting, or release system", direct)
         self.assertIn("must not claim that `direct` bypasses", direct.lower())
@@ -490,6 +493,7 @@ class CodexAdapterTests(unittest.TestCase):
         review = (SKILLS / "review-code" / "SKILL.md").read_text(
             encoding="utf-8"
         )
+        self.assertIn("For `Run existing tests only`, confirm test files were unchanged", review)
         self.assertIn("`tests: skipped-by-user`", review)
         self.assertIn(
             "Do not execute or prescribe automatic execution of declined behavioral tests",

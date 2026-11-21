@@ -2,8 +2,6 @@
 
 Use the Codex Plugin to guide requirements, implementation, and Review. Start with `$ask-then-do-it`.
 
-These are the 1.4.3 installation/download targets. If remote artifacts are unavailable, wait for publication.
-
 ## Installation and preparation
 
 Run these first-install commands in a terminal, or ask your AI to run them:
@@ -17,7 +15,7 @@ codex plugin add ask-then-do-it@ask-then-do-it
 <details>
 <summary>ZIP fallback</summary>
 
-[Download ask-then-do-it-1.4.3.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.4.3/ask-then-do-it-1.4.3.zip)
+[Download ask-then-do-it-1.5.0.zip](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/download/v1.5.0/ask-then-do-it-1.5.0.zip)
 
 Keep the complete `ask-then-do-it/` folder, not only `skills/`. Place it in `plugins/ask-then-do-it/` of an existing editable local Marketplace whose entry points there, then run:
 
@@ -66,8 +64,8 @@ Normally use `$ask-then-do-it`. Expand the table to select a particular stage. D
 | `$ask-requirements` | Clarify one high-impact requirement at a time |
 | `$ask-with-docs` | Clarify requirements while maintaining a Project Knowledge Base |
 | `$write-spec` | Turn approved requirements into a specification |
-| `$plan-tickets` | Split a specification into vertical Tickets and collect all add-tests choices in one response |
-| `$implement-direct` | Implement an approved `direct` Ticket without creating or running behavioral tests |
+| `$plan-tickets` | Split a specification into vertical Tickets and collect all test choices in one response |
+| `$implement-direct` | Implement an approved `direct` Ticket using existing tests only or skipping behavioral tests as approved |
 | `$implement-tdd` | Implement a Ticket through Red, Green, and Refactor |
 | `$review-code` | Review requirements, changes, and available evidence, including skipped-test risk |
 | `$improve-architecture` | Analyze architecture and module relationships, then propose improvements |

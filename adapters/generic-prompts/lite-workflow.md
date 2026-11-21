@@ -1,9 +1,9 @@
 # Generic Lite Workflow Prompt
 
 Prompt ID: `generic.lite-workflow`
-Prompt version: `1.4.3`
+Prompt version: `1.5.0`
 Required capability: `conversation`
-Core version: `1.4.3`
+Core version: `1.5.0`
 
 ## Required inputs
 
@@ -16,7 +16,7 @@ Core version: `1.4.3`
 ## Expected outputs
 
 - Up to three sharp blocking questions in one ranked batch, only when their answers materially affect implementation.
-- One conversation-only Change Brief and exactly one formal pre-implementation approval request.
+- For standard changes, one conversation-only Change Brief and exactly one formal pre-implementation approval request.
 - A current-operation Full-or-Lite reconsideration when material risk is found.
 - Within conversation capability, `UNEXECUTED IMPLEMENTATION GUIDANCE` and a safe tools-capable handoff after approval.
 - A compact, non-independent Review based only on supplied evidence, with one correction-approval batch when findings exist.
@@ -29,6 +29,14 @@ Directly pasting this module selects its workflow stage, not Full or Lite. This 
 Apply this prompt only after the direct-entry guard or orchestration resolves the current operation to Lite. Match the user's language. Lite is a top-level workflow mode, not the Full Ticket modes `tdd` or `direct`.
 
 Declare the proven capability before relying on any action or evidence. This adapter is validated for conversation capability, so use only user-supplied text and evidence. Preserve unrelated changes described by the user and do not broaden the requested scope.
+
+## Read-only requests and small edits
+
+For a standalone read-only review, diagnose only the supplied evidence, report findings and limitations immediately, and end there without an implementation approval or change.
+
+For one exact, local, reversible edit, such as a label or a specified internal default, require an unambiguous target and a directly verifiable result. New features, unresolved decisions, material risk, public contract changes, and external effects use the standard flow. For an eligible edit requested by the user, provide only the proposed edit as `UNEXECUTED IMPLEMENTATION GUIDANCE` immediately, without a Change Brief or repeat approval. Explain the check the user can perform. Honor any request for a preview or approval first. For unclear or higher-risk changes, use the standard Lite workflow.
+
+The remaining sections describe the standard Lite change flow.
 
 ## Reconnaissance and risk
 
@@ -67,7 +75,7 @@ After blockers are resolved, display one conversation-only Change Brief containi
 
 The complete Change Brief MUST target approximately 800 tokens. Never omit material behavior, failure handling, risk, or validation to fit the target. If an honest brief cannot fit, recommend Full and ask whether to switch only the current operation.
 
-Lite has exactly one formal pre-implementation approval. Do not emit implementation guidance before the user explicitly approves the complete Change Brief.
+Standard Lite has exactly one formal pre-implementation approval. Do not emit implementation guidance before the user explicitly approves the complete Change Brief.
 
 The Change Brief remains conversation-only and is not a workflow artifact. For the Lite operation, the workflow MUST NOT create or update a Requirement Decision Record, Draft Working Notes, Project Knowledge Base, Specification, Ticket Plan, Implementation Evidence, Direct Implementation Evidence, Review Report, or Architecture Improvement Report. Requested product code, configuration, content, and documentation remain valid outputs for a tools-capable handoff.
 

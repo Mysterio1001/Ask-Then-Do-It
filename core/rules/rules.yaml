@@ -1,4 +1,4 @@
-core_version: 1.4.3
+core_version: 1.5.0
 capability_profiles:
   conversation:
     includes: []
@@ -36,7 +36,7 @@ rules:
   - id: LITE-BRIEF-001
     mandatory: true
     module: lite-workflow
-    statement: Require one complete conversation-only Lite Change Brief and exactly one explicit approval before implementation without creating workflow artifacts.
+    statement: Standard Lite changes require one approved conversation-only Change Brief. Report standalone read-only findings directly. An exact, local, reversible low-risk edit can use the original instruction as authorization after scope and risk checks.
   - id: LITE-RISK-001
     mandatory: true
     module: lite-workflow
@@ -64,7 +64,7 @@ rules:
   - id: GATE-PLAN-001
     mandatory: true
     module: ticket-planning
-    statement: Require explicit plain-language test choices in one batch, map every choice to an internal implementation mode, and obtain explicit human approval before marking a Ticket Plan Approved.
+    statement: Require explicit plain-language test choices in one batch, preserve the choice to add tests, run existing tests only, or skip behavioral tests alongside its internal implementation mode, and obtain explicit human approval before marking a Ticket Plan Approved.
   - id: GRILL-ONE-001
     mandatory: true
     module: requirements

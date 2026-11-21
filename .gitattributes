@@ -4,6 +4,9 @@ adapters/claude-code/** text eol=lf -filter -working-tree-encoding -ident
 tests/claude/fixtures/** text eol=lf
 tests/release/fixtures/claude-context-proxy/** text eol=lf
 
+# Migration manifests record the SHA-256 of the original LF bytes.
+docs/project/drafts/codex-skill-runtime-slimming/migration/backup/*.md text eol=lf
+
 # Codex runtime measurements use stable source bytes across operating systems.
 adapters/codex/plugin/ask-then-do-it/** text eol=lf -filter -working-tree-encoding -ident
 adapters/codex/plugin/ask-then-do-it/assets/icon.png -text -eol -filter -working-tree-encoding -ident

@@ -25,8 +25,8 @@ Generic workflow 沒有讀取 Codex Config 的能力，會改用貼入工作流�
 | 適合情境 | 高風險、跨模組、需求仍需深入確認，或需要完整稽核軌跡 | 範圍清楚、風險較低的小型變更 |
 | 問題 | 一次只問一題，直到需求共識 | 每輪最多三個阻塞問題，整批約 500 tokens |
 | 流程文件 | 保存需求、專案知識、規格、Ticket 計畫與實作證據 | Change Brief 只顯示在對話中，不建立流程文件 |
-| 實作前核准 | 需求、規格、Ticket 計畫共三個核准點 | Change Brief 一個核准點 |
-| 測試 | 每張 Ticket 由使用者決定是否新增測試 | 不新增或修改測試，也不執行 TDD |
+| 實作前核准 | 需求、規格、Ticket 計畫共三個核准點 | 一般變更核准一次，指定文字或格式的小改可直接處理 |
+| 測試 | 每張 Ticket 可選新增測試、只跑既有測試或略過行為測試 | 不新增或修改測試，也不執行 TDD |
 | 驗證 | 依 Ticket 模式與風險執行完整、可追溯的驗證 | 靜態檢查，加上一個成功與一個失敗或邊界路徑 |
 | Review | 獨立、固定十二項視角，並留下證據 | 同一個 AI 做精簡 Review；修正 findings 前仍需使用者核准 |
 | 可追溯性 | 高，可跨工作階段接續 | 較低，新的工作階段不會延續未保存的流程狀態 |
@@ -43,11 +43,12 @@ flowchart TD
     F_KNOWLEDGE["更新專案知識庫"]
     F_SPECIFICATION["3. 寫規格<br/>行為、失敗方式、範圍"]
     F_SPECIFICATION_GATE{"核准點 2：核准完整規格？"}
-    F_TICKETS["4. 規劃垂直 Tickets<br/>決定每張 Ticket 是否加上測試"]
+    F_TICKETS["4. 規劃垂直 Tickets<br/>決定每張 Ticket 的測試方式"]
     F_TICKET_PLAN_GATE{"核准點 3：核准完整 Ticket 計畫？"}
     F_TEST_CHOICE{"5. 依已核准的測試選擇分流"}
     F_TDD["加上測試<br/>TDD：Red、Green、Refactor"]
-    F_DIRECT["不加測試<br/>Direct：tests: skipped-by-user"]
+    F_DIRECT["略過行為測試<br/>Direct：tests: skipped-by-user"]
+    F_EXISTING["只跑既有測試<br/>Direct：記錄實際結果"]
     F_EVIDENCE["6. 留下實作證據"]
     F_REVIEW["7. 十二項視角 Review"]
     F_COMPLETE["8. 回報完成<br/>證據缺口與殘餘風險"]
@@ -65,7 +66,9 @@ flowchart TD
     F_TICKET_PLAN_GATE -->|修訂| F_TICKETS
     F_TICKET_PLAN_GATE -->|核准| F_TEST_CHOICE
     F_TEST_CHOICE -->|加上測試| F_TDD
-    F_TEST_CHOICE -->|不加測試| F_DIRECT
+    F_TEST_CHOICE -->|略過測試| F_DIRECT
+    F_TEST_CHOICE -->|只跑既有測試| F_EXISTING
+    F_EXISTING --> F_EVIDENCE
     F_TDD --> F_EVIDENCE
     F_DIRECT --> F_EVIDENCE
     F_EVIDENCE --> F_REVIEW
@@ -78,15 +81,17 @@ flowchart TD
 1. **理解現況。** AI 先讀取專案指示、相關程式、測試、設定與目前變更，不碰無關內容。
 2. **取得需求共識。** AI 一次只問一個需求問題，附上建議與主要取捨；你核准後才更新專案知識庫，這是第一個核准點。
 3. **寫規格。** 規格描述可觀察行為、失敗方式與範圍，不先塞入正式程式碼；完整內容經你核准，這是第二個核准點。
-4. **拆成垂直 Tickets。** 每張 Ticket 交付一個可獨立驗證的結果。AI 逐張提供測試建議，提醒執行測試可能增加工時、不加測試會降低信心，再由你一次決定每張 Ticket 是否加上測試；完整 Ticket 計畫經你核准，這是第三個核准點。
-5. **依測試選擇實作。** 在 Full 內部，加上測試與不加測試會分別對應 `tdd` 與 `direct`；使用者不需要用這些內部名稱回答。
-6. **留下實作證據。** `$implement-tdd` 依 `Red`、`Green`、`Refactor` 實作並記錄實際測試結果。`$implement-direct` 不建立也不執行行為測試，但可執行 lint、type-check 或 build，並保留 `tests: skipped-by-user` 與未測範圍。
+4. **拆成垂直 Tickets。** 每張 Ticket 交付一個可獨立驗證的結果。AI 逐張提供測試建議，提醒執行測試可能增加工時、不加測試會降低信心，再由你一次決定每張 Ticket 的測試方式；完整 Ticket 計畫經你核准，這是第三個核准點。
+5. **依測試選擇實作。** 在 Full 內部，新增測試對應 `tdd`，只跑既有測試及略過行為測試都對應 `direct`；使用者不需要用這些內部名稱回答。
+6. **留下實作證據。** `$implement-tdd` 依 `Red`、`Green`、`Refactor` 實作並記錄實際測試結果。`$implement-direct` 不修改測試檔。選「只跑既有測試」時記錄相關測試的實際結果；選「略過行為測試」時記錄 `tests: skipped-by-user`。舊版已核准的 direct 計畫維持略過測試。
 7. **Review。** Review 對照核准內容、差異與驗證，使用十二項視角找出錯誤與維護風險。系統性問題先做架構改善分析，再回到規格與 Ticket 流程，不直接擴大修改。
 8. **完成。** AI 說明交付內容、實際驗證、未取得的證據與殘餘風險；已保存的文件可供下一個工作階段接續。
 
 沉默、無關回覆或 AI 自己更改狀態，都不能代替上述核准。
 
 ## Lite 模式
+
+只要求審查時，AI 直接說明發現與依據。若你要求「把首頁按鈕的『送出』改成『確認送出』」，目標唯一、只改顯示、可還原且風險低，這句話就足以授權。AI 核對差異與結果後回報。如果有兩個可能的按鈕、牽涉付款行為，或你要求先看預覽，就先確認。以下是其他變更使用的標準流程。
 
 Lite 用較少流程文字完成已界定的小型工作。它每輪最多三個阻塞問題，只問答案會阻止實作或大幅改變方向的事項。
 
@@ -131,7 +136,7 @@ flowchart TD
 1. **理解現況與風險。** AI 只檢查和本次工作直接相關的指示、變更、程式、測試、設定與文件，並先判斷是否存在高風險。
 2. **只問阻塞問題。** 每輪最多三個阻塞問題，依影響與不確定性排序；每題最多三個短句、只包含一個決定，並提供建議與主要取捨。整批約 `500 tokens`，少於三題就不補問題；超過三題時先問最重要的三題，再依回答重新判斷。
 3. **顯示 Change Brief。** Change Brief 約 `800 tokens`，包含目標、範圍、明確不做的事、三到五個可觀察驗收情境、重大風險與預計驗證。若無法在不省略重要資訊的情況下保持精簡，AI 會建議改用 Full。
-4. **取得一次核准。** Lite 恰好一個正式核准點：你明確核准完整 Change Brief 後，AI 才能開始修改。Lite 不建立或更新流程文件；Change Brief、進度和 Review 只存在於這次對話。
+4. **取得一次核准。** 一般 Lite 變更恰好一個正式核准點：你明確核准完整 Change Brief 後，AI 才能開始修改。Lite 不建立或更新流程文件；Change Brief、進度和 Review 只存在於這次對話。
 5. **直接實作核准範圍。** Lite 不新增或修改測試，不使用 `Red`、`Green`、`Refactor`，也不宣稱具備 TDD 同等信心。若需要新的重要行為或擴大範圍，AI 必須停下來重新確認。
 6. **執行最低驗證。** AI 檢查最終差異與檔案範圍，執行適用的語法、lint、type-check、build、設定或 schema 等靜態檢查；再用現有聚焦測試或手動 smoke check 驗證一個主要成功路徑，以及一個最重要的失敗或邊界路徑。適用檢查若失敗，修正後必須重跑；無法執行的檢查要說明，已知未解決失敗不能被描述為完成。
 7. **進行精簡 Review。** 同一個 AI 檢查 Change Brief 覆蓋、差異範圍、失敗與安全路徑、驗證缺口和殘餘風險。所有可處理 findings 必須同一批列出，取得你的核准後才能修正，並在修正後重跑相關驗證；未核准的項目保持不變並列為未解決。沒有可處理的 findings 時，AI 必須明確回報為零，不得建立空的修正核准點。
@@ -157,7 +162,7 @@ $ask-then-do-it 我想做一個……
 
 ## 在 Claude Desktop 或其他 AI 開始
 
-在 Claude Desktop 中，將 Generic ZIP 上傳為 Skill；入口 `SKILL.md` 位於 ZIP 內套件資料夾的根目錄。安全掃描完成後，啟用 Skill 並指定使用 Ask Then Do It。只有文字對話能力的服務，則在每個新對話先貼上完整 `SKILL.md`，再說明需求。Generic workflow 仍限於對話指引，不能宣稱已修改專案檔案或執行驗證。
+在 Claude Desktop 中，將 Generic ZIP 上傳為 Skill；入口 `SKILL.md` 位於 ZIP 內套件資料夾的根目錄。安全掃描完成後，啟用 Skill 並指定使用 Ask Then Do It。只有文字對話能力的服務，每個新對話可選 `SKILL.md` 使用完整流程，或選 `LITE.md` 使用精簡流程，在同一則訊息貼上全文和需求。Generic workflow 仍限於對話指引，不能宣稱已修改專案檔案或執行驗證。
 
 ## 換新工作階段時
 
@@ -166,7 +171,7 @@ $ask-then-do-it 我想做一個……
 ## 最後檢查
 
 - [ ] 模式依目前操作、專案 Config、使用者 Config、Full fallback 的順序決定。
-- [ ] Full 的需求、規格與 Ticket 計畫都有核准，並在一次回覆中決定每張 Ticket 是否加上測試。
+- [ ] Full 的需求、規格與 Ticket 計畫都有核准，並在一次回覆中決定每張 Ticket 的測試方式。
 - [ ] Lite 只有一份已核准的 Change Brief，沒有新增測試或流程文件。
 - [ ] 實際驗證、無法執行的檢查、未解決 findings 與殘餘風險都有揭露。
 - [ ] 高風險切換只影響目前操作，不改變其他工作階段的 Config 行為。

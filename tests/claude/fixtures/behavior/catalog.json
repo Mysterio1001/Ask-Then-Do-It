@@ -568,7 +568,7 @@
               "specification": "Approved",
               "choices_complete": true
             },
-            "decision": "Do not add tests"
+            "decision": "Skip behavioral tests"
           },
           "expected": {
             "load": [
@@ -713,6 +713,37 @@
               "execute behavioral tests",
               "claim Red/Green or passing tests",
               "silently bypass external constraints"
+            ]
+          }
+        },
+        {
+          "id": "approved-existing-tests-only",
+          "given": {
+            "capability": "tools",
+            "entry": "automatic-ready-5",
+            "state": {
+              "upstream": "Approved",
+              "dependencies": "complete",
+              "ticket_mode": "direct",
+              "test_choice": "Run existing tests only"
+            },
+            "decision": "implement-ticket"
+          },
+          "expected": {
+            "load": [
+              "direct-implementation.md"
+            ],
+            "transition": "run-existing-tests-record-outcomes-Review",
+            "artifact": "Direct Implementation Evidence",
+            "status": "observed outcomes or unavailable evidence",
+            "disclosures": [
+              "actual commands and results",
+              "uncovered paths and unresolved failures"
+            ],
+            "forbidden": [
+              "create or edit tests",
+              "record tests: skipped-by-user",
+              "claim TDD"
             ]
           }
         }
