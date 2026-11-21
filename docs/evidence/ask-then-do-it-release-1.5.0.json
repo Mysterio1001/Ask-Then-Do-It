@@ -1,0 +1,155 @@
+{
+  "schema_version": 2,
+  "release_version": "1.5.0",
+  "status": "Completed",
+  "source_commit": "ee306b6fdda32df32cccf75189ec761e8ee9ccb8",
+  "candidate_identity": {
+    "tree_files": 85,
+    "tree_sha256": "f9e88ccddda8724195a3b56441a9025794b81052d5ab861f315d6a51c76d5128",
+    "archives": {
+      "codex/ask-then-do-it-1.5.0.zip": "13fd3ce508c1ca98a2771b10b5a1182128a0814ffb4ce0defe72aa0761661850",
+      "generic/ask-then-do-it-generic-1.5.0.zip": "9f1c08bf16ebc6b4c052a033a2f38e17376c542da596a79ae99f3f588d358278",
+      "claude/ask-then-do-it-claude-1.5.0.zip": "073767334496915cfdee84422f4e7244799c4aded0813cbafed65f0a7335a894"
+    },
+    "checksums_sha256": "68d675fc00a4ea691d4dc58fc3618b9a9d461a1ed277d11d303a16f8ac8e1ca6",
+    "package_files": {
+      "codex": 30,
+      "generic": 19,
+      "claude": 32
+    }
+  },
+  "checks": [
+    {
+      "id": "automated-tests",
+      "status": "passed",
+      "command": "python -B -m unittest discover -s tests -v",
+      "outcome": "511 tests, 509 passed, two Windows symlink permission skips, exit 0."
+    },
+    {
+      "id": "workflow-token-proxy",
+      "status": "passed",
+      "command": "python -B scripts/measure_workflow_token_proxy.py --json",
+      "outcome": "75.57% reduction in the fixed Codex workload, above the 60% threshold."
+    },
+    {
+      "id": "codex-skill-validation",
+      "status": "passed",
+      "command": "skill-creator quick_validate.py on each source and packaged skill",
+      "outcome": "All 18 directories passed."
+    },
+    {
+      "id": "codex-plugin-validation",
+      "status": "passed",
+      "command": "build_release.validate_codex_source; validate_codex_contract.py --validate-only on source and package; validate_marketplace.py",
+      "outcome": "Repository validators accepted manifest, icons, version-matched catalog, and packaged plugin."
+    },
+    {
+      "id": "codex-conformance",
+      "status": "passed",
+      "command": "validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/codex/conformance.yaml",
+      "outcome": "Core 1.5.0 conformance passed."
+    },
+    {
+      "id": "generic-conformance",
+      "status": "passed",
+      "command": "validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/generic-prompts/manifest.yaml",
+      "outcome": "Core 1.5.0 conformance passed."
+    },
+    {
+      "id": "codex-package-inventory",
+      "status": "passed",
+      "command": "build_release.validate_output_set with require_source_equivalence; validate_codex_contract.py --validate-only --package-root dist/codex/ask-then-do-it",
+      "outcome": "All 30 Codex package files and ZIP members verified."
+    },
+    {
+      "id": "generic-package-inventory",
+      "status": "passed",
+      "command": "build_release.validate_output_set with require_source_equivalence; compare expanded directory and ZIP",
+      "outcome": "19 Generic files including SKILL.md and LITE.md matched."
+    },
+    {
+      "id": "reproducible-build",
+      "status": "passed",
+      "command": "python -B scripts/build_release.py in two clean detached checkouts; compare directory and file lists and every SHA-256",
+      "outcome": "All 85 files in both output trees were byte-identical."
+    },
+    {
+      "id": "zip-equivalence",
+      "status": "passed",
+      "command": "zipfile.ZipFile.testzip and SHA-256 comparison per expanded member",
+      "outcome": "Three ZIPs passed CRC and matched all 81 expanded files."
+    },
+    {
+      "id": "sha256-verification",
+      "status": "passed",
+      "command": "Recompute SHA-256 for each archive and compare with checksums.sha256",
+      "outcome": "All three archive digests matched the checksum file."
+    },
+    {
+      "id": "removed-artifact-scan",
+      "status": "passed",
+      "command": "Check paths in all ZIPs, forbidden local content, canonical release inventory and git diff HEAD^ HEAD --check",
+      "outcome": "81 packaged files were scanned. No extra files, local paths, or excluded directories found."
+    },
+    {
+      "id": "release-architecture-diagnosis",
+      "status": "passed",
+      "command": "Read-only release review of the exact source change",
+      "outcome": "Reviewed routing, approval and capability boundaries, session maintenance, packaging and release changes. No release blocker found. Due sweeps still enumerate the session directory."
+    },
+    {
+      "id": "claude-plugin-validation",
+      "status": "passed",
+      "command": "scripts/validate_claude_plugin.py; scripts/validate_claude_model_evidence.py with mapping and source trace",
+      "outcome": "Claude plugin, provider catalog and model classification evidence passed."
+    },
+    {
+      "id": "claude-conformance",
+      "status": "passed",
+      "command": "validate_conformance.py --catalog core/rules/rules.yaml --manifest adapters/claude-code/conformance.yaml",
+      "outcome": "Core 1.5.0 conformance passed."
+    },
+    {
+      "id": "claude-package-inventory",
+      "status": "passed",
+      "command": "validate_claude_package.validate_parity against the built package; compare expanded members and ZIP",
+      "outcome": "All 32 Claude files matched."
+    }
+  ],
+  "optional_qualification": {
+    "claude-behavior": "not run",
+    "claude-context": "not run",
+    "claude-live-smoke": "not run"
+  },
+  "public_verification": {
+    "release_id": 453975117,
+    "version": "v1.5.0",
+    "tag_object": "66d260e65a90b9cfa3216aadb4ec4fb20eb07eb3",
+    "commit": "ee306b6fdda32df32cccf75189ec761e8ee9ccb8",
+    "published_at": "2026-11-21T20:50:15Z",
+    "url": "https://github.com/Mysterio1001/Ask-Then-Do-It/releases/tag/v1.5.0",
+    "downloads": [
+      {
+        "name": "ask-then-do-it-1.5.0.zip",
+        "bytes": 432096,
+        "sha256": "13fd3ce508c1ca98a2771b10b5a1182128a0814ffb4ce0defe72aa0761661850"
+      },
+      {
+        "name": "ask-then-do-it-generic-1.5.0.zip",
+        "bytes": 53203,
+        "sha256": "9f1c08bf16ebc6b4c052a033a2f38e17376c542da596a79ae99f3f588d358278"
+      },
+      {
+        "name": "ask-then-do-it-claude-1.5.0.zip",
+        "bytes": 57461,
+        "sha256": "073767334496915cfdee84422f4e7244799c4aded0813cbafed65f0a7335a894"
+      },
+      {
+        "name": "checksums.sha256",
+        "bytes": 309,
+        "sha256": "68d675fc00a4ea691d4dc58fc3618b9a9d461a1ed277d11d303a16f8ac8e1ca6"
+      }
+    ],
+    "guides_and_catalogs_verified": 15
+  }
+}

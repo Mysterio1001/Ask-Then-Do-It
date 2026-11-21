@@ -14,7 +14,7 @@ Inputs: 現行 Core／adapter sources、既有核准需求／規格／計畫、�
 
 Assumptions: 當前來源 1.5.0，required release contract、Claude static/package assurance 與 optional live qualification 分開判斷；歷史 1.4.0／1.4.1 核准、Review、收據、hash 與實測紀錄保留原版本。
 
-Deferred: 1.5.0 的最終 commit、兩次乾淨建置、發布驗證與公開下載，以及未接受的架構提案列在[狀態文件](status.md)；Claude live qualification 與 Codex exact GPT-5.x／GPT-6 fresh-session compatibility 均保留為非阻擋的 `unverified` 項目。
+Deferred: 未接受的架構提案列在[狀態文件](status.md)；Claude live qualification 與 Codex exact GPT-5.x／GPT-6 fresh-session compatibility 均保留為非阻擋的 `unverified` 項目。
 
 Handoff: 維護時先讀本索引，再讀相關規格／手冊；不要依舊 Ticket 的下一步重走已完成工作。
 
@@ -83,7 +83,7 @@ Codex catalog 位於 `.agents/plugins/marketplace.json`，Claude 位於 `.claude
 
 ## Unresolved items
 
-Claude actual host／profile／context／smoke 目前均為 optional／deferred qualification，未執行且不得標成 passed。目前的 1.5.0 套件將於正式發布時從最終 commit 重建並驗證；1.4.2 的核准紀錄見下方。提交前瘦身已使舊 source-selection／binding／staging identities 失效，不得沿用；最終 Git commit 與從它重建的 candidate bytes才是 authority。Codex exact GPT-5.x／GPT-6 fresh-session compatibility仍是非 release blocker 的 deferred／`unverified`項目。既有未接受架構提案維持 future proposals，不代表已授權重構。
+Claude actual host／profile／context／smoke 目前均為 optional／deferred qualification，未執行且不得標成 passed。1.5.0 套件已從正式提交重建並完成公開驗證，見[發布紀錄](../evidence/ask-then-do-it-release-1.5.0.md)；1.4.2 的核准紀錄見下方。提交前瘦身已使舊 source-selection／binding／staging identities 失效，不得沿用；最終 Git commit 與從它重建的 candidate bytes才是 authority。Codex exact GPT-5.x／GPT-6 fresh-session compatibility仍是非 release blocker 的 deferred／`unverified`項目。既有未接受架構提案維持 future proposals，不代表已授權重構。
 
 新增其他 adapters、universal installer／registry、Claude 非 user scopes、Desktop／web/cloud、unattended updates、private fork 分發、Community Marketplace 與 signing/provenance 方案均待後續決策。官方 bare aliases 是否顯示與 exact invocation 仍按實測記錄，不作多一個受支援公開入口的承諾。
 

@@ -1,6 +1,6 @@
 # 維護與發布手冊
 
-目前公開的穩定版是 [v1.4.3](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/tag/v1.4.3)。本次發布目標為 1.5.0。此手冊說明下一次發布的步驟。進度見[狀態頁](../project/status.md)，歷史依據見[發布紀錄](../evidence/release-history.md)。
+目前公開的穩定版是 [v1.5.0](https://github.com/Mysterio1001/Ask-Then-Do-It/releases/tag/v1.5.0)。此手冊說明下一次發布的步驟。進度見[狀態頁](../project/status.md)，歷史依據見[發布紀錄](../evidence/release-history.md)。
 
 ## 開發環境
 
