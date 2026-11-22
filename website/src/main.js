@@ -69,7 +69,7 @@ document.querySelector("#app").innerHTML = `
       <h1 id="hero-title"><span data-i18n="hero.line1"></span><span class="accent-text" data-i18n="hero.line2"></span></h1>
       ${text("stages.0.title", "p", "hero-statement")}
       ${text("hero.description", "p", "story-description")}
-      <div class="hero-actions"><a class="button button-primary" href="#aeris">${text("hero.begin")}${icon("arrow-right")}</a><a class="button button-text" href="#aegis">${icon("terminal")}${text("hero.install")}${icon("arrow-up-right")}</a></div>
+      
     </section>
 
     ${journeyStops
@@ -82,7 +82,6 @@ document.querySelector("#app").innerHTML = `
         <h2 id="title-${stop.id}" data-i18n="stages.${index + 1}.title"></h2>
         ${text(`stages.${index + 1}.desc`, "p", "story-description")}
         <ul class="principles">${[1, 2, 3].map((n) => `<li>${icon("check")}${text(`stages.${index + 1}.feature${n}`)}</li>`).join("")}</ul>
-        <a class="button button-text stage-next" href="#${journeyStops[index + 2].id}">${text("common.next")}${icon("arrow-right")}</a>
       </section>`,
       )
       .join("")}
@@ -97,11 +96,10 @@ document.querySelector("#app").innerHTML = `
         <div class="install-tabs" role="tablist" aria-label="Installation platform">
           ${["codex", "claude", "clone"].map((mode, i) => `<button type="button" id="tab-${mode}" role="tab" aria-controls="command-panel" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-install-mode="${mode}" data-i18n="terminal.${mode}"></button>`).join("")}
         </div>
-        <div id="command-panel" class="command-panel" role="tabpanel" aria-labelledby="tab-codex"><span class="command-prompt mono">$</span><pre><code id="install-command"></code></pre><button type="button" id="copy-command" class="icon-button" data-i18n-aria="terminal.copy">${icon("copy")}<span class="tooltip" data-i18n="terminal.copy"></span></button></div>
-        <div id="copy-status" class="copy-status mono" role="status" aria-live="polite"></div>
+        <div id="command-panel" class="command-panel" role="tabpanel" aria-labelledby="tab-codex"><span class="command-prompt mono">$</span><pre><code id="install-command"></code></pre><button type="button" id="copy-command" class="icon-button" data-i18n-aria="terminal.copy">${icon("copy", "copy-icon")}${icon("check", "copied-icon")}<span class="tooltip" aria-hidden="true"></span></button></div>
+        <div id="copy-status" class="copy-status" role="status" aria-live="polite"></div>
       </div>
       <div class="terminal-actions"><a class="button button-primary" href="${product.repository}" ${external}>${icon("github")}${text("terminal.repository")}${icon("arrow-up-right")}</a><a id="docs-link" class="button button-text" href="${product.docs["zh-TW"]}" ${external}>${text("terminal.viewDocs")}${icon("arrow-up-right")}</a></div>
-      ${text("terminal.footer", "p", "terminal-footnote mono")}
     </section>
 
     <aside class="planet-annotation" aria-hidden="true"><span class="annotation-cross">+</span><span class="annotation-line"></span><div><span id="planet-label" class="mono"></span><span id="planet-type"></span></div></aside>
@@ -154,10 +152,7 @@ function updateLanguage() {
   document.querySelector("#docs-link").href = product.docs[i18n.locale];
   updateAnnotations();
   updateMotionButton();
-  if (copyResult)
-    document.querySelector("#copy-status").textContent = i18n.t(
-      `terminal.${copyResult}`,
-    );
+  updateCopyFeedback();
 }
 
 function updateAnnotations() {
@@ -313,12 +308,22 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+function updateCopyFeedback() {
+  const button = document.querySelector("#copy-command");
+  const message = i18n.t(`terminal.${copyResult || "copy"}`);
+  button.dataset.result = copyResult;
+  button.querySelector(".tooltip").textContent = message;
+  document.querySelector("#copy-status").textContent = copyResult
+    ? message
+    : "";
+}
+
 function setInstallMode(mode) {
   installMode = mode;
   copyOperation += 1;
   copyResult = "";
   clearTimeout(copyTimer);
-  document.querySelector("#copy-status").textContent = "";
+  updateCopyFeedback();
   document.querySelector("#install-command").textContent =
     product.commands[mode];
   document
@@ -366,12 +371,10 @@ document.querySelector("#copy-command").addEventListener("click", async () => {
     selection.removeAllRanges();
     selection.addRange(range);
   }
-  document.querySelector("#copy-status").textContent = i18n.t(
-    `terminal.${copyResult}`,
-  );
+  updateCopyFeedback();
   copyTimer = setTimeout(() => {
     copyResult = "";
-    document.querySelector("#copy-status").textContent = "";
+    updateCopyFeedback();
   }, 5000);
 });
 
